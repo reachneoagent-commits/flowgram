@@ -34,8 +34,6 @@ Download the installer for your system (latest version, 3.0.0).
 | Windows x64                       | [Installer](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.0/Flowgram_3.0.0_x64-setup.exe)   |
 | Windows ARM64                     | [Installer](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.0/Flowgram_3.0.0_arm64-setup.exe) |
 
-Older versions are on the [Releases page](https://github.com/reachneoagent-commits/flowgram/releases).
-
 Flowgram isn't signed with a paid Apple or Microsoft certificate (that costs money every year, and Flowgram is free). Your computer will warn you the first time you open it. The warning is expected, and the steps below get past it once.
 
 ### Mac
