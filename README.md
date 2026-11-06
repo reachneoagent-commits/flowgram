@@ -1,67 +1,97 @@
-<div id="header" align="center">
-    <img src="logo.svg" width="400px" />
-    <h1>Harper</h1>
+<div align="center">
+  <img src="brand/logo.svg" width="120px" alt="Flowgram" />
+  <h1>Flowgram</h1>
+  <p><strong>A free, open source, private grammar and spell checker for the Mac and Windows apps you already write in.</strong></p>
 </div>
 
-[![Harper Binaries](https://github.com/automattic/harper/actions/workflows/binaries.yml/badge.svg)](https://github.com/automattic/harper/actions/workflows/binaries.yml)
-[![Website](https://github.com/automattic/harper/actions/workflows/build_web.yml/badge.svg)](https://github.com/automattic/harper/actions/workflows/build_web.yml)
-[![Checks](https://github.com/automattic/harper/actions/workflows/just_checks.yml/badge.svg)](https://github.com/automattic/harper/actions/workflows/just_checks.yml)
-[![Crates.io](https://img.shields.io/crates/v/harper-ls)](https://crates.io/crates/harper-ls)
-![NPM Version](https://img.shields.io/npm/v/harper.js)
-![Downloads](https://img.shields.io/github/downloads/automattic/harper/total?label=Binary+Downloads)
-![Obsidian Plugin Downloads](https://img.shields.io/github/downloads/automattic/harper-obsidian-plugin/total?label=Obsidian+Plugin+Downloads)
+> Flowgram is a fork of [Harper](https://github.com/automattic/harper) by Automattic, an open source project under the Apache 2.0 license. Thank you to the Harper authors and contributors for the grammar engine and the foundation this app is built on. See [NOTICE](NOTICE) for details.
 
-Harper is an English grammar checker designed to be _just right._
-I created it after years of dealing with the shortcomings of the competition.
+Flowgram checks your writing as you type, in Notes, Mail, Messages, TextEdit and any other app you switch on. Underlines appear right in the text, and a click applies the fix. Everything runs on your computer: your text never goes to a server.
 
-Grammarly was too expensive and too overbearing.
-Its suggestions lacked context, and were often just plain _wrong_.
-Not to mention: it's a privacy nightmare.
-Everything you write with Grammarly is sent to their servers.
-Their privacy policy claims they don't sell the data, but that doesn't mean they don't use it to train large language models and god knows what else.
-Not only that, but the round-trip-time of the network request makes revising your work all the more tedious.
+## Why Flowgram?
 
-LanguageTool is great, if you have gigabytes of RAM to spare and are willing to download the ~16GB n-gram dataset.
-Besides the memory requirements, I found LanguageTool too slow: it would take several seconds to lint even a moderate-size document.
+- **Free**: no subscription, no account
+- **Private**: all checking happens on your own computer
+- **Fast**: suggestions in milliseconds
+- **Works across apps**: native apps through macOS Accessibility, websites and webmail through the browser extension
 
-That's why I created Harper: it is the grammar checker that fits my needs.
-Not only does it take milliseconds to lint a document, take less than 1/50th of LanguageTool's memory footprint,
-but it is also completely private.
+## Features
 
-Harper is even small enough to load via [WebAssembly.](https://writewithharper.com)
+- Grammar, spelling and punctuation suggestions with one-click fixes
+- A rule pack that flags AI-sounding phrases ("delve into", "rich tapestry of")
+- Email tone, wordiness and common-mistake rules
+- Per-app switches, so Flowgram only watches the apps you choose
+- A built-in editor, a personal dictionary and per-rule settings
+- A browser extension for Chrome, Edge and Brave, with per-profile status in Settings → Integrations
 
-## Language Support
+## Download and install
 
-Harper currently only supports English, but the core is extensible to support other languages, so we welcome contributions that allow for other language support.
+Download the installer for your system (latest version, 3.0.0).
 
-## Performance Issues
+| Platform                          | Installer                                                                                                              |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| macOS Apple Silicon (M1 or newer) | [DMG](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.0/Flowgram_3.0.0_Mac_Apple-Silicon.dmg) |
+| macOS Intel                       | [DMG](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.0/Flowgram_3.0.0_Mac_Intel.dmg)         |
+| Windows x64                       | [Installer](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.0/Flowgram_3.0.0_x64-setup.exe)   |
+| Windows ARM64                     | [Installer](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.0/Flowgram_3.0.0_arm64-setup.exe) |
 
-We consider long lint times bugs.
-If you encounter any significant performance issues, please create an issue on the topic.
+Older versions are on the [Releases page](https://github.com/reachneoagent-commits/flowgram/releases).
 
-If you find a fix to any performance issue, we would appreciate the contribution.
-Just please make sure to read [our contribution guidelines first.](https://writewithharper.com/docs/contributors/introduction)
+Flowgram isn't signed with a paid Apple or Microsoft certificate (that costs money every year, and Flowgram is free). Your computer will warn you the first time you open it. The warning is expected, and the steps below get past it once.
 
-## Links
+### Mac
 
-- [Frequently Asked Questions](https://writewithharper.com/#faqs)
-- [Obsidian Documentation](https://writewithharper.com/docs/integrations/obsidian)
-- [`harper-ls` Documentation](https://writewithharper.com/docs/integrations/language-server)
-- Supported Editors' Documentation
-  - [Visual Studio Code](https://writewithharper.com/docs/integrations/visual-studio-code)
-  - [Neovim](https://writewithharper.com/docs/integrations/neovim)
-  - [Helix](https://writewithharper.com/docs/integrations/helix)
-  - [Emacs](https://writewithharper.com/docs/integrations/emacs)
-  - [Zed](https://writewithharper.com/docs/integrations/zed)
-- [`harper.js` Documentation](https://writewithharper.com/docs/harperjs/introduction)
-- [Official Discord Server](https://discord.com/invite/JBqcAaKrzQ)
+1. Download the `.dmg` that matches your Mac:
+   - **`Mac_Apple-Silicon`**: Macs with an M1, M2, M3 or newer chip.
+   - **`Mac_Intel`**: older Macs with an Intel chip.
+2. Open the `.dmg` and drag **Flowgram** into **Applications**.
+3. Open Flowgram. macOS will say it can't verify the app. Click **Done** (not Move to Trash).
+4. Open **System Settings → Privacy & Security**, scroll down to the message about Flowgram, click **Open Anyway**, and enter your password.
+5. When asked, allow **Accessibility** access. Flowgram needs it to read what you type and to apply fixes.
 
-## Huge Thanks
+If step 4 doesn't show Open Anyway, run this once and open Flowgram again:
 
-This project would not be possible without the hard work from those who [contribute](https://writewithharper.com/docs/contributors/introduction).
+```bash
+xattr -cr /Applications/Flowgram.app
+```
 
-<a href="https://github.com/automattic/harper/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=automattic/harper" />
-</a>
+If Flowgram keeps asking for Accessibility after an update, run `tccutil reset Accessibility com.flowgram.app` in Terminal, reopen Flowgram and click **Allow**.
 
-Harper's logo was designed by [Lukas Werner](https://lukaswerner.com/).
+### Windows
+
+1. Download the `.exe` installer (`x64-setup` for most PCs, `arm64-setup` for Windows on ARM) and run it.
+2. If Windows says **"Windows protected your PC"**, click **More info**, then **Run anyway**.
+3. Finish the installer and open Flowgram.
+
+### Add the browser extension (optional)
+
+The extension checks your writing on websites and in webmail such as Gmail. Chrome, Edge and Brave keep a separate extension list for each profile, so repeat these steps for every profile you want checked.
+
+1. In Flowgram, open **Settings → Integrations → Browser extension**. Your profiles are listed, with a status for each.
+2. Click **Show extension folder**. Flowgram copies the extension to a **Flowgram Browser Extension** folder in Documents.
+3. Click **Set up** next to a profile. That profile's extensions page opens.
+4. Turn on **Developer mode**, click **Load unpacked**, and choose the **Flowgram Browser Extension** folder.
+
+The status in Settings changes to "Extension active" once the profile has it.
+
+## Build it yourself
+
+You need [Rust](https://rustup.rs/), [Node.js](https://nodejs.org/), [pnpm](https://pnpm.io/), [just](https://github.com/casey/just) and [wasm-pack](https://rustwasm.github.io/wasm-pack/). Building from source avoids the unsigned-app warning, because your own computer made the app.
+
+```bash
+just build-chrome-plugin
+just build-harperjs build-lint-framework build-components build-harper-editor
+cd harper-desktop
+pnpm install
+pnpm tauri build
+```
+
+For development, run `just dev-desktop`.
+
+## About this fork
+
+Flowgram's grammar engine, rules and browser extension come from Harper. The original Harper README is kept in [README.harper.md](README.harper.md), and the upstream project is at <https://github.com/automattic/harper>.
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE). Flowgram is a derivative work of Harper, Copyright (c) Automattic. "Harper" and "Automattic" names and logos are not licensed for use as Flowgram branding.

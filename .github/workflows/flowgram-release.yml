@@ -1,0 +1,131 @@
+name: Flowgram Release
+
+# Builds Flowgram installers for macOS (Apple Silicon + Intel) and Windows (x64 + ARM64)
+# and attaches them to a GitHub release. Run it manually from the Actions tab.
+# Installers are not signed with paid Apple/Microsoft certificates; the README explains
+# how users open them. Updater artifacts are signed with TAURI_SIGNING_PRIVATE_KEY.
+
+on: workflow_dispatch
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    outputs:
+      release-id: ${{ steps.create-release.outputs.result }}
+      version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Read version from tauri.conf.json
+        id: get-version
+        run: |
+          VERSION=$(grep -o '"version": "[^"]*"' harper-desktop/src-tauri/tauri.conf.json | head -1 | cut -d'"' -f4)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Create draft release
+        id: create-release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `v${{ steps.get-version.outputs.version }}`,
+              name: `Flowgram ${{ steps.get-version.outputs.version }}`,
+              body: [
+                '## Download the installer for your computer',
+                '',
+                '| System | File |',
+                '|---|---|',
+                '| Mac with an M1, M2, M3 or newer chip | `Flowgram_..._Mac_Apple-Silicon.dmg` |',
+                '| Mac with an Intel chip | `Flowgram_..._Mac_Intel.dmg` |',
+                '| Windows (most PCs) | `.exe` ending in `x64-setup` |',
+                '| Windows on ARM | `.exe` ending in `arm64-setup` |',
+                '',
+                'Your computer will warn you the first time you open Flowgram because it is not signed with a paid certificate. The steps to get past that are in the [README](https://github.com/' + context.repo.owner + '/' + context.repo.repo + '#download-and-install).',
+              ].join('\n'),
+              draft: true,
+              prerelease: false,
+            })
+            return data.id
+
+  build:
+    needs: create-release
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            rust-target: aarch64-apple-darwin
+            tauri-args: "--target aarch64-apple-darwin --bundles app,dmg"
+          - platform: macos-15-intel
+            rust-target: x86_64-apple-darwin
+            tauri-args: "--target x86_64-apple-darwin --bundles app,dmg"
+          - platform: windows-latest
+            rust-target: x86_64-pc-windows-msvc
+            tauri-args: "--target x86_64-pc-windows-msvc --bundles nsis"
+          - platform: windows-11-arm
+            rust-target: aarch64-pc-windows-msvc
+            tauri-args: "--target aarch64-pc-windows-msvc --bundles nsis"
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: extractions/setup-just@v3
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: ".node-version"
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.rust-target }}
+          cache: false
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --locked
+      - name: Build shared packages and the Chrome extension
+        shell: bash
+        run: just build-harperjs build-lint-framework build-components build-harper-editor build-chrome-plugin
+      - name: Install desktop dependencies
+        shell: bash
+        run: cd harper-desktop && pnpm install
+      - name: Build and upload installers
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: harper-desktop
+          releaseId: ${{ needs.create-release.outputs.release-id }}
+          args: ${{ matrix.tauri-args }}
+          includeUpdaterJson: true
+
+  # Gives the Mac installers plain names and publishes the release once every build is done.
+  finish:
+    needs: [create-release, build]
+    if: ${{ always() && needs.create-release.result == 'success' }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rename Mac installers
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RELEASE_ID: ${{ needs.create-release.outputs.release-id }}
+          VERSION: ${{ needs.create-release.outputs.version }}
+        run: |
+          gh api "repos/$REPO/releases/$RELEASE_ID/assets" --paginate --jq '.[] | "\(.id) \(.name)"' |
+          while read -r id name; do
+            case "$name" in
+              *_aarch64.dmg) new="Flowgram_${VERSION}_Mac_Apple-Silicon.dmg" ;;
+              *_x64.dmg) new="Flowgram_${VERSION}_Mac_Intel.dmg" ;;
+              *) continue ;;
+            esac
+            gh api -X PATCH "repos/$REPO/releases/assets/$id" -f name="$new" > /dev/null
+            echo "$name -> $new"
+          done
