@@ -52,8 +52,34 @@ jobs:
             })
             return data.id
 
+  # The browser extensions are the same on every OS, so build them once on Linux.
+  extensions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: extractions/setup-just@v3
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: ".node-version"
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: wasm32-unknown-unknown
+          cache: false
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --locked
+      - name: Build the Chrome and Firefox extensions
+        run: just build-chrome-plugin build-firefox-unpacked
+      - uses: actions/upload-artifact@v4
+        with:
+          name: browser-extensions
+          path: |
+            packages/chrome-plugin/build
+            packages/chrome-plugin/build-firefox
+          if-no-files-found: error
+
   build:
-    needs: create-release
+    needs: [create-release, extensions]
     permissions:
       contents: write
     strategy:
@@ -90,9 +116,14 @@ jobs:
         run: cargo install just --locked
       - name: Install wasm-pack
         run: cargo install wasm-pack --locked
-      - name: Build shared packages and the Chrome and Firefox extensions
+      - name: Build shared packages
         shell: bash
-        run: just build-harperjs build-lint-framework build-components build-harper-editor build-chrome-plugin build-firefox-unpacked
+        run: just build-harperjs build-lint-framework build-components build-harper-editor
+      - name: Download the browser extensions
+        uses: actions/download-artifact@v4
+        with:
+          name: browser-extensions
+          path: packages/chrome-plugin
       - name: Install desktop dependencies
         shell: bash
         run: cd harper-desktop && pnpm install
@@ -100,13 +131,12 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # In-app updater files are not built yet, so no signing key is needed.
+          TAURI_CONFIG: '{"bundle":{"createUpdaterArtifacts":false}}'
         with:
           projectPath: harper-desktop
           releaseId: ${{ needs.create-release.outputs.release-id }}
           args: ${{ matrix.tauri-args }}
-          includeUpdaterJson: true
 
   # Gives the Mac installers plain names and publishes the release once every build is done.
   finish:
