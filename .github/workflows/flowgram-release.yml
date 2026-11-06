@@ -76,6 +76,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: extractions/setup-just@v3
+        if: matrix.platform != 'windows-11-arm'
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:
@@ -84,11 +85,14 @@ jobs:
         with:
           target: ${{ matrix.rust-target }}
           cache: false
+      - name: Install just (Windows ARM)
+        if: matrix.platform == 'windows-11-arm'
+        run: cargo install just --locked
       - name: Install wasm-pack
         run: cargo install wasm-pack --locked
       - name: Build shared packages and the Chrome and Firefox extensions
         shell: bash
-        run: just build-harperjs build-lint-framework build-components build-harper-editor build-chrome-plugin build-firefox-plugin
+        run: just build-harperjs build-lint-framework build-components build-harper-editor build-chrome-plugin build-firefox-unpacked
       - name: Install desktop dependencies
         shell: bash
         run: cd harper-desktop && pnpm install

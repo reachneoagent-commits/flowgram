@@ -298,8 +298,8 @@ build-chrome-plugin: build-harperjs build-lint-framework build-components
   pnpm install
   pnpm zip-for-chrome
 
-# Build the Firefox version of the browser extension into packages/chrome-plugin/build-firefox.
-build-firefox-plugin: build-harperjs build-lint-framework build-components
+# Build the unpacked Firefox extension into packages/chrome-plugin/build-firefox (bundled with the desktop app).
+build-firefox-unpacked: build-harperjs build-lint-framework build-components
   #!/usr/bin/env bash
   set -eo pipefail
 
