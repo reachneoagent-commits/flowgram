@@ -3047,6 +3047,7 @@ dependencies = [
  "egui-wgpu",
  "egui-winit",
  "egui_commonmark",
+ "fastrand",
  "harper-core",
  "harper-dictionary-wordlist",
  "is-macro",

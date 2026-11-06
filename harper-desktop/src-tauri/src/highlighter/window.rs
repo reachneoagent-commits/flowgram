@@ -27,20 +27,13 @@ pub struct Window {
     egui_state: egui_winit::State,
     painter: Painter,
     viewport_id: egui::ViewportId,
-    /// This monitor's rectangle in global logical points, the space accessibility reports in.
-    viewport: egui::Rect,
 }
 
 impl Window {
     pub async fn new(event_loop: &ActiveEventLoop, monitor: MonitorHandle) -> Result<Self, Error> {
-        let context = egui::Context::default();
+        let context = super::fonts::context();
         let position = monitor.position();
         let size = monitor.size();
-        let scale = monitor.scale_factor() as f32;
-        let viewport = egui::Rect::from_min_size(
-            egui::pos2(position.x as f32 / scale, position.y as f32 / scale),
-            egui::vec2(size.width as f32 / scale, size.height as f32 / scale),
-        );
         let window = Arc::new(
             event_loop.create_window(
                 WinitWindow::default_attributes()
@@ -91,12 +84,7 @@ impl Window {
             egui_state,
             painter,
             viewport_id,
-            viewport,
         })
-    }
-
-    pub fn viewport(&self) -> egui::Rect {
-        self.viewport
     }
 
     pub fn id(&self) -> WindowId {
@@ -135,12 +123,34 @@ impl Window {
         }
     }
 
-    pub fn render(&mut self, render_state: &mut RenderState) {
-        let viewport = self.viewport;
+    /// The window's bounds in the screen coordinates that lints and the cursor use.
+    ///
+    /// On platforms that cannot report where the window is, this assumes the window is at the
+    /// screen's origin.
+    pub fn screen_rect(&self) -> egui::Rect {
+        let pixels_per_point =
+            egui_winit::pixels_per_point(self.egui_state.egui_ctx(), &self.inner);
+
+        egui_winit::inner_rect_in_points(&self.inner, pixels_per_point).unwrap_or_else(|| {
+            let size = self.inner.inner_size();
+            egui::Rect::from_min_size(
+                egui::Pos2::ZERO,
+                egui::vec2(size.width as f32, size.height as f32) / pixels_per_point,
+            )
+        })
+    }
+
+    /// Draws `render_state` into this window, which is `screen_rects[index]`.
+    pub fn render(
+        &mut self,
+        render_state: &mut RenderState,
+        screen_rects: &[egui::Rect],
+        index: usize,
+    ) {
         let context = self.egui_state.egui_ctx().clone();
         let input = self.egui_state.take_egui_input(&self.inner);
         let output = context.run_ui(input, |ui| {
-            render_state.render(ui, viewport);
+            render_state.render(ui, screen_rects, index);
         });
 
         self.egui_state
