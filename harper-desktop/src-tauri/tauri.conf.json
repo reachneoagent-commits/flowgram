@@ -30,7 +30,7 @@
 			"../../packages/chrome-plugin/build": "browser-extension/chrome",
 			"../../packages/chrome-plugin/build-firefox": "browser-extension/firefox"
 		},
-		"createUpdaterArtifacts": true
+		"createUpdaterArtifacts": false
 	},
 	"plugins": {
 		"updater": {

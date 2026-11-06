@@ -131,8 +131,6 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # In-app updater files are not built yet, so no signing key is needed.
-          TAURI_CONFIG: '{"bundle":{"createUpdaterArtifacts":false}}'
         with:
           projectPath: harper-desktop
           releaseId: ${{ needs.create-release.outputs.release-id }}
