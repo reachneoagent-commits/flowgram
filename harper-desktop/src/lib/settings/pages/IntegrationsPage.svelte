@@ -33,6 +33,7 @@ let browserProfiles: BrowserProfileStatus[] = [];
 let isProfilesLoading = true;
 let extensionError = '';
 let isPreparingExtension = false;
+let isPreparingFirefox = false;
 
 const BROWSER_LABELS: Record<string, string> = {
 	chrome: 'Chrome',
@@ -82,6 +83,20 @@ async function showExtensionFolder() {
 		extensionError = `${error}`;
 	} finally {
 		isPreparingExtension = false;
+	}
+}
+
+async function setUpFirefox() {
+	if (isPreparingFirefox) return;
+	isPreparingFirefox = true;
+	extensionError = '';
+	try {
+		await Client.prepareFirefoxExtension();
+		await Client.openBrowserExtensionsPage('firefox');
+	} catch (error) {
+		extensionError = `${error}`;
+	} finally {
+		isPreparingFirefox = false;
 	}
 }
 
@@ -314,6 +329,22 @@ function closeAppPicker() {
       </Button>
       <span class="muted">Set up opens that profile's extensions page: turn on Developer mode, click Load unpacked, and pick the "Flowgram Browser Extension" folder in Documents.</span>
     </div>
+    <Panel>
+      <div class="app-row">
+        <div class="grow">
+          <strong>Opera</strong>
+          <p>Opera uses the same extension as Chrome. Open its extensions page, turn on Developer mode, click Load unpacked and choose the "Flowgram Browser Extension" folder.</p>
+        </div>
+        <Button color="white" size="sm" on:click={() => Client.openBrowserExtensionsPage('opera').catch((error) => (extensionError = `${error}`))}>Set up</Button>
+      </div>
+      <div class="app-row">
+        <div class="grow">
+          <strong>Firefox</strong>
+          <p>Firefox needs its own copy. Click Set up, then on the page that opens choose "Load Temporary Add-on…" and pick manifest.json inside the "Flowgram Firefox Extension" folder in Documents. Firefox forgets it when it quits, so repeat after restarting Firefox.</p>
+        </div>
+        <Button color="white" size="sm" disabled={isPreparingFirefox} on:click={setUpFirefox}>{isPreparingFirefox ? 'Preparing...' : 'Set up'}</Button>
+      </div>
+    </Panel>
     {#if extensionError}
       <p class="result-summary" role="alert">{extensionError}</p>
     {/if}

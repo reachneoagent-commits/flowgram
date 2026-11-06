@@ -86,9 +86,9 @@ jobs:
           cache: false
       - name: Install wasm-pack
         run: cargo install wasm-pack --locked
-      - name: Build shared packages and the Chrome extension
+      - name: Build shared packages and the Chrome and Firefox extensions
         shell: bash
-        run: just build-harperjs build-lint-framework build-components build-harper-editor build-chrome-plugin
+        run: just build-harperjs build-lint-framework build-components build-harper-editor build-chrome-plugin build-firefox-plugin
       - name: Install desktop dependencies
         shell: bash
         run: cd harper-desktop && pnpm install

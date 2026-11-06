@@ -21,7 +21,7 @@ Flowgram checks your writing as you type, in Notes, Mail, Messages, TextEdit and
 - Email tone, wordiness and common-mistake rules
 - Per-app switches, so Flowgram only watches the apps you choose
 - A built-in editor, a personal dictionary and per-rule settings
-- A browser extension for Chrome, Edge and Brave, with per-profile status in Settings → Integrations
+- A browser extension for Chrome, Edge, Brave, Opera and Firefox, with per-profile status for Chrome, Edge and Brave in Settings → Integrations
 
 ## Download and install
 
@@ -72,6 +72,15 @@ The extension checks your writing on websites and in webmail such as Gmail. Chro
 4. Turn on **Developer mode**, click **Load unpacked**, and choose the **Flowgram Browser Extension** folder.
 
 The status in Settings changes to "Extension active" once the profile has it.
+
+**Opera** uses the same extension folder: open `opera://extensions`, turn on Developer mode, click **Load unpacked**, and choose the **Flowgram Browser Extension** folder. Settings has a **Set up** button that opens that page.
+
+**Firefox** needs its own copy of the extension:
+
+1. In Flowgram, open **Settings → Integrations → Browser extension** and click **Set up** next to Firefox. Flowgram copies the extension to a **Flowgram Firefox Extension** folder in Documents and opens `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…** and choose the `manifest.json` file inside that folder.
+
+Firefox only keeps unsigned extensions until it quits, so repeat step 2 after restarting Firefox. Firefox 146 or newer is required.
 
 ## Build it yourself
 

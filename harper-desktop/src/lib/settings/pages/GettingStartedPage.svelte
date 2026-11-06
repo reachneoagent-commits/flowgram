@@ -3,7 +3,7 @@ import { isTauri } from '@tauri-apps/api/core';
 import { platform } from '@tauri-apps/plugin-os';
 import { Button, SlideDeck, Toggle } from 'components';
 import { onMount } from 'svelte';
-import { type AccessibilityPermissionStatus, Client, type Integration } from '$lib/client';
+import { type AccessibilityPermissionStatus, type BrowserId, Client, type Integration } from '$lib/client';
 import AppIcon from '../components/AppIcon.svelte';
 import AppPickerModal from '../components/AppPickerModal.svelte';
 
@@ -33,7 +33,7 @@ const allSlides: OnboardingSlide[] = [
 	{
 		id: 'browser',
 		title: 'Add the browser extension',
-		lede: 'To check your writing on websites and in webmail, add the Flowgram extension to Chrome, Edge or Brave.\n\nThis is optional. You can do it later from Settings → Integrations.',
+		lede: 'To check your writing on websites and in webmail, add the Flowgram extension to Chrome, Edge, Brave, Opera or Firefox.\n\nThis is optional. You can do it later from Settings → Integrations.',
 	},
 	{
 		id: 'test-drive',
@@ -73,6 +73,7 @@ let integrations: Integration[] = [];
 let integrationsError = '';
 let isLoadingIntegrations = true;
 let extensionFolder = '';
+let firefoxFolder = '';
 let isPreparingExtension = false;
 let extensionError = '';
 let isSavingApps = false;
@@ -221,7 +222,18 @@ async function prepareExtension() {
 	}
 }
 
-async function openExtensionsPage(browser: 'chrome' | 'edge' | 'brave') {
+async function prepareFirefox() {
+	extensionError = '';
+
+	try {
+		firefoxFolder = await Client.prepareFirefoxExtension();
+		await Client.openBrowserExtensionsPage('firefox');
+	} catch (error) {
+		extensionError = `${error}`;
+	}
+}
+
+async function openExtensionsPage(browser: BrowserId) {
 	extensionError = '';
 
 	try {
@@ -422,10 +434,16 @@ async function prepareService(request = false) {
               <Button color="white" size="sm" on:click={() => openExtensionsPage('chrome')}>Chrome</Button>
               <Button color="white" size="sm" on:click={() => openExtensionsPage('edge')}>Edge</Button>
               <Button color="white" size="sm" on:click={() => openExtensionsPage('brave')}>Brave</Button>
+              <Button color="white" size="sm" on:click={() => openExtensionsPage('opera')}>Opera</Button>
             </span>
           </li>
           <li>Click <strong>Load unpacked</strong> and choose the <strong>Flowgram Browser Extension</strong> folder{extensionFolder ? ` in Documents` : ''}.</li>
         </ol>
+        <p>
+          <strong>Firefox:</strong> it needs its own copy.
+          <Button color="white" size="sm" on:click={prepareFirefox}>Set up Firefox</Button>
+          Then, on the page that opens, click <strong>Load Temporary Add-on…</strong> and choose the <strong>manifest.json</strong> file inside the <strong>Flowgram Firefox Extension</strong> folder{firefoxFolder ? ' in Documents' : ''}. Firefox forgets it when it quits, so repeat this after restarting Firefox.
+        </p>
         {#if extensionError}
           <p role="alert">{extensionError}</p>
         {/if}

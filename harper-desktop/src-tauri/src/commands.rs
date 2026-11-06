@@ -50,6 +50,7 @@ pub fn application_message_handler<R: Runtime>() -> impl Fn(Invoke<R>) -> bool {
         stop_highlighter_service,
         launch_app,
         prepare_browser_extension,
+        prepare_firefox_extension,
         open_browser_extensions_page,
         get_browser_extension_profiles,
         search_apps,
@@ -470,13 +471,35 @@ fn search_apps(
 /// and survive app updates. Returns the folder path so the UI can show it.
 #[tauri::command]
 fn prepare_browser_extension<R: Runtime>(app: AppHandle<R>) -> Result<String, String> {
+    prepare_extension_folder(
+        &app,
+        "browser-extension/chrome",
+        crate::browser_extension::EXTENSION_FOLDER_NAME,
+    )
+}
+
+/// Same as [`prepare_browser_extension`], for the Firefox build of the extension.
+#[tauri::command]
+fn prepare_firefox_extension<R: Runtime>(app: AppHandle<R>) -> Result<String, String> {
+    prepare_extension_folder(
+        &app,
+        "browser-extension/firefox",
+        crate::browser_extension::FIREFOX_EXTENSION_FOLDER_NAME,
+    )
+}
+
+fn prepare_extension_folder<R: Runtime>(
+    app: &AppHandle<R>,
+    resource: &str,
+    folder_name: &str,
+) -> Result<String, String> {
     let source = app
         .path()
-        .resolve("browser-extension/chrome", BaseDirectory::Resource)
+        .resolve(resource, BaseDirectory::Resource)
         .map_err(|error| format!("Could not find the bundled extension: {error}"))?;
     let destination = app
         .path()
-        .resolve("Flowgram Browser Extension", BaseDirectory::Document)
+        .resolve(folder_name, BaseDirectory::Document)
         .map_err(|error| format!("Could not find your Documents folder: {error}"))?;
 
     if destination.exists() {
@@ -529,7 +552,7 @@ async fn get_browser_extension_profiles()
         .map_err(|error| error.to_string())
 }
 
-/// Open the extensions page of a supported browser (`chrome`, `edge`, `brave`), optionally in a
+/// Open the extensions page of a supported browser (`chrome`, `edge`, `brave`, `opera`, `firefox`), optionally in a
 /// specific profile (the profile directory name, e.g. `Profile 1`).
 #[tauri::command]
 fn open_browser_extensions_page(
@@ -540,6 +563,8 @@ fn open_browser_extensions_page(
         "chrome" => ("Google Chrome", "chrome://extensions"),
         "edge" => ("Microsoft Edge", "edge://extensions"),
         "brave" => ("Brave Browser", "brave://extensions"),
+        "opera" => ("Opera", "opera://extensions"),
+        "firefox" => ("Firefox", "about:debugging#/runtime/this-firefox"),
         other => return Err(format!("Unsupported browser: {other}")),
     };
 
@@ -548,7 +573,8 @@ fn open_browser_extensions_page(
     }
 
     let mut command = std::process::Command::new("open");
-    match profile_directory.filter(|profile| !profile.is_empty()) {
+    // Only Chrome-family browsers take a profile flag.
+    match profile_directory.filter(|profile| !profile.is_empty() && browser != "firefox") {
         // `-n` is required so `--args` reach an already-running browser.
         Some(profile) => command
             .args(["-n", "-a", app_name, "--args"])

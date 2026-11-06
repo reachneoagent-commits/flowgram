@@ -40,7 +40,7 @@ export interface Integration {
 	display_name: string;
 }
 
-export type BrowserId = 'chrome' | 'edge' | 'brave';
+export type BrowserId = 'chrome' | 'edge' | 'brave' | 'opera' | 'firefox';
 
 export interface BrowserProfileStatus {
 	browser: BrowserId;
@@ -227,6 +227,11 @@ export class Client {
 	/** Copy the bundled browser extension to Documents and open that folder. Returns its path. */
 	static async prepareBrowserExtension(): Promise<string> {
 		return await invoke<string>('prepare_browser_extension');
+	}
+
+	/** Copy the bundled Firefox extension to Documents and open that folder. Returns its path. */
+	static async prepareFirefoxExtension(): Promise<string> {
+		return await invoke<string>('prepare_firefox_extension');
 	}
 
 	static async openBrowserExtensionsPage(

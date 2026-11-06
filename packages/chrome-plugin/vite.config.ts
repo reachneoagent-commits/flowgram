@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
 	return {
 		build: {
 			minify: false,
-			outDir: 'build',
+			outDir: env.OUT_DIR ?? 'build',
 			rollupOptions: {
 				output: {
 					chunkFileNames: 'assets/chunk-[hash].js',

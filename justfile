@@ -298,6 +298,16 @@ build-chrome-plugin: build-harperjs build-lint-framework build-components
   pnpm install
   pnpm zip-for-chrome
 
+# Build the Firefox version of the browser extension into packages/chrome-plugin/build-firefox.
+build-firefox-plugin: build-harperjs build-lint-framework build-components
+  #!/usr/bin/env bash
+  set -eo pipefail
+
+  cd "{{justfile_directory()}}/packages/chrome-plugin"
+
+  pnpm install
+  pnpm build-for-firefox
+
 # Start a development server for the Chrome extension.
 alias dev-chrome := dev-chrome-plugin
 alias dev-chrome-extension := dev-chrome-plugin

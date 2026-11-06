@@ -10,6 +10,9 @@ use std::path::{Path, PathBuf};
 /// Folder name `prepare_browser_extension` copies the extension into.
 pub const EXTENSION_FOLDER_NAME: &str = "Flowgram Browser Extension";
 
+/// Folder the Firefox build of the extension is copied into.
+pub const FIREFOX_EXTENSION_FOLDER_NAME: &str = "Flowgram Firefox Extension";
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct BrowserProfileStatus {
     /// `chrome`, `edge` or `brave`.

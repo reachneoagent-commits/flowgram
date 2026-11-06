@@ -27,7 +27,8 @@
 		],
 		"resources": {
 			"../static/fonts/atkinson/OFL.txt": "licenses/AtkinsonHyperlegible-OFL.txt",
-			"../../packages/chrome-plugin/build": "browser-extension/chrome"
+			"../../packages/chrome-plugin/build": "browser-extension/chrome",
+			"../../packages/chrome-plugin/build-firefox": "browser-extension/firefox"
 		},
 		"createUpdaterArtifacts": true
 	},
