@@ -1,0 +1,26 @@
+expr main [(in the ever-evolving landscape of), (in the ever-changing landscape of), (in the rapidly evolving landscape of), (in the ever-evolving world of), (in the realm of)]
+
+let message "Say `in` and name the field directly. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `in the ever-evolving landscape of` and `in the realm of` with `in`."
+let kind "Style"
+let becomes "in"
+
+# True positives
+test "In the ever-evolving landscape of marketing, change is constant." "In marketing, change is constant."
+test "Teams in the ever-changing landscape of law must adapt." "Teams in law must adapt."
+test "In the rapidly evolving landscape of software, tools age fast." "In software, tools age fast."
+test "Writers in the ever-evolving world of news move quickly." "Writers in news move quickly."
+test "In the realm of grammar, rules have exceptions." "In grammar, rules have exceptions."
+test "She works in the realm of security." "She works in security."
+test "He is an expert in the ever-evolving landscape of finance." "He is an expert in finance."
+test "We compete in the rapidly evolving landscape of retail." "We compete in retail."
+
+# True negatives
+allows "In marketing, change is constant."
+allows "The realm was at peace."
+allows "The landscape painter used oils."
+allows "She works in security."
+allows "The evolving plot kept us guessing."
+allows "He ruled the realm for forty years."
+allows "In the ever-green forest, we camped."
+allows "A landscape of hills surrounded us."

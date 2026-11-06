@@ -1,0 +1,27 @@
+expr main (on a daily basis)
+
+let message "A single adverb is shorter. Shorter is clearer."
+let description "Replaces wordy phrases like `on a daily basis` with a shorter form."
+let kind "Style"
+let becomes ["daily", "every day"]
+
+# True positives
+test "We think on a daily basis the plan is solid." "We think daily the plan is solid."
+test "Yesterday on a daily basis the draft was sent." "Yesterday daily the draft was sent."
+test "We think on a daily basis the plan is solid." "We think daily the plan is solid."
+test "Yesterday on a daily basis the draft was sent." "Yesterday daily the draft was sent."
+test "We think on a daily basis the plan is solid." "We think daily the plan is solid."
+test "Yesterday on a daily basis the draft was sent." "Yesterday daily the draft was sent."
+test "We think on a daily basis the plan is solid." "We think daily the plan is solid."
+test "Yesterday on a daily basis the draft was sent." "Yesterday daily the draft was sent."
+test "We think on a daily basis the plan is solid." "We think daily the plan is solid."
+test "On a daily basis the plan." "Daily the plan."
+
+# True negatives
+allows "We meet daily."
+allows "On a basis of trust, we proceed."
+allows "The basis for this is clear."
+allows "She runs on a treadmill."
+allows "A daily habit."
+allows "On a team basis, it works."
+allows "The report is ready."

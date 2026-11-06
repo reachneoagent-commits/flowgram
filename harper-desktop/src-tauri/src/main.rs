@@ -39,6 +39,7 @@ use tokio::{
 };
 
 mod args;
+pub mod browser_extension;
 pub mod color;
 mod commands;
 pub mod communication;
@@ -391,6 +392,7 @@ pub fn run_highlighter(has_parent: bool) {
             auto_update: true,
             last_update_check: None,
             highlighter_service_enabled: true,
+            theme: "system".to_string(),
         };
         *dictionary_linter.borrow_mut() = config.create_linter();
 
@@ -479,7 +481,7 @@ struct IntegrationState {
 
 /// Builds the broker's policy callback. Known apps are checked locally; only unknown apps with
 /// automatic enablement on reach `resolve`, which persists registration in the parent process.
-/// Harper itself is excluded from discovery, but explicitly configured entries are respected.
+/// Flowgram itself is excluded from discovery, but explicitly configured entries are respected.
 /// Standalone callers can approve registration locally without IPC.
 fn integration_callback(
     state: Arc<StdMutex<IntegrationState>>,
@@ -535,6 +537,7 @@ fn fetch_highlighter_config(
             auto_update: true,
             last_update_check: None,
             highlighter_service_enabled: true,
+            theme: "system".to_string(),
         })
     })
 }

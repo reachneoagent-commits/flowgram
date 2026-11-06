@@ -13,11 +13,11 @@ const dispatch = createEventDispatcher<{ click: MouseEvent }>();
 
 $: ({ class: restClass, ...restProps } = $$restProps);
 const baseClasses =
-	'h-5 w-[34px] flex-none rounded-full border-0 p-0.5 shadow-[inset_0_0.5px_1px_rgb(0_0_0_/_10%)] disabled:cursor-not-allowed disabled:opacity-50 disabled:grayscale';
-const uncheckedClasses = 'bg-[#d4cfc4]';
-const checkedClasses = 'bg-[var(--settings-accent,#2a6bd8)]';
+	'h-7 w-12 flex-none cursor-pointer rounded-full border-2 border-foreground p-0.5 transition-colors focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none disabled:cursor-not-allowed disabled:opacity-50';
+const uncheckedClasses = 'bg-background';
+const checkedClasses = 'bg-primary';
 const thumbClasses =
-	'block size-4 rounded-full bg-[#fff] shadow-[0_1px_2px_rgb(0_0_0_/_20%),0_0.5px_0_rgb(0_0_0_/_10%)] transition-transform duration-150 ease-[ease]';
+	'block size-5 rounded-full transition-transform duration-150 ease-[ease] motion-reduce:transition-none';
 
 $: classes = [
 	'toggle',
@@ -41,7 +41,9 @@ $: classes = [
 		{...restProps}
 		on:click={(event) => dispatch('click', event)}
 	>
-		<span class={`${thumbClasses} ${checked ? 'translate-x-3.5' : 'translate-x-0'}`}></span>
+		<span
+			class={`${thumbClasses} ${checked ? 'translate-x-5 bg-[#2b2c23]' : 'translate-x-0 bg-foreground'}`}
+		></span>
 	</button>
 {:else}
 	<label

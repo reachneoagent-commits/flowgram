@@ -1,0 +1,27 @@
+expr main (in the event that)
+
+let message "`if` says the same in fewer words. Shorter is clearer."
+let description "Replaces wordy phrases like `in the event that` with a shorter form."
+let kind "Style"
+let becomes ["if"]
+
+# True positives
+test "We think in the event that the plan is solid." "We think if the plan is solid."
+test "Yesterday in the event that the draft was sent." "Yesterday if the draft was sent."
+test "We think in the event that the plan is solid." "We think if the plan is solid."
+test "Yesterday in the event that the draft was sent." "Yesterday if the draft was sent."
+test "We think in the event that the plan is solid." "We think if the plan is solid."
+test "Yesterday in the event that the draft was sent." "Yesterday if the draft was sent."
+test "We think in the event that the plan is solid." "We think if the plan is solid."
+test "Yesterday in the event that the draft was sent." "Yesterday if the draft was sent."
+test "We think in the event that the plan is solid." "We think if the plan is solid."
+test "In the event that the plan." "If the plan."
+
+# True negatives
+allows "If it rains, we stay."
+allows "In the event, nobody came."
+allows "The event is on Friday."
+allows "In that event, call me."
+allows "An event that matters."
+allows "The events that followed were odd."
+allows "The report is ready."

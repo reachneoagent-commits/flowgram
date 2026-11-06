@@ -54,6 +54,9 @@ pub struct RenderState {
     /// resources from scratch.
     markdown_cache: CommonMarkCache,
 
+    /// Each monitor's rectangle in global logical points. Empty until the windows exist.
+    viewports: Vec<egui::Rect>,
+
     /// Called when the user dismisses a lint so app-level ignored-lint state can be updated.
     ignore_lint: IgnoreLint,
 
@@ -83,6 +86,7 @@ impl RenderState {
             current_sidebar_position: FIRST_ROW_OFFSET,
             last_render: None,
             markdown_cache: CommonMarkCache::default(),
+            viewports: Vec::new(),
             ignore_lint,
             add_to_dictionary,
             disable_rule,
@@ -90,6 +94,25 @@ impl RenderState {
         };
         state.set_lints(rects);
         state
+    }
+
+    /// Tells the popup layout which monitors exist so cards stay on the monitor holding the word.
+    pub fn set_viewports(&mut self, viewports: Vec<egui::Rect>) {
+        self.viewports = viewports;
+    }
+
+    /// The monitor that holds the center of `rect`, or the first monitor when none does.
+    fn viewport_for(&self, rect: &crate::rect::Rect) -> egui::Rect {
+        let center = egui::pos2(
+            (rect.x + rect.width / 2.0) as f32,
+            (rect.y + rect.height / 2.0) as f32,
+        );
+        self.viewports
+            .iter()
+            .find(|viewport| viewport.contains(center))
+            .or(self.viewports.first())
+            .copied()
+            .unwrap_or(egui::Rect::EVERYTHING)
     }
 
     /// Saves successful accessibility reads while retaining the previous lints after a failed read.
@@ -166,6 +189,7 @@ impl RenderState {
                     &positioned_lint.rect,
                     &positioned_lint.lint,
                     self.current_sidebar_position,
+                    self.viewport_for(&positioned_lint.rect),
                 )
             })
     }
@@ -174,7 +198,8 @@ impl RenderState {
     /// regions and clickable regions do not drift apart.
     ///
     /// Each call also moves the sidebar toward its target by the time since the previous call.
-    pub fn render(&mut self, ui: &mut egui::Ui) {
+    pub fn render(&mut self, ui: &mut egui::Ui, window_viewport: egui::Rect) {
+        let origin = window_viewport.min.to_vec2();
         let now = Instant::now();
         let time_since_last_render = self
             .last_render
@@ -194,19 +219,30 @@ impl RenderState {
         }
 
         for positioned_lint in self.lints() {
-            draw_highlight(ui, &positioned_lint.rect, &positioned_lint.lint);
+            if self.viewport_for(&positioned_lint.rect) == window_viewport
+                || self.viewports.is_empty()
+            {
+                draw_highlight(
+                    ui,
+                    &shifted(&positioned_lint.rect, origin),
+                    &positioned_lint.lint,
+                );
+            }
         }
 
         if let Some(index) = self.highlighted_lint
             && let Some(positioned_lint) = self.lints().get(index)
+            && (self.viewports.is_empty()
+                || self.viewport_for(&positioned_lint.rect) == window_viewport)
         {
-            let rect = positioned_lint.rect;
+            let rect = shifted(&positioned_lint.rect, origin);
             let lint = positioned_lint.lint.clone();
             let source_text = positioned_lint.source_text.clone();
 
             match render_lint_card(
                 ui,
                 &rect,
+                window_viewport.translate(-origin),
                 &lint,
                 &source_text,
                 self.shown_suggestion,
@@ -293,4 +329,14 @@ fn lint_kind_color32(lint_kind: LintKind) -> egui::Color32 {
     let color = lint_kind_color(lint_kind);
 
     egui::Color32::from_rgb(color.r, color.g, color.b)
+}
+
+/// Converts a global rectangle into the local space of the monitor window starting at `origin`.
+fn shifted(rect: &crate::rect::Rect, origin: egui::Vec2) -> crate::rect::Rect {
+    crate::rect::Rect::new(
+        rect.x - origin.x as f64,
+        rect.y - origin.y as f64,
+        rect.width,
+        rect.height,
+    )
 }

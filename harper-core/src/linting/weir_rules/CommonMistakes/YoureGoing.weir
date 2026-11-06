@@ -1,0 +1,27 @@
+expr main <(your [(going to), (not), (always), (never), (supposed to), (gonna), (wrong)]), your>
+
+let message "Use `you're` (you are) here, not `your`."
+let description "Fixes the common mistake `your going to`."
+let kind "Grammar"
+let becomes "you're"
+
+# True positives
+test "I think your going to ready." "I think you're going to ready."
+test "Hope your not ready." "Hope you're not ready."
+test "Tell me your always ready." "Tell me you're always ready."
+test "Remember your never ready." "Remember you're never ready."
+test "I think your supposed to ready." "I think you're supposed to ready."
+test "Hope your wrong ready." "Hope you're wrong ready."
+test "Hope your going to ready." "Hope you're going to ready."
+test "Tell me your not ready." "Tell me you're not ready."
+test "Remember your always ready." "Remember you're always ready."
+test "Your going to the plan." "You're going to the plan."
+
+# True negatives
+allows "You're going to love it."
+allows "Your phone is ringing."
+allows "Your car is outside."
+allows "You're not alone."
+allows "Your welcome is warm."
+allows "Is this your answer?"
+allows "The report is ready."

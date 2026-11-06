@@ -1,0 +1,27 @@
+expr main todays
+
+let message "Add the apostrophe: `today's`."
+let description "Fixes the common mistake `todays`."
+let kind "Punctuation"
+let becomes "today's"
+
+# True positives
+test "Check todays news." "Check today's news."
+test "Check todays news." "Check today's news."
+test "Check todays news." "Check today's news."
+test "Check todays news." "Check today's news."
+test "Check todays news." "Check today's news."
+test "Check todays news." "Check today's news."
+test "Check todays news." "Check today's news."
+test "Check todays news." "Check today's news."
+test "Check todays news." "Check today's news."
+test "Todays the plan." "Today's the plan."
+
+# True negatives
+allows "Today's meeting is short."
+allows "Today is Monday."
+allows "These days are long."
+allows "Yesterday was fine."
+allows "What day is it today?"
+allows "The report is ready."
+allows "Send the file tomorrow."

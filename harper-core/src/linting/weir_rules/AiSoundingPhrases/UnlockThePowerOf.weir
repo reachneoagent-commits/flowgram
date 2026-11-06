@@ -1,0 +1,26 @@
+expr main [(unlock the power of), (unleash the power of), (harness the power of)]
+
+let message "Say `use` instead of `unlock the power of`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `unlock the power of` with `use`."
+let kind "Style"
+let becomes "use"
+
+# True positives
+test "Learn to unlock the power of data." "Learn to use data."
+test "You can unleash the power of habits." "You can use habits."
+test "We harness the power of teamwork." "We use teamwork."
+test "Unlock the power of your notes." "Use your notes."
+test "Try to harness the power of the sun." "Try to use the sun."
+test "She will unlock the power of the team." "She will use the team."
+test "They hope to unleash the power of the crowd." "They hope to use the crowd."
+test "Let us harness the power of wind." "Let us use wind."
+
+# True negatives
+allows "Learn to use data."
+allows "He unlocked the door."
+allows "The power of the engine surprised us."
+allows "Unleash the dog."
+allows "Harness the horse before dawn."
+allows "The power grid failed."
+allows "She has the power to decide."
+allows "Unlock the phone with a code."

@@ -1,0 +1,27 @@
+expr main (for the purpose of)
+
+let message "`for` is shorter. Shorter is clearer."
+let description "Replaces wordy phrases like `for the purpose of` with a shorter form."
+let kind "Style"
+let becomes ["for", "to"]
+
+# True positives
+test "We think for the purpose of the plan is solid." "We think for the plan is solid."
+test "Yesterday for the purpose of the draft was sent." "Yesterday for the draft was sent."
+test "We think for the purpose of the plan is solid." "We think for the plan is solid."
+test "Yesterday for the purpose of the draft was sent." "Yesterday for the draft was sent."
+test "We think for the purpose of the plan is solid." "We think for the plan is solid."
+test "Yesterday for the purpose of the draft was sent." "Yesterday for the draft was sent."
+test "We think for the purpose of the plan is solid." "We think for the plan is solid."
+test "Yesterday for the purpose of the draft was sent." "Yesterday for the draft was sent."
+test "We think for the purpose of the plan is solid." "We think for the plan is solid."
+test "For the purpose of the plan." "For the plan."
+
+# True negatives
+allows "We met for lunch."
+allows "The purpose of the test is clear."
+allows "For this purpose, we agreed."
+allows "It served its purpose."
+allows "A purpose-built tool."
+allows "For the record, I agree."
+allows "The report is ready."

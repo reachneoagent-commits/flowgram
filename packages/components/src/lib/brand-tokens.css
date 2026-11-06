@@ -1,0 +1,187 @@
+/* Flowgram brand tokens: single source for components, editor and desktop. */
+@theme {
+	--font-serif: "Instrument Serif", Georgia, serif;
+	--font-sans:
+		Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		sans-serif;
+
+	/* ── Flowgram brand palette (see /brand/flowgram-brand-mockup.html) ── */
+
+	/* Lime: the primary action colour. Use dark ink text on it, never white. */
+	--color-primary-50: #f6fae0;
+	--color-primary-100: #ecf5c4;
+	--color-primary-200: #dce99b; /* meadow */
+	--color-primary-300: #cfe384; /* fern */
+	--color-primary-400: #c6ee55;
+	--color-primary: #b8e62e; /* lime */
+	--color-primary-600: #a6d41f; /* lime hover */
+	--color-primary-700: #3f6b12; /* text-safe green (5:1 on white) */
+	--color-primary-800: #2f4f0e;
+	--color-primary-900: #243a0b;
+	--color-primary-950: #172407;
+
+	/* Coral: spelling and errors. */
+	--color-accent-50: #fdeee9;
+	--color-accent-100: #fbd9cf;
+	--color-accent-200: #f6b3a1;
+	--color-accent-300: #ff8f70;
+	--color-accent-400: #e5532d;
+	--color-accent: #c8401f;
+	--color-accent-600: #a83219;
+	--color-accent-700: #862813;
+	--color-accent-800: #651e0e;
+	--color-accent-900: #3f1309;
+	--color-accent-950: #260b05;
+
+	/* Ink and olive-tinted neutrals. Replaces the warm stone/cream/gray scales. */
+	--color-stone-50: #f6f8ec;
+	--color-stone-100: #eef1dc;
+	--color-stone-200: #dde2c8;
+	--color-stone-300: #c6cbaf;
+	--color-stone-400: #8d9082;
+	--color-stone-500: #6b6e60;
+	--color-stone-600: #5b5e50;
+	--color-stone-700: #44463a;
+	--color-stone-800: #33352a;
+	--color-stone-900: #2b2c23;
+	--color-stone-950: #15160e;
+
+	--color-gray-50: #f6f8ec;
+	--color-gray-100: #eef1dc;
+	--color-gray-200: #dde2c8;
+	--color-gray-300: #c6cbaf;
+	--color-gray-400: #8d9082;
+	--color-gray-500: #6b6e60;
+	--color-gray-600: #5b5e50;
+	--color-gray-700: #44463a;
+	--color-gray-800: #33352a;
+	--color-gray-900: #2b2c23;
+	--color-gray-950: #15160e;
+
+	--color-cream-50: #f6f8ec;
+	--color-cream-100: #eef1dc;
+	--color-cream-200: #dde2c8;
+	--color-cream-300: #c6cbaf;
+	--color-cream-400: #8d9082;
+	--color-cream-500: #6b6e60;
+	--color-cream-600: #5b5e50;
+	--color-cream-700: #44463a;
+	--color-cream-800: #33352a;
+	--color-cream-900: #2b2c23;
+	--color-cream-950: #15160e;
+	--color-cream: #f6f8ec;
+
+	--color-champagne-mist-50: #f6f8ec;
+	--color-champagne-mist-100: #eef1dc;
+	--color-champagne-mist-200: #dde2c8;
+	--color-champagne-mist-300: #c6cbaf;
+	--color-champagne-mist-400: #8d9082;
+	--color-champagne-mist-500: #6b6e60;
+	--color-champagne-mist-600: #5b5e50;
+	--color-champagne-mist-700: #44463a;
+	--color-champagne-mist-800: #33352a;
+	--color-champagne-mist-900: #2b2c23;
+	--color-champagne-mist-950: #15160e;
+
+	/* Amber: clarity. */
+	--color-amber-50: #fff6e0;
+	--color-amber-100: #fde9b8;
+	--color-amber-200: #f9d78a;
+	--color-amber-300: #f2b83f;
+	--color-amber-400: #e6a01e;
+	--color-amber-500: #d18a0c;
+	--color-amber-600: #b87400;
+	--color-amber-700: #9a6200;
+	--color-amber-800: #7a4e00;
+	--color-amber-900: #5c3a00;
+	--color-amber-950: #3a2400;
+
+	/* Green: success states ("All clear"). */
+	--color-emerald-50: #f1f8e1;
+	--color-emerald-100: #e2f0c2;
+	--color-emerald-200: #cde59a;
+	--color-emerald-300: #b8d870;
+	--color-emerald-400: #9bc43e;
+	--color-emerald-500: #7fae1f;
+	--color-emerald-600: #5f8a0a;
+	--color-emerald-700: #4a6f0a;
+	--color-emerald-800: #3a560b;
+	--color-emerald-900: #2d420b;
+	--color-emerald-950: #1a2606;
+
+	--color-white: #ffffff;
+}
+
+/*
+ * Semantic tokens (the shadcn convention: a role, not a colour). New UI should use these
+ * (bg-background, text-foreground, border-border, ring-ring ...) so light and dark stay in sync.
+ */
+:root {
+	--background: #ffffff;
+	--foreground: #2b2c23;
+	--card: #ffffff;
+	--muted: #f6f8ec;
+	--muted-foreground: #5b5e50;
+	--subtle-foreground: #6b6e60;
+	--border: rgba(43, 44, 35, 0.14);
+	--input: rgba(43, 44, 35, 0.32);
+	--primary: #b8e62e;
+	--primary-hover: #a6d41f;
+	--primary-foreground: #2b2c23;
+	--accent: #dce99b;
+	--accent-foreground: #2b2c23;
+	--inverse: #2b2c23;
+	--inverse-foreground: #ffffff;
+	--ring: #2b2c23;
+	--destructive: #c8401f;
+	--cat-spelling: #c8401f;
+	--cat-grammar: #1f6fd1;
+	--cat-style: #6d3fd9;
+	--cat-clarity: #9a6200;
+	--radius: 14px;
+}
+
+.dark {
+	--background: #15160e;
+	--foreground: #eef1dc;
+	--card: #20221a;
+	--muted: #20221a;
+	--muted-foreground: #c6cbaf;
+	--subtle-foreground: #a9ae93;
+	--border: rgba(238, 241, 220, 0.14);
+	--input: rgba(238, 241, 220, 0.34);
+	--accent: #323a18;
+	--accent-foreground: #eef1dc;
+	--inverse: #eef1dc;
+	--inverse-foreground: #15160e;
+	--ring: #b8e62e;
+	--destructive: #ff8f70;
+	--cat-spelling: #ff8f70;
+	--cat-grammar: #78b6ff;
+	--cat-style: #b9a3ff;
+	--cat-clarity: #f2b83f;
+}
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-subtle-foreground: var(--subtle-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-primary-hover: var(--primary-hover);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-accent-surface: var(--accent);
+	--color-accent-surface-foreground: var(--accent-foreground);
+	--color-inverse: var(--inverse);
+	--color-inverse-foreground: var(--inverse-foreground);
+	--color-ring: var(--ring);
+	--color-destructive: var(--destructive);
+	--color-cat-spelling: var(--cat-spelling);
+	--color-cat-grammar: var(--cat-grammar);
+	--color-cat-style: var(--cat-style);
+	--color-cat-clarity: var(--cat-clarity);
+	--radius-brand: var(--radius);
+}

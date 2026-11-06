@@ -3,29 +3,34 @@ import { getContrastingTextColor } from './utils';
 
 export type { LintKind } from 'harper.js';
 
-// First, define the color map as a constant
+// Flowgram's four issue categories. Tuned to stay visible on both light and dark pages.
+const SPELLING = '#E5532D'; // Coral
+const GRAMMAR = '#3D8BFF'; // Sky
+const CLARITY = '#E69A0B'; // Amber
+const STYLE = '#8F63F0'; // Violet
+
 const LINT_KIND_COLORS = {
-	Agreement: '#228B22', // Forest green
-	BoundaryError: '#8B4513', // Saddle brown
-	Capitalization: '#540D6E', // Deep purple
-	Eggcorn: '#FF8C00', // Dark orange
-	Enhancement: '#0EAD69', // Green
-	Formatting: '#7D3C98', // Amethyst purple
-	Grammar: '#9B59B6', // Medium purple
-	Malapropism: '#C71585', // Medium violet red
-	Miscellaneous: '#3BCEAC', // Turquoise
-	Nonstandard: '#008B8B', // Dark cyan
-	Punctuation: '#D4850F', // Dark orange
-	Readability: '#2E8B57', // Sea green
-	Redundancy: '#4682B4', // Steel blue
-	Regionalism: '#C061CB', // Vibrant purple
-	Repetition: '#00A67C', // Green-cyan
-	Spelling: '#EE4266', // Pink-red
-	Style: '#FFD23F', // Yellow
-	Typo: '#FF6B35', // Vibrant orange-red
-	Usage: '#1E90FF', // Dodger blue
-	WordChoice: '#228B22', // Forest green
-	WordOrder: '#4D4DFF', // Royal blue
+	Agreement: GRAMMAR,
+	BoundaryError: GRAMMAR,
+	Capitalization: GRAMMAR,
+	Eggcorn: SPELLING,
+	Enhancement: STYLE,
+	Formatting: GRAMMAR,
+	Grammar: GRAMMAR,
+	Malapropism: SPELLING,
+	Miscellaneous: STYLE,
+	Nonstandard: GRAMMAR,
+	Punctuation: GRAMMAR,
+	Readability: CLARITY,
+	Redundancy: CLARITY,
+	Regionalism: STYLE,
+	Repetition: CLARITY,
+	Spelling: SPELLING,
+	Style: STYLE,
+	Typo: SPELLING,
+	Usage: GRAMMAR,
+	WordChoice: CLARITY,
+	WordOrder: GRAMMAR,
 } as const satisfies Record<LintKind, string>;
 
 // Export the array of all lint kind names

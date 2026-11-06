@@ -1,0 +1,26 @@
+expr main (nestled in the heart of)
+
+let message "Say where it is plainly. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `nestled in the heart of` with `in the middle of`."
+let kind "Style"
+let becomes "in the middle of"
+
+# True positives
+test "The inn is nestled in the heart of the old town." "The inn is in the middle of the old town."
+test "A cafe nestled in the heart of Rome serves pasta." "A cafe in the middle of Rome serves pasta."
+test "Nestled in the heart of the valley, it is quiet." "In the middle of the valley, it is quiet."
+test "Our office is nestled in the heart of downtown." "Our office is in the middle of downtown."
+test "The shop, nestled in the heart of the market, opens at nine." "The shop, in the middle of the market, opens at nine."
+test "They live nestled in the heart of the forest." "They live in the middle of the forest."
+test "It sits nestled in the heart of the park." "It sits in the middle of the park."
+test "We stayed at a hotel nestled in the heart of Paris." "We stayed at a hotel in the middle of Paris."
+
+# True negatives
+allows "The inn is in the middle of the old town."
+allows "The cat nestled in the blanket."
+allows "She nestled into the sofa."
+allows "The heart of the matter is cost."
+allows "He has a kind heart."
+allows "A bird nestled in the hedge."
+allows "In the heart of winter, we stayed in."
+allows "The baby nestled against her."

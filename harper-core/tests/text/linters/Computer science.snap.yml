@@ -897,6 +897,17 @@ Suggest:
 
 
 
+Lint:    Style (31 priority)
+Message: |
+     274 | also for network coding. Codes are studied for the purpose of designing
+         |                                            ^~~~~~~~~~~~~~~~~~ `for` is shorter. Shorter is clearer.
+     275 | efficient and reliable data transmission methods.
+Suggest:
+  - Replace with: “for”
+  - Replace with: “to”
+
+
+
 Lint:    Capitalization (127 priority)
 Message: |
      277 | #### Data structures and algorithms
@@ -1066,6 +1077,16 @@ Suggest:
 
 
 
+Lint:    Style (31 priority)
+Message: |
+     354 | Software engineering is the study of designing, implementing, and modifying the
+     355 | software in order to ensure it is of high quality, affordable, maintainable, and
+         |          ^~~~~~~~~~~ `in order to` can usually be just `to`. Shorter is clearer.
+Suggest:
+  - Replace with: “to”
+
+
+
 Lint:    Punctuation (31 priority)
 Message: |
      360 | maintenance. For example software testing, systems engineering, technical debt
@@ -1214,6 +1235,16 @@ Suggest:
 
 
 
+Lint:    Style (31 priority)
+Message: |
+     440 |   and Samuel Morse's insight: there are only two objects that a computer has to
+     441 |   deal with in order to represent "anything".[note 4]
+         |             ^~~~~~~~~~~ `in order to` can usually be just `to`. Shorter is clearer.
+Suggest:
+  - Replace with: “to”
+
+
+
 Lint:    Spelling (127 priority)
 Message: |
      444 |   > easily distinguishable states, such as "on/off", "magnetized/de-magnetized",
@@ -1221,6 +1252,16 @@ Message: |
      445 |   > "high-voltage/low-voltage", etc.).
 Suggest:
   - Replace with: “demagnetized”
+
+
+
+Lint:    Style (31 priority)
+Message: |
+     446 | - Alan Turing's insight: there are only five actions that a computer has to
+     447 |   perform in order to do "anything".
+         |           ^~~~~~~~~~~ `in order to` can usually be just `to`. Shorter is clearer.
+Suggest:
+  - Replace with: “to”
 
 
 

@@ -1,0 +1,26 @@
+expr main [(rich tapestry of), (vibrant tapestry of), (intricate tapestry of), (diverse tapestry of), (complex tapestry of), (cultural tapestry of)]
+
+let message "Name what is there instead of a `tapestry`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `rich tapestry of` and similar with `mix of`."
+let kind "Style"
+let becomes ["mix of", "range of"]
+
+# True positives
+test "The city has a rich tapestry of cultures." "The city has a mix of cultures."
+test "It is a vibrant tapestry of sounds." "It is a mix of sounds."
+test "She wove an intricate tapestry of clues." "She wove an mix of clues."
+test "The park is a diverse tapestry of plants." "The park is a mix of plants."
+test "Life is a complex tapestry of choices." "Life is a mix of choices."
+test "The coast is a cultural tapestry of traditions." "The coast is a mix of traditions."
+test "A rich tapestry of voices filled the hall." "A mix of voices filled the hall."
+test "Truly a vibrant tapestry of flavors." "Truly a mix of flavors."
+
+# True negatives
+allows "The city has a mix of cultures."
+allows "The museum owns a medieval tapestry."
+allows "A tapestry hung on the wall."
+allows "She repaired the old tapestry."
+allows "The rich man bought a boat."
+allows "A vibrant color filled the room."
+allows "An intricate lock secured the door."
+allows "He sells tapestry in Paris."

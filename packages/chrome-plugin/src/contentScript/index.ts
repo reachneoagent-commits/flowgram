@@ -24,12 +24,6 @@ const fw = new LintFramework(
 		getDelay: () => ProtocolClient.getDelay(),
 		openOptions: () => ProtocolClient.openOptions(),
 		addToUserDictionary: (words) => ProtocolClient.addToUserDictionary(words),
-		reportError: (lint: UnpackedLint, ruleId: string) =>
-			ProtocolClient.openReportError(
-				padWithContext(lint.source, lint.span.start, lint.span.end, 15),
-				ruleId,
-				'',
-			),
 		setRuleEnabled: async (ruleId, enabled) => {
 			await ProtocolClient.setRuleEnabled(ruleId, enabled);
 			fw.update();

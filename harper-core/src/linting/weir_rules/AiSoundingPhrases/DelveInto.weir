@@ -1,0 +1,26 @@
+expr main (delve into)
+
+let message "Prefer a plainer verb than `delve into`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `delve into` with a simpler verb."
+let kind "Style"
+let becomes ["explore", "examine"]
+
+# True positives
+test "We will delve into the data next week." "We will explore the data next week."
+test "The team delve into the results at noon." "The team explore the results at noon."
+test "Delve into the details before you decide." "Explore the details before you decide."
+test "Please delve into this topic in the report." "Please explore this topic in the report."
+test "Today they delve into the budget again." "Today they explore the budget again."
+test "She wanted to delve into the archive after lunch." "She wanted to explore the archive after lunch."
+test "Nobody asked us to delve into the old logs." "Nobody asked us to explore the old logs."
+test "The paper may delve into the question, but not answer it." "The paper may explore the question, but not answer it."
+
+# True negatives
+allows "We looked at the data next week."
+allows "The team reviewed the results at noon."
+allows "Dig into the details before you decide."
+allows "She delved deeper than anyone expected."
+allows "He loves to delve."
+allows "The mine goes deep into the hill."
+allows "They explored the archive after lunch."
+allows "Into the woods we went."

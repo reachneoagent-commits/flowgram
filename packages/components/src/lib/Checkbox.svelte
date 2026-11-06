@@ -14,9 +14,9 @@ const dispatch = createEventDispatcher<{ click: MouseEvent }>();
 
 $: ({ class: restClass, ...restProps } = $$restProps);
 const baseClasses =
-	'size-4 flex-none grid place-items-center rounded border p-0 text-white [&>svg]:size-[11px] [&>svg]:flex-none';
-const uncheckedClasses = 'border-black/25 bg-[#fff]';
-const checkedClasses = 'border-black/15 bg-[var(--settings-accent,#2a6bd8)]';
+	'size-5 flex-none grid place-items-center rounded-md border-2 p-0 text-[#2b2c23] [&>svg]:size-[13px] [&>svg]:flex-none';
+const uncheckedClasses = 'border-[var(--settings-ink-3,#6b6e60)] bg-[var(--settings-surface,#fff)]';
+const checkedClasses = 'border-[#2b2c23] bg-[var(--settings-accent,#b8e62e)]';
 
 $: classes = [
 	'checkbox',

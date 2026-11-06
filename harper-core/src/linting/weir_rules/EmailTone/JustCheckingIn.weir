@@ -1,0 +1,27 @@
+expr main [(just checking in), (just following up), (just circling back), (just touching base)]
+
+let message "`Just` softens your message. State the follow-up plainly."
+let description "Suggests warmer, clearer wording than `just checking in` in emails."
+let kind "Style"
+let becomes ["following up"]
+
+# True positives
+test "We think just checking in the plan is solid." "We think following up the plan is solid."
+test "My manager said just following up the budget." "My manager said following up the budget."
+test "She wrote just circling back the summary." "She wrote following up the summary."
+test "After the call, just touching base the team agreed." "After the call, following up the team agreed."
+test "Maybe just checking in the results will help." "Maybe following up the results will help."
+test "We think just following up the plan is solid." "We think following up the plan is solid."
+test "My manager said just circling back the budget." "My manager said following up the budget."
+test "She wrote just touching base the summary." "She wrote following up the summary."
+test "Honestly, just checking in this is fine." "Honestly, following up this is fine."
+test "Just checking in the plan." "Following up the plan."
+
+# True negatives
+allows "I am following up on the quote."
+allows "He checked in at the hotel."
+allows "Checking in now."
+allows "We just arrived."
+allows "She is just a friend."
+allows "The base is touched by rain."
+allows "The report is ready."

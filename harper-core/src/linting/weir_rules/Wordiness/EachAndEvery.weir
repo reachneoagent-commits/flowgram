@@ -1,0 +1,27 @@
+expr main (each and every)
+
+let message "`each and every` is redundant. Shorter is clearer."
+let description "Replaces wordy phrases like `each and every` with a shorter form."
+let kind "Style"
+let becomes ["every", "each"]
+
+# True positives
+test "We think each and every the plan is solid." "We think every the plan is solid."
+test "Yesterday each and every the draft was sent." "Yesterday every the draft was sent."
+test "We think each and every the plan is solid." "We think every the plan is solid."
+test "Yesterday each and every the draft was sent." "Yesterday every the draft was sent."
+test "We think each and every the plan is solid." "We think every the plan is solid."
+test "Yesterday each and every the draft was sent." "Yesterday every the draft was sent."
+test "We think each and every the plan is solid." "We think every the plan is solid."
+test "Yesterday each and every the draft was sent." "Yesterday every the draft was sent."
+test "We think each and every the plan is solid." "We think every the plan is solid."
+test "Each and every the plan." "Every the plan."
+
+# True negatives
+allows "Each person signed in."
+allows "Every person signed in."
+allows "Each of them and every one of us agreed."
+allows "Each, and every other item, was checked."
+allows "She and each of her friends left."
+allows "The report is ready."
+allows "Send the file tomorrow."

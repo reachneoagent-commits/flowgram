@@ -1,0 +1,27 @@
+expr main [(at your earliest convenience), (at your earliest opportunity)]
+
+let message "Vague deadlines get ignored. Name a date."
+let description "Suggests warmer, clearer wording than `at your earliest convenience` in emails."
+let kind "Style"
+let becomes ["soon"]
+
+# True positives
+test "We think at your earliest convenience the plan is solid." "We think soon the plan is solid."
+test "My manager said at your earliest opportunity the budget." "My manager said soon the budget."
+test "I noticed at your earliest convenience the update." "I noticed soon the update."
+test "Honestly, at your earliest opportunity this is fine." "Honestly, soon this is fine."
+test "She wrote at your earliest convenience the summary." "She wrote soon the summary."
+test "After the call, at your earliest opportunity the team agreed." "After the call, soon the team agreed."
+test "Maybe at your earliest convenience the results will help." "Maybe soon the results will help."
+test "We think at your earliest opportunity the plan is solid." "We think soon the plan is solid."
+test "Yesterday at your earliest convenience the draft was sent." "Yesterday soon the draft was sent."
+test "At your earliest convenience the plan." "Soon the plan."
+
+# True negatives
+allows "Reply by Friday."
+allows "Call at your convenience."
+allows "At the earliest, we ship Monday."
+allows "It is a convenience store."
+allows "She took the first opportunity."
+allows "Your convenience matters."
+allows "The report is ready."

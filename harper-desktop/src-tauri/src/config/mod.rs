@@ -29,6 +29,8 @@ pub struct Config {
     /// Failed attempts also count toward the automatic 24-hour interval.
     pub last_update_check: Option<u64>,
     pub highlighter_service_enabled: bool,
+    /// Preferred UI theme: "light", "dark", or "system" (follows OS preference).
+    pub theme: String,
 }
 
 impl Config {
@@ -42,9 +44,11 @@ impl Config {
             auto_enable_new_apps: false,
             onboarding_completed: false,
             debounce_ms: 0,
-            auto_update: true,
+            // Off until Flowgram has its own signed update feed; the inherited feed is Harper's.
+            auto_update: false,
             last_update_check: None,
             highlighter_service_enabled: true,
+            theme: "system".to_string(),
         }
     }
 
@@ -63,7 +67,7 @@ impl Config {
 
     /// Resolves an app's enabled state, registering unknown apps when automatic enablement is on.
     /// Existing disabled entries are never re-enabled; removed entries can be discovered again.
-    /// Harper itself is excluded from discovery, but explicitly configured entries are respected.
+    /// Flowgram itself is excluded from discovery, but explicitly configured entries are respected.
     /// The caller is responsible for persisting any newly registered integration.
     pub fn resolve_integration(&mut self, bundle_id: &str) -> bool {
         let bundle_id = bundle_id.trim();
@@ -198,6 +202,7 @@ impl Config {
             "auto_update": self.auto_update,
             "last_update_check": self.last_update_check,
             "highlighter_service_enabled": self.highlighter_service_enabled,
+            "theme": &self.theme,
         }))
     }
 
@@ -220,7 +225,7 @@ impl Config {
             onboarding_completed: deserialize_optional_field(object, "onboarding_completed")?
                 .unwrap_or(true),
             debounce_ms: deserialize_optional_field(object, "debounce_ms")?.unwrap_or(0),
-            auto_update: deserialize_optional_field(object, "auto_update")?.unwrap_or(true),
+            auto_update: deserialize_optional_field(object, "auto_update")?.unwrap_or(false),
             last_update_check: deserialize_optional_field::<Option<u64>>(
                 object,
                 "last_update_check",
@@ -231,6 +236,8 @@ impl Config {
                 "highlighter_service_enabled",
             )?
             .unwrap_or(true),
+            theme: deserialize_optional_field(object, "theme")?
+                .unwrap_or_else(|| "system".to_string()),
         })
     }
 }
@@ -351,7 +358,7 @@ mod tests {
 
         let deserialized = Config::deserialize_main(&value.to_string()).unwrap();
 
-        assert!(deserialized.auto_update);
+        assert!(!deserialized.auto_update);
         assert_eq!(deserialized.last_update_check, None);
     }
 

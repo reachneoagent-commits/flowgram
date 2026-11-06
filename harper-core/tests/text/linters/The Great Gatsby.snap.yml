@@ -1645,6 +1645,16 @@ Message: |
 
 
 
+Lint:    Style (31 priority)
+Message: |
+    1404 | tortuously, fashionably, and keeping in the corners—and a great number of single
+         |                                                         ^~~~~~~~~~~~~~~~~ `many` is shorter. Shorter is clearer.
+    1405 | girls dancing individualistically or relieving the orchestra for a moment of the
+Suggest:
+  - Replace with: “many”
+
+
+
 Lint:    Formatting (255 priority)
 Message: |
     1408 | jazz, and between the numbers people were doing ‘‘stunts” all over the garden,
@@ -1791,6 +1801,16 @@ Message: |
          |                                ^~~~~~~~ Did you mean the closed compound `someone`?
 Suggest:
   - Replace with: “someone”
+
+
+
+Lint:    Style (31 priority)
+Message: |
+    1559 | engaged in song. She had drunk a quantity of champagne, and during the course of
+         |                                                             ^~~~~~~~~~~~~~~~~~~~ `during` is shorter. Shorter is clearer.
+    1560 | her song she had decided, ineptly, that everything was very, very sad—she was
+Suggest:
+  - Replace with: “during”
 
 
 
@@ -2039,6 +2059,17 @@ Message: |
          | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     1792 | smile turned to the world and yet satisfy the demands of her hard, jaunty body.
          | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ This sentence is 48 words long.
+
+
+
+Lint:    Style (31 priority)
+Message: |
+    1790 | at a disadvantage and, given this unwillingness, I suppose she had begun dealing
+    1791 | in subterfuges when she was very young in order to keep that cool, insolent
+         |                                        ^~~~~~~~~~~ `in order to` can usually be just `to`. Shorter is clearer.
+    1792 | smile turned to the world and yet satisfy the demands of her hard, jaunty body.
+Suggest:
+  - Replace with: “to”
 
 
 
@@ -3016,6 +3047,15 @@ Suggest:
   - Replace with: “gnawing”
   - Replace with: “gearings”
   - Replace with: “gratings”
+
+
+
+Lint:    Style (31 priority)
+Message: |
+    2041 | interested. I hadn’t asked Jordan to tea in order to discuss Mr. Jay Gatsby. I
+         |                                          ^~~~~~~~~~~ `in order to` can usually be just `to`. Shorter is clearer.
+Suggest:
+  - Replace with: “to”
 
 
 
@@ -5321,6 +5361,16 @@ Message: |
     4150 | life and family institutions, and next they’ll throw everything overboard and
 Suggest:
   - Insert “,”
+
+
+
+Lint:    Style (31 priority)
+Message: |
+    4158 | “I know I’m not very popular. I don’t give big parties. I suppose you’ve got to
+    4159 | make your house into a pigsty in order to have any friends—in the modern world.”
+         |                               ^~~~~~~~~~~ `in order to` can usually be just `to`. Shorter is clearer.
+Suggest:
+  - Replace with: “to”
 
 
 

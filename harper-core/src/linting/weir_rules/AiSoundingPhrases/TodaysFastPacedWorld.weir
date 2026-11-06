@@ -1,0 +1,26 @@
+expr main [(in today's fast-paced world), (in today's digital age), (in today's ever-changing world), (in today's modern world), (in this day and age)]
+
+let message "Cut the stock opener and say `today`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces stock openers like `in today's fast-paced world` with `today`."
+let kind "Style"
+let becomes "today"
+
+# True positives
+test "In today's fast-paced world, time is short." "Today, time is short."
+test "In today's digital age, we all type more." "Today, we all type more."
+test "In today's ever-changing world, plans shift." "Today, plans shift."
+test "In today's modern world, phones are common." "Today, phones are common."
+test "In this day and age, nobody waits." "Today, nobody waits."
+test "We know that in today's fast-paced world, mail is instant." "We know that today, mail is instant."
+test "Sadly, in today's digital age, privacy is rare." "Sadly, today, privacy is rare."
+test "Note that in this day and age, speed wins." "Note that today, speed wins."
+
+# True negatives
+allows "Today, time is short."
+allows "The fast-paced game ended early."
+allows "In the digital archive, we found a map."
+allows "She lives in the modern wing of the museum."
+allows "In this day, we rested."
+allows "In the world cup, Brazil won."
+allows "What a fast-paced film!"
+allows "In the age of sail, ships were slow."

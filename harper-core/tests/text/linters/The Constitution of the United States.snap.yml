@@ -22,6 +22,16 @@ Message: |
 
 
 
+Lint:    Style (31 priority)
+Message: |
+       5 | **We the People** of the United States, in Order to form a more perfect Union,
+         |                                         ^~~~~~~~~~~ `in order to` can usually be just `to`. Shorter is clearer.
+       6 | establish Justice, insure domestic Tranquility, provide for the common defence,
+Suggest:
+  - Replace with: “to”
+
+
+
 Lint:    Spelling (63 priority)
 Message: |
        6 | establish Justice, insure domestic Tranquility, provide for the common defence,
@@ -698,6 +708,16 @@ Message: |
          | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      269 | Person.
          | ~~~~~~~ This sentence is 54 words long.
+
+
+
+Lint:    Style (31 priority)
+Message: |
+     266 | States now existing shall think proper to admit, shall not be prohibited by the
+     267 | Congress prior to the Year one thousand eight hundred and eight, but a Tax or
+         |          ^~~~~~~~ `before` is simpler than `prior to`. Shorter is clearer.
+Suggest:
+  - Replace with: “before”
 
 
 
@@ -1715,6 +1735,16 @@ Message: |
          | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      675 | without its Consent, shall be deprived of its equal Suffrage in the Senate.
          | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ This sentence is 143 words long.
+
+
+
+Lint:    Style (31 priority)
+Message: |
+     672 | Congress; Provided that no Amendment which may be made prior to the Year One
+         |                                                        ^~~~~~~~ `before` is simpler than `prior to`. Shorter is clearer.
+     673 | thousand eight hundred and eight shall in any Manner affect the first and
+Suggest:
+  - Replace with: “before”
 
 
 

@@ -1,9 +1,9 @@
 <script lang="ts">
 import { onMount, tick } from 'svelte';
 import Button from './Button.svelte';
+import FlowgramMark from './FlowgramMark.svelte';
 import ChevronLeftIcon from './icons/ChevronLeftIcon.svelte';
 import ChevronRightIcon from './icons/ChevronRightIcon.svelte';
-import Panel from './Panel.svelte';
 
 /**
  * Slide deck shell: `slideProgress` runs from 0 (first slide) to 1 (last slide)
@@ -27,6 +27,11 @@ export let nextDisabled = false;
 export let showAside = false;
 
 let heading: HTMLElement;
+
+/** Titles read as plain text plus one serif-italic accent word (the brand's headline pattern). */
+$: words = title.trim().split(/\s+/);
+$: leadWords = words.length > 1 ? words.slice(0, -1).join(' ') : '';
+$: accentWord = words[words.length - 1] ?? '';
 
 /**
  * Number of flashes played. Each increment recreates the flash overlay through
@@ -92,51 +97,54 @@ function handleKeydown(event: KeyboardEvent) {
 }
 </script>
 
-<main class="grid h-dvh grid-cols-1 place-items-center overflow-y-auto bg-[#f1ede5] px-6 py-6 text-[var(--marketing-ink)] scheme-light [scrollbar-gutter:stable_both-edges] sm:py-12 dark:bg-stone-950 dark:text-stone-100 dark:scheme-dark">
+<main class="grid h-dvh grid-cols-1 place-items-center overflow-y-auto bg-[#dce99b] px-6 py-6 text-foreground scheme-light [scrollbar-gutter:stable_both-edges] sm:py-10 dark:bg-[#0c0d07] dark:scheme-dark">
 	<!-- Viewport-based width keeps the panel unchanged when reserving scrollbar gutters. -->
-	<div class="relative w-[calc(100vw-3rem)] max-w-[64rem]">
-		<div class="overflow-hidden rounded-lg border border-black/15 bg-[#fbfaf7] shadow-sm dark:border-white/15 dark:bg-stone-900">
+	<div class="relative w-[calc(100vw-3rem)] max-w-[60rem]">
+		<div class="overflow-hidden rounded-[28px] border border-border bg-background text-foreground shadow-[0_30px_60px_-30px_rgba(43,44,35,0.45)]">
 			<div
-				class="h-1 bg-black/5 dark:bg-white/10"
+				class="h-1.5 bg-muted"
 				role="progressbar"
-				aria-label="Slide deck progress"
+				aria-label="Setup progress"
 				aria-valuemin={0}
 				aria-valuemax={100}
 				aria-valuenow={Math.round(slideProgress * 100)}
 			>
 				<div
-					class="h-full bg-linear-to-b from-[var(--marketing-amber-soft)] to-[var(--marketing-amber)] transition-[width] duration-200 ease-out motion-reduce:transition-none"
+					class="h-full bg-primary transition-[width] duration-200 ease-out motion-reduce:transition-none"
 					style:width={`${slideProgress * 100}%`}
 				></div>
 			</div>
 
-			<div class="relative overflow-hidden p-3 sm:p-6">
-				<Panel class="border-black/10! shadow-sm dark:border-white/10! dark:bg-stone-800!">
-					<div class="grid min-h-112 p-6 sm:p-10">
-						{#key slideProgress}
-							<div class={showAside ? 'grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,16rem)]' : ''}>
-								<div class="min-w-0 self-start">
-									<svelte:element
-										this={slideProgress === 0 ? 'h1' : 'h2'}
-										bind:this={heading}
-										tabindex="-1"
-										id="step-heading"
-										class="m-0! p-0! font-[family-name:Domine,serif] font-semibold! leading-tight! tracking-normal! text-pretty focus:outline-none text-4xl! sm:text-5xl!"
-									>
-										{title}
-									</svelte:element>
-									<p class="mx-0! mb-0! font-[family-name:Domine,serif] font-medium leading-relaxed! text-pretty text-[var(--marketing-ink-2)] max-w-2xl dark:text-stone-300 text-lg sm:text-xl mt-6!">{lede}</p>
-									<slot />
-								</div>
-								{#if showAside}
-									<div class="flex min-w-0 items-center justify-center self-stretch py-3 md:px-3">
-										<slot name="aside" />
-									</div>
-								{/if}
+			<div class="relative overflow-hidden px-8 pt-7 pb-8 sm:px-14">
+				<div class="flex items-center gap-2.5 text-foreground">
+					<FlowgramMark className="h-6 w-auto" />
+					<span class="text-2xl leading-none font-semibold tracking-[-0.05em]">flowgram</span>
+				</div>
+
+				<div class="grid min-h-96 pt-10">
+					{#key slideProgress}
+						<div class={showAside ? 'grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,16rem)]' : ''}>
+							<div class="min-w-0 self-start">
+								<svelte:element
+									this={slideProgress === 0 ? 'h1' : 'h2'}
+									bind:this={heading}
+									tabindex="-1"
+									id="step-heading"
+									class="m-0! p-0! text-5xl! font-medium! leading-[0.98]! tracking-[-0.05em]! text-pretty text-foreground focus:outline-none sm:text-6xl!"
+								>
+									{#if leadWords}{leadWords}&nbsp;{/if}<em class="font-serif text-[1.08em] font-normal italic tracking-[-0.03em]">{accentWord}</em>
+								</svelte:element>
+								<p class="mx-0! mb-0! mt-6! max-w-xl text-lg leading-relaxed! font-normal text-pretty text-muted-foreground sm:text-xl">{lede}</p>
+								<slot />
 							</div>
-						{/key}
-					</div>
-				</Panel>
+							{#if showAside}
+								<div class="flex min-w-0 items-center justify-center self-stretch py-3 md:px-3">
+									<slot name="aside" />
+								</div>
+							{/if}
+						</div>
+					{/key}
+				</div>
 
 				{#key flashCount}
 					{#if flashCount > 0}
@@ -145,21 +153,28 @@ function handleKeydown(event: KeyboardEvent) {
 				{/key}
 			</div>
 
-			<div class="flex items-center justify-end gap-2 border-t border-black/10 bg-[#fbfaf7] px-6 pt-3 pb-4 dark:border-white/10 dark:bg-stone-900">
+			<div class="flex items-center justify-end gap-2.5 border-t border-border bg-muted px-8 py-4 sm:px-14">
 				{#if slideProgress > 0}
-					<Button size="md" color="white" class="bg-white! text-gray-900! hover:bg-gray-100! motion-reduce:transition-none dark:border-white/15! dark:bg-stone-800! dark:text-stone-100! dark:hover:bg-stone-700!" aria-label="Back" on:click={() => changeStep(-1)}>
+					<button
+						type="button"
+						class="inline-grid size-11 cursor-pointer place-items-center rounded-xl border border-input bg-background text-foreground transition-colors hover:bg-muted focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+						aria-label="Back"
+						on:click={() => changeStep(-1)}
+					>
 						<ChevronLeftIcon className="size-4" />
-					</Button>
+					</button>
 				{/if}
 				{#if slideProgress < 1}
-					<Button size="md" color="primary" class="bg-primary-600! text-white! hover:bg-primary-700! focus:ring-primary-300! motion-reduce:transition-none" disabled={nextDisabled}
+					<Button size="lg" color="primary" class="gap-3 rounded-xl py-1.5! pr-1.5! pl-5! text-base! font-medium! motion-reduce:transition-none" disabled={nextDisabled}
 						onpointerdown={(event: PointerEvent) => {
 							if (event.button === 0 && canAdvance()) flashCount += 1;
 						}}
 						onclick={(event: MouseEvent) => changeStep(1, event.detail === 0)}
 					>
 						<span>Next</span>
-						<ChevronRightIcon className="size-5" />
+						<span class="inline-grid size-9 place-items-center rounded-lg bg-[#2b2c23] text-white">
+							<ChevronRightIcon className="size-4" />
+						</span>
 					</Button>
 				{/if}
 			</div>

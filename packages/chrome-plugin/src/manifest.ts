@@ -25,8 +25,6 @@ export function makeExtensionCSP(isDev: boolean): string {
 		styleSrc.push('http://localhost:5173', 'http://127.0.0.1:*');
 	}
 
-	connectSrc.push('https://writewithharper.com');
-
 	// Assemble the semicolon-delimited CSP
 	return `${[
 		`script-src ${scriptSrc.join(' ')}`,
@@ -38,7 +36,7 @@ export function makeExtensionCSP(isDev: boolean): string {
 }
 
 export default defineManifest({
-	name: `Private Grammar & Spell Checker - Harper${isDev ? ' ➡️ Dev' : ''}`,
+	name: `Flowgram: Private Grammar & Spell Checker${isDev ? ' ➡️ Dev' : ''}`,
 	description: packageData.description,
 	version: packageData.version,
 	manifest_version: 3,
@@ -48,7 +46,7 @@ export default defineManifest({
 	options_page: 'options.html',
 	browser_specific_settings: {
 		gecko: {
-			id: 'harper@writewithharper.com',
+			id: 'extension@flowgram.app',
 			strict_min_version: '146.0',
 		},
 	},
@@ -94,5 +92,4 @@ export default defineManifest({
 	content_security_policy: {
 		extension_pages: makeExtensionCSP(isDev),
 	},
-	host_permissions: ['https://writewithharper.com/*'],
 });

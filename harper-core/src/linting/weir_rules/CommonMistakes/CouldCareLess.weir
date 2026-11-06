@@ -1,0 +1,27 @@
+expr main <(could care less), could>
+
+let message "`I could care less` means you do care. The usual phrase is `couldn't care less`."
+let description "Fixes the common mistake `could care less`."
+let kind "Usage"
+let becomes "couldn't"
+
+# True positives
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Honestly I could care less about it." "Honestly I couldn't care less about it."
+test "Could care less the plan." "Couldn't care less the plan."
+
+# True negatives
+allows "I couldn't care less."
+allows "She could care for him."
+allows "He could care for the plants."
+allows "I care less than before."
+allows "We could do less."
+allows "They could not care less."
+allows "The report is ready."

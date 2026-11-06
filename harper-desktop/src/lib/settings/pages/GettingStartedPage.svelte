@@ -1,14 +1,15 @@
 <script lang="ts">
 import { isTauri } from '@tauri-apps/api/core';
 import { platform } from '@tauri-apps/plugin-os';
-import { Button, SlideDeck } from 'components';
+import { Button, SlideDeck, Toggle } from 'components';
 import { onMount } from 'svelte';
 import { type AccessibilityPermissionStatus, Client, type Integration } from '$lib/client';
 import AppIcon from '../components/AppIcon.svelte';
+import AppPickerModal from '../components/AppPickerModal.svelte';
 
 /** Slide identities determine setup gates; only the welcome and test drive need no action. */
 type OnboardingSlide = {
-	id: 'welcome' | 'accessibility' | 'integration' | 'test-drive' | 'ready';
+	id: 'welcome' | 'accessibility' | 'apps' | 'browser' | 'test-drive' | 'ready';
 	title: string;
 	lede: string;
 };
@@ -16,28 +17,33 @@ type OnboardingSlide = {
 const allSlides: OnboardingSlide[] = [
 	{
 		id: 'welcome',
-		title: 'Welcome',
-		lede: "Before you can start writing with Harper, we need to do a little housekeeping.\n\nDon't worry, this should only take a minute.",
+		title: 'Welcome to Flowgram',
+		lede: "Before you can start writing with Flowgram, we need to do a little housekeeping.\n\nDon't worry, this should only take a minute.",
 	},
 	{
 		id: 'accessibility',
 		title: 'Accessibility',
-		lede: 'To be able to read and write text to your favorite text editors, you need to grant Harper the permission to do so.\n\nNone of your text will leave your device.',
+		lede: 'To be able to read and write text to your favorite text editors, you need to grant Flowgram the permission to do so.\n\nNone of your text will leave your device.',
 	},
 	{
-		id: 'integration',
-		title: 'Enable TextEdit',
-		lede: 'The Harper community is constantly adding support for new text editors. If we haven\'t marked a text editor as "supported" already, you can override this option yourself.\n\nLet\'s try that now. Go ahead and enable "TextEdit". Once you do, Harper will start checking your grammar in that app.',
+		id: 'apps',
+		title: 'Choose your apps',
+		lede: 'Flowgram checks your writing in the apps you switch on. Notes, Mail, Messages and TextEdit are ready by default.\n\nTurn any off, add your own, or skip this and change it later in Settings → Integrations.',
+	},
+	{
+		id: 'browser',
+		title: 'Add the browser extension',
+		lede: 'To check your writing on websites and in webmail, add the Flowgram extension to Chrome, Edge or Brave.\n\nThis is optional. You can do it later from Settings → Integrations.',
 	},
 	{
 		id: 'test-drive',
-		title: 'Try Harper',
-		lede: 'Now that you\'ve enabled TextEdit, go ahead and open it. Write something like, "This is an test."\n\nYou should see Harper jump in to fix that mistake.',
+		title: 'Try Flowgram',
+		lede: 'Open TextEdit and write something like, "This is an test."\n\nYou should see Flowgram jump in to fix that mistake.',
 	},
 	{
 		id: 'ready',
 		title: 'Ready',
-		lede: "Okay! Now we're ready to go.\n\nDon't let your dreams be dreams. Write anything, anywhere and Harper will be there to catch your mistakes.",
+		lede: "Okay! Now we're ready to go.\n\nDon't let your dreams be dreams. Write anything, anywhere and Flowgram will be there to catch your mistakes.",
 	},
 ];
 
@@ -47,12 +53,31 @@ let step = 0;
 let isMacOS = false;
 let accessibilityStatus: AccessibilityPermissionStatus | null = null;
 let setupError = '';
+let copiedResetCommand = false;
+
+/** Clears a stale macOS Accessibility entry (for example after an update changed the app's signature). */
+const RESET_COMMAND = 'tccutil reset Accessibility com.flowgram.app';
+
+async function copyResetCommand() {
+	try {
+		await navigator.clipboard.writeText(RESET_COMMAND);
+		copiedResetCommand = true;
+		setTimeout(() => (copiedResetCommand = false), 2000);
+	} catch (error) {
+		console.error('Unable to copy the reset command.', error);
+	}
+}
 let isPreparingService = true;
 let hasRequestedAccessibility = false;
 let integrations: Integration[] = [];
 let integrationsError = '';
 let isLoadingIntegrations = true;
-let isEnablingTextEdit = false;
+let extensionFolder = '';
+let isPreparingExtension = false;
+let extensionError = '';
+let isSavingApps = false;
+let appPickerOpen = false;
+let newBundleId = '';
 let isLaunchingTextEdit = false;
 let testDriveError = '';
 let isCompletingOnboarding = false;
@@ -60,30 +85,65 @@ let onboardingError = '';
 
 $: slides = allSlides.filter((slide) => slide.id !== 'accessibility' || isMacOS);
 $: textEditIntegration = integrations.find((item) => item.bundle_id === 'com.apple.TextEdit');
-$: isTextEditEnabled = textEditIntegration?.enabled === true;
 $: accessibilityReady =
 	(!isMacOS || accessibilityStatus === 'Granted') && !isPreparingService && !setupError;
-$: integrationReady =
-	isTextEditEnabled && !isLoadingIntegrations && !isEnablingTextEdit && !integrationsError;
-$: nextDisabled = !canAdvance(slides[step].id, accessibilityReady, integrationReady, isMacOS);
+$: existingBundleIds = integrations.map((item) => item.bundle_id);
+$: nextDisabled = !canAdvance(slides[step].id, accessibilityReady, isMacOS);
 
 onMount(() => {
 	// Use the native platform in Tauri; user-agent detection is only for browser previews.
 	isMacOS = isTauri() ? platform() === 'macos' : navigator.userAgent.includes('Macintosh');
 	void prepareService();
 	void loadIntegrations();
+
+	// Watch for the permission switch being turned on, so nobody has to press a recheck button.
+	const watcher = window.setInterval(() => void watchAccessibility(), 1000);
+	window.addEventListener('focus', watchAccessibility);
+	return () => {
+		window.clearInterval(watcher);
+		window.removeEventListener('focus', watchAccessibility);
+	};
 });
 
-/** Gate service startup on Welcome outside macOS, or on Accessibility on macOS; the trial is optional. */
+let isWatchingAccessibility = false;
+
+/** Quietly polls macOS; once access is on, starts the service and moves to the next step. */
+async function watchAccessibility() {
+	if (
+		isWatchingAccessibility ||
+		isPreparingService ||
+		!isMacOS ||
+		accessibilityReady ||
+		slides[step]?.id !== 'accessibility'
+	) {
+		return;
+	}
+
+	isWatchingAccessibility = true;
+	try {
+		if ((await Client.getAccessibilityPermissionStatus()) !== 'Granted') return;
+		await prepareService();
+		if (accessibilityReady && slides[step]?.id === 'accessibility') {
+			// Let the "granted" message show for a moment before moving on.
+			await new Promise((resolve) => setTimeout(resolve, 900));
+			if (slides[step]?.id === 'accessibility') step++;
+		}
+	} catch (error) {
+		console.error('Unable to check Accessibility permission.', error);
+	} finally {
+		isWatchingAccessibility = false;
+	}
+}
+
+/** Gate service startup on Welcome outside macOS, or on Accessibility on macOS; choosing apps and the trial are optional. */
 function canAdvance(
 	slide: OnboardingSlide['id'],
 	accessReady: boolean,
-	appReady: boolean,
 	needsPermission: boolean,
 ) {
 	if (slide === 'welcome') return needsPermission || accessReady;
 	if (slide === 'accessibility') return accessReady;
-	return accessReady && appReady;
+	return accessReady;
 }
 
 async function loadIntegrations() {
@@ -99,31 +159,85 @@ async function loadIntegrations() {
 	}
 }
 
-async function enableTextEditForSetup() {
-	if (!accessibilityReady || isLoadingIntegrations || isEnablingTextEdit) return;
-	isEnablingTextEdit = true;
+async function setAppEnabled(bundleId: string, enabled: boolean) {
+	if (isSavingApps) return;
+	isSavingApps = true;
 	integrationsError = '';
 
 	try {
-		if (textEditIntegration) {
-			await Client.setIntegrationEnabled('com.apple.TextEdit', true);
-		} else {
-			await Client.addIntegration('com.apple.TextEdit');
-		}
+		await Client.setIntegrationEnabled(bundleId, enabled);
 		await loadIntegrations();
 	} catch (error) {
-		integrationsError = `Unable to enable TextEdit: ${error}`;
+		integrationsError = `Unable to update the app: ${error}`;
 	} finally {
-		isEnablingTextEdit = false;
+		isSavingApps = false;
+	}
+}
+
+async function addApp(bundleId: string) {
+	const id = bundleId.trim();
+	if (!id || isSavingApps || existingBundleIds.includes(id)) return;
+	isSavingApps = true;
+	integrationsError = '';
+
+	try {
+		await Client.addIntegration(id);
+		await loadIntegrations();
+		closeAppPicker();
+	} catch (error) {
+		integrationsError = `Unable to add the app: ${error}`;
+	} finally {
+		isSavingApps = false;
+	}
+}
+
+function closeAppPicker() {
+	appPickerOpen = false;
+	newBundleId = '';
+}
+
+/** Make sure TextEdit is watched so the test drive works even if the user turned it off. */
+async function ensureTextEditEnabled() {
+	if (textEditIntegration?.enabled) return;
+	if (textEditIntegration) {
+		await Client.setIntegrationEnabled('com.apple.TextEdit', true);
+	} else {
+		await Client.addIntegration('com.apple.TextEdit');
+	}
+	await loadIntegrations();
+}
+
+async function prepareExtension() {
+	if (isPreparingExtension) return;
+	isPreparingExtension = true;
+	extensionError = '';
+
+	try {
+		extensionFolder = await Client.prepareBrowserExtension();
+	} catch (error) {
+		extensionError = `${error}`;
+	} finally {
+		isPreparingExtension = false;
+	}
+}
+
+async function openExtensionsPage(browser: 'chrome' | 'edge' | 'brave') {
+	extensionError = '';
+
+	try {
+		await Client.openBrowserExtensionsPage(browser);
+	} catch (error) {
+		extensionError = `${error}`;
 	}
 }
 
 async function launchTextEditForTestDrive() {
-	if (!accessibilityReady || !integrationReady || isLaunchingTextEdit) return;
+	if (!accessibilityReady || isLaunchingTextEdit) return;
 	isLaunchingTextEdit = true;
 	testDriveError = '';
 
 	try {
+		await ensureTextEditEnabled();
 		await Client.launchApp('com.apple.TextEdit');
 	} catch (error) {
 		testDriveError = `Unable to launch TextEdit: ${error}`;
@@ -134,7 +248,7 @@ async function launchTextEditForTestDrive() {
 
 /** Persist completion only after mandatory setup; leave the deck only when the save succeeds. */
 async function completeOnboarding() {
-	if (!accessibilityReady || !integrationReady || isCompletingOnboarding) return;
+	if (!accessibilityReady || isCompletingOnboarding) return;
 	isCompletingOnboarding = true;
 	onboardingError = '';
 
@@ -148,7 +262,7 @@ async function completeOnboarding() {
 	}
 }
 
-/** Start Harper on every platform, checking or requesting Accessibility permission only on macOS. */
+/** Start Flowgram on every platform, checking or requesting Accessibility permission only on macOS. */
 async function prepareService(request = false) {
 	isPreparingService = true;
 	setupError = '';
@@ -168,10 +282,10 @@ async function prepareService(request = false) {
 			(!isMacOS || accessibilityStatus === 'Granted') &&
 			!(await Client.startHighlighterService())
 		) {
-			throw new Error('The Harper service did not start. Please try again.');
+			throw new Error('The Flowgram service did not start. Please try again.');
 		}
 	} catch (error) {
-		setupError = `Unable to ${isMacOS ? 'set up Accessibility' : 'start Harper'}: ${error}`;
+		setupError = `Unable to ${isMacOS ? 'set up Accessibility' : 'start Flowgram'}: ${error}`;
 	} finally {
 		isPreparingService = false;
 	}
@@ -192,12 +306,12 @@ async function prepareService(request = false) {
     {#if slides[step].id === 'welcome' && !isMacOS}
       {#if isPreparingService}
         <div class="onboarding-actions">
-          <p role="status">Starting Harper...</p>
+          <p role="status">Starting Flowgram...</p>
         </div>
       {:else if setupError}
         <div class="onboarding-actions">
           <p role="alert">{setupError}</p>
-          <Button on:click={() => prepareService()}>Retry Starting Harper</Button>
+          <Button on:click={() => prepareService()}>Retry Starting Flowgram</Button>
         </div>
       {/if}
     {:else if slides[step].id === 'accessibility'}
@@ -206,11 +320,11 @@ async function prepareService(request = false) {
           {#if isPreparingService}
             Checking Accessibility access...
           {:else if accessibilityReady}
-            Accessibility access granted. Harper is ready to check your writing.
+            Accessibility access granted. Continuing...
           {:else if accessibilityStatus === 'Unsupported'}
             Accessibility setup is unavailable on this platform. Setup cannot continue here.
           {:else if hasRequestedAccessibility && accessibilityStatus === 'NotGranted'}
-            Enable Harper in System Settings → Privacy &amp; Security → Accessibility, then recheck permission.
+            Switch Flowgram on in System Settings → Privacy &amp; Security → Accessibility. Flowgram will notice and continue by itself.
           {/if}
         </p>
         {#if setupError}
@@ -227,39 +341,95 @@ async function prepareService(request = false) {
           {:else if accessibilityStatus === 'Unsupported'}
             Unavailable
           {:else if hasRequestedAccessibility || accessibilityStatus === 'Granted'}
-            Recheck Permission
+            Open System Settings again
           {:else}
             Open System Settings
           {/if}
         </Button>
+
+        {#if isMacOS && !accessibilityReady && !isPreparingService}
+          <details class="help-details" open={hasRequestedAccessibility && accessibilityStatus === 'NotGranted'}>
+            <summary>Already turned it on, but Flowgram can't tell?</summary>
+            <p>
+              macOS sometimes keeps an old Flowgram entry that no longer matches this version. Reset it,
+              then grant access again:
+            </p>
+            <ol>
+              <li>Quit Flowgram from its menu-bar icon.</li>
+              <li>Open Terminal and run this command:</li>
+            </ol>
+            <div class="command-row">
+              <code>{RESET_COMMAND}</code>
+              <Button type="button" color="white" size="sm" on:click={copyResetCommand}>
+                {copiedResetCommand ? 'Copied' : 'Copy'}
+              </Button>
+            </div>
+            <ol start="3">
+              <li>Open Flowgram again and click Open System Settings.</li>
+              <li>Switch Flowgram on. Flowgram notices and continues by itself.</li>
+            </ol>
+          </details>
+        {/if}
       </div>
-    {:else if slides[step].id === 'integration'}
-      <div class="onboarding-actions">
+    {:else if slides[step].id === 'apps'}
+      <div class="onboarding-actions onboarding-apps">
         <p role="status">
           {#if isLoadingIntegrations}
-            Loading integration state...
-          {:else if isEnablingTextEdit}
-            Enabling TextEdit...
-          {:else if integrationReady}
-            TextEdit enabled. Harper will check your writing in this app.
+            Loading your apps...
+          {:else if isSavingApps}
+            Saving...
           {/if}
         </p>
         {#if integrationsError}
           <p role="alert">{integrationsError}</p>
-          <Button color="white" disabled={isLoadingIntegrations || isEnablingTextEdit} on:click={loadIntegrations}>
-            Retry Loading Integrations
+          <Button color="white" disabled={isLoadingIntegrations || isSavingApps} on:click={loadIntegrations}>
+            Retry Loading Apps
           </Button>
         {/if}
-        <div class="onboarding-app">
-          <Button
-            disabled={!accessibilityReady || isLoadingIntegrations || isEnablingTextEdit || isTextEditEnabled || !!integrationsError}
-            on:click={enableTextEditForSetup}
-          >
-            {isEnablingTextEdit ? 'Enabling...' : isTextEditEnabled ? 'Enabled' : 'Enable TextEdit'}
+        <ul class="onboarding-app-list">
+          {#each integrations as app (app.bundle_id)}
+            <li class="onboarding-app">
+              <AppIcon bundleId={app.bundle_id} name={app.display_name} />
+              <strong>{app.display_name}</strong>
+              <Toggle
+                appearance="settings"
+                checked={app.enabled}
+                disabled={isLoadingIntegrations || isSavingApps}
+                aria-label={`Check writing in ${app.display_name}`}
+                on:click={() => setAppEnabled(app.bundle_id, !app.enabled)}
+              />
+            </li>
+          {/each}
+        </ul>
+        <div class="onboarding-app-actions">
+          <Button color="white" disabled={isLoadingIntegrations || isSavingApps} on:click={() => (appPickerOpen = true)}>
+            Add application...
           </Button>
-          <AppIcon bundleId="com.apple.TextEdit" name="TextEdit" />
-          <strong>TextEdit</strong>
+          <Button color="white" on:click={() => step++}>Skip for now</Button>
         </div>
+      </div>
+    {:else if slides[step].id === 'browser'}
+      <div class="onboarding-actions">
+        <ol class="onboarding-steps">
+          <li>
+            <Button disabled={isPreparingExtension} on:click={prepareExtension}>
+              {isPreparingExtension ? 'Preparing...' : extensionFolder ? 'Show the folder again' : 'Get the extension folder'}
+            </Button>
+          </li>
+          <li>
+            Open your browser's extensions page and switch on <strong>Developer mode</strong>.
+            <span class="onboarding-browser-buttons">
+              <Button color="white" size="sm" on:click={() => openExtensionsPage('chrome')}>Chrome</Button>
+              <Button color="white" size="sm" on:click={() => openExtensionsPage('edge')}>Edge</Button>
+              <Button color="white" size="sm" on:click={() => openExtensionsPage('brave')}>Brave</Button>
+            </span>
+          </li>
+          <li>Click <strong>Load unpacked</strong> and choose the <strong>Flowgram Browser Extension</strong> folder{extensionFolder ? ` in Documents` : ''}.</li>
+        </ol>
+        {#if extensionError}
+          <p role="alert">{extensionError}</p>
+        {/if}
+        <Button color="white" on:click={() => step++}>Skip for now</Button>
       </div>
     {:else if slides[step].id === 'test-drive'}
       <div class="onboarding-actions">
@@ -275,10 +445,20 @@ async function prepareService(request = false) {
         {#if onboardingError}
           <p role="alert">{onboardingError}</p>
         {/if}
-        <Button disabled={isCompletingOnboarding || !accessibilityReady || !integrationReady} on:click={completeOnboarding}>
+        <Button disabled={isCompletingOnboarding || !accessibilityReady} on:click={completeOnboarding}>
           {isCompletingOnboarding ? 'Finishing...' : 'Finish'}
         </Button>
       </div>
     {/if}
   </SlideDeck>
 </div>
+
+{#if appPickerOpen}
+  <AppPickerModal
+    bind:bundleId={newBundleId}
+    {existingBundleIds}
+    isSaving={isSavingApps}
+    close={closeAppPicker}
+    add={addApp}
+  />
+{/if}

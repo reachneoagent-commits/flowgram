@@ -1,0 +1,27 @@
+expr main [(has the ability to), (have the ability to)]
+
+let message "`can` is shorter than `has the ability to`. Shorter is clearer."
+let description "Replaces wordy phrases like `has the ability to` with a shorter form."
+let kind "Style"
+let becomes ["can"]
+
+# True positives
+test "We think has the ability to the plan is solid." "We think can the plan is solid."
+test "My manager said have the ability to the budget." "My manager said can the budget."
+test "I noticed has the ability to the update." "I noticed can the update."
+test "Honestly, have the ability to this is fine." "Honestly, can this is fine."
+test "She wrote has the ability to the summary." "She wrote can the summary."
+test "After the call, have the ability to the team agreed." "After the call, can the team agreed."
+test "Maybe has the ability to the results will help." "Maybe can the results will help."
+test "We think have the ability to the plan is solid." "We think can the plan is solid."
+test "Yesterday has the ability to the draft was sent." "Yesterday can the draft was sent."
+test "Has the ability to the plan." "Can the plan."
+
+# True negatives
+allows "She can swim."
+allows "She has the ability."
+allows "They have a strong ability to focus, we hear."
+allows "Ability tests are common."
+allows "He had skill."
+allows "The ability to swim is useful."
+allows "The report is ready."

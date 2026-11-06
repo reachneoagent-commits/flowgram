@@ -1,0 +1,27 @@
+expr main (in close proximity to)
+
+let message "`near` is simpler. Shorter is clearer."
+let description "Replaces wordy phrases like `in close proximity to` with a shorter form."
+let kind "Style"
+let becomes ["near", "close to"]
+
+# True positives
+test "We think in close proximity to the plan is solid." "We think near the plan is solid."
+test "Yesterday in close proximity to the draft was sent." "Yesterday near the draft was sent."
+test "We think in close proximity to the plan is solid." "We think near the plan is solid."
+test "Yesterday in close proximity to the draft was sent." "Yesterday near the draft was sent."
+test "We think in close proximity to the plan is solid." "We think near the plan is solid."
+test "Yesterday in close proximity to the draft was sent." "Yesterday near the draft was sent."
+test "We think in close proximity to the plan is solid." "We think near the plan is solid."
+test "Yesterday in close proximity to the draft was sent." "Yesterday near the draft was sent."
+test "We think in close proximity to the plan is solid." "We think near the plan is solid."
+test "In close proximity to the plan." "Near the plan."
+
+# True negatives
+allows "It sits near the door."
+allows "Proximity sensors work well."
+allows "In close quarters, we worked."
+allows "The proximity of the shop is great."
+allows "Stay close to me."
+allows "In proximity, they agreed."
+allows "The report is ready."

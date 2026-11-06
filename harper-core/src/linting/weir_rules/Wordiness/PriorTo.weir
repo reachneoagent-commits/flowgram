@@ -1,0 +1,27 @@
+expr main (prior to)
+
+let message "`before` is simpler than `prior to`. Shorter is clearer."
+let description "Replaces wordy phrases like `prior to` with a shorter form."
+let kind "Style"
+let becomes ["before"]
+
+# True positives
+test "We think prior to the plan is solid." "We think before the plan is solid."
+test "Yesterday prior to the draft was sent." "Yesterday before the draft was sent."
+test "We think prior to the plan is solid." "We think before the plan is solid."
+test "Yesterday prior to the draft was sent." "Yesterday before the draft was sent."
+test "We think prior to the plan is solid." "We think before the plan is solid."
+test "Yesterday prior to the draft was sent." "Yesterday before the draft was sent."
+test "We think prior to the plan is solid." "We think before the plan is solid."
+test "Yesterday prior to the draft was sent." "Yesterday before the draft was sent."
+test "We think prior to the plan is solid." "We think before the plan is solid."
+test "Prior to the plan." "Before the plan."
+
+# True negatives
+allows "Arrive before noon."
+allows "Before the meeting, we met."
+allows "Her prior work was excellent."
+allows "A prior engagement kept him away."
+allows "Priority matters."
+allows "It was prior experience that counted."
+allows "The report is ready."

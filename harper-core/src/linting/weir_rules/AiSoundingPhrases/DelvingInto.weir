@@ -1,0 +1,26 @@
+expr main (delving into)
+
+let message "Prefer a plainer verb than `delving into`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `delving into` with a simpler verb."
+let kind "Style"
+let becomes ["exploring", "examining"]
+
+# True positives
+test "We will delving into the data next week." "We will exploring the data next week."
+test "The team delving into the results at noon." "The team exploring the results at noon."
+test "Delving into the details before you decide." "Exploring the details before you decide."
+test "Please delving into this topic in the report." "Please exploring this topic in the report."
+test "Today they delving into the budget again." "Today they exploring the budget again."
+test "She wanted to delving into the archive after lunch." "She wanted to exploring the archive after lunch."
+test "Nobody asked us to delving into the old logs." "Nobody asked us to exploring the old logs."
+test "The paper may delving into the question, but not answer it." "The paper may exploring the question, but not answer it."
+
+# True negatives
+allows "We looked at the data next week."
+allows "The team reviewed the results at noon."
+allows "Dig into the details before you decide."
+allows "She delved deeper than anyone expected."
+allows "He loves to delve."
+allows "The mine goes deep into the hill."
+allows "They explored the archive after lunch."
+allows "Into the woods we went."

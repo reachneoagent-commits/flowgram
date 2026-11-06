@@ -6818,6 +6818,74 @@
 					]
 				}
 			}
+		},
+		{
+			"Group": {
+				"label": "AI-Sounding Writing",
+				"description": "Flags stock phrases that make writing read like generic AI output, such as `delve into` and `stands as a testament to`, and suggests plainer wording.",
+				"child": {
+					"settings": [
+						{
+							"Bool": {
+								"name": "AiSoundingPhrases",
+								"state": true,
+								"label": "AI-Sounding Phrases"
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"Group": {
+				"label": "Clear Writing",
+				"description": "Trims wordy phrases like `in order to` and `due to the fact that`, and suggests shorter wording.",
+				"child": {
+					"settings": [
+						{
+							"Bool": {
+								"name": "Wordiness",
+								"state": true,
+								"label": "Wordiness"
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"Group": {
+				"label": "Email Tone",
+				"description": "Flags stock email phrases that can sound stiff or passive-aggressive, such as `per my last email`, and suggests friendlier wording.",
+				"child": {
+					"settings": [
+						{
+							"Bool": {
+								"name": "EmailTone",
+								"state": true,
+								"label": "Email Tone"
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"Group": {
+				"label": "Common Mistakes",
+				"description": "Catches frequent slips like `your not`, `who's idea`, `todays` and `could care less`.",
+				"child": {
+					"settings": [
+						{
+							"Bool": {
+								"name": "CommonMistakes",
+								"state": true,
+								"label": "Common Mistakes"
+							}
+						}
+					]
+				}
+			}
 		}
 	]
 }

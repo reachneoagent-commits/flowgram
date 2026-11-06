@@ -1,6 +1,7 @@
 <script lang="ts">
 import { onMount } from 'svelte';
 import { Client } from '$lib/client';
+import { applyTheme } from '$lib/theme';
 import SettingsSidebar from './SettingsSidebar.svelte';
 import './settings.css';
 import AboutPage from './pages/AboutPage.svelte';
@@ -32,7 +33,23 @@ const titleMap: Record<SectionId, string> = {
 
 onMount(() => {
 	void loadOnboardingState();
+	void loadTheme();
+
+	// Follow the OS when the preference is "system".
+	const media = window.matchMedia('(prefers-color-scheme: dark)');
+	const onSystemChange = () => void loadTheme();
+	media.addEventListener('change', onSystemChange);
+	return () => media.removeEventListener('change', onSystemChange);
 });
+
+async function loadTheme() {
+	try {
+		applyTheme(await Client.getTheme());
+	} catch (error) {
+		console.error('Unable to load theme.', error);
+		applyTheme('system');
+	}
+}
 
 async function loadOnboardingState() {
 	try {
@@ -44,7 +61,28 @@ async function loadOnboardingState() {
 	}
 }
 
+const pageHeads: Partial<Record<SectionId, { lead: string; accent: string; sub: string }>> = {
+	general: { lead: 'Make it', accent: 'yours', sub: 'How Flowgram looks, behaves and starts.' },
+	dictionary: {
+		lead: 'Your',
+		accent: 'dictionary',
+		sub: 'Words Flowgram should never flag again.',
+	},
+	integrations: {
+		lead: 'Where it',
+		accent: 'works',
+		sub: 'Choose the apps where Flowgram checks your writing.',
+	},
+	shortcuts: {
+		lead: 'Keyboard',
+		accent: 'shortcuts',
+		sub: 'Move faster without leaving the keys.',
+	},
+	weirpacks: { lead: 'Style', accent: 'guides', sub: 'Rule bundles that enforce a house style.' },
+};
+
 $: title = titleMap[active];
+$: pageHead = pageHeads[active];
 
 $: if (contentEl && active) {
 	contentEl.scrollTop = 0;
@@ -64,6 +102,12 @@ $: if (contentEl && active) {
     <SettingsSidebar bind:active />
 
     <main bind:this={contentEl} class="content" aria-label={title}>
+      {#if pageHead}
+        <header class="page-head">
+          <h1>{pageHead.lead} <em class="accent">{pageHead.accent}</em></h1>
+          <p>{pageHead.sub}</p>
+        </header>
+      {/if}
       {#if active === "general"}
         <GeneralPage />
       {:else if active === "writing"}

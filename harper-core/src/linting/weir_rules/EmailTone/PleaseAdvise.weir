@@ -1,0 +1,27 @@
+expr main (please advise)
+
+let message "`Please advise` is stiff. Say what you need."
+let description "Suggests warmer, clearer wording than `please advise` in emails."
+let kind "Style"
+let becomes ["please let me know what you think", "please let me know"]
+
+# True positives
+test "We think please advise the plan is solid." "We think please let me know what you think the plan is solid."
+test "Yesterday please advise the draft was sent." "Yesterday please let me know what you think the draft was sent."
+test "We think please advise the plan is solid." "We think please let me know what you think the plan is solid."
+test "Yesterday please advise the draft was sent." "Yesterday please let me know what you think the draft was sent."
+test "We think please advise the plan is solid." "We think please let me know what you think the plan is solid."
+test "Yesterday please advise the draft was sent." "Yesterday please let me know what you think the draft was sent."
+test "We think please advise the plan is solid." "We think please let me know what you think the plan is solid."
+test "Yesterday please advise the draft was sent." "Yesterday please let me know what you think the draft was sent."
+test "We think please advise the plan is solid." "We think please let me know what you think the plan is solid."
+test "Please advise the plan." "Please let me know what you think the plan."
+
+# True negatives
+allows "She will advise the board."
+allows "Please let me know."
+allows "He wants to advise them."
+allows "We advise caution."
+allows "Her advice was kind."
+allows "The report is ready."
+allows "Send the file tomorrow."

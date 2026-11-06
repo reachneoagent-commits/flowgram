@@ -1,0 +1,27 @@
+expr main [(at this point in time), (at the present time), (at this moment in time)]
+
+let message "Say `now` instead. Shorter is clearer."
+let description "Replaces wordy phrases like `at this point in time` with a shorter form."
+let kind "Style"
+let becomes ["now", "currently"]
+
+# True positives
+test "We think at this point in time the plan is solid." "We think now the plan is solid."
+test "My manager said at the present time the budget." "My manager said now the budget."
+test "She wrote at this moment in time the summary." "She wrote now the summary."
+test "Honestly, at this point in time this is fine." "Honestly, now this is fine."
+test "Maybe at the present time the results will help." "Maybe now the results will help."
+test "We think at this moment in time the plan is solid." "We think now the plan is solid."
+test "Yesterday at this point in time the draft was sent." "Yesterday now the draft was sent."
+test "I noticed at the present time the update." "I noticed now the update."
+test "Honestly, at this moment in time this is fine." "Honestly, now this is fine."
+test "At this point in time the plan." "Now the plan."
+
+# True negatives
+allows "We are busy now."
+allows "At this point, we agree."
+allows "The present is a gift."
+allows "At the time, it seemed fine."
+allows "Point in time is abstract."
+allows "This moment matters."
+allows "At present, we are closed."

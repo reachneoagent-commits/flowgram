@@ -1,0 +1,27 @@
+expr main <(kindly [let, send, confirm, provide, review]), kindly>
+
+let message "`Kindly` can sound stiff or curt. `Please` is friendlier."
+let description "Suggests warmer, clearer wording than `kindly let` in emails."
+let kind "Style"
+let becomes ["please"]
+
+# True positives
+test "We think kindly let the plan is solid." "We think please let the plan is solid."
+test "My manager said kindly send the budget." "My manager said please send the budget."
+test "She wrote kindly confirm the summary." "She wrote please confirm the summary."
+test "After the call, kindly provide the team agreed." "After the call, please provide the team agreed."
+test "Yesterday kindly review the draft was sent." "Yesterday please review the draft was sent."
+test "We think kindly let the plan is solid." "We think please let the plan is solid."
+test "My manager said kindly send the budget." "My manager said please send the budget."
+test "She wrote kindly confirm the summary." "She wrote please confirm the summary."
+test "After the call, kindly provide the team agreed." "After the call, please provide the team agreed."
+test "Kindly let the plan." "Please let the plan."
+
+# True negatives
+allows "Please let me know."
+allows "She spoke kindly to him."
+allows "He kindly offered a seat."
+allows "Be kind to others."
+allows "They treated us kindly."
+allows "A kindly old man."
+allows "The report is ready."

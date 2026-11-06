@@ -1,0 +1,27 @@
+expr main (in order to)
+
+let message "`in order to` can usually be just `to`. Shorter is clearer."
+let description "Replaces wordy phrases like `in order to` with a shorter form."
+let kind "Style"
+let becomes ["to"]
+
+# True positives
+test "We think in order to the plan is solid." "We think to the plan is solid."
+test "Yesterday in order to the draft was sent." "Yesterday to the draft was sent."
+test "We think in order to the plan is solid." "We think to the plan is solid."
+test "Yesterday in order to the draft was sent." "Yesterday to the draft was sent."
+test "We think in order to the plan is solid." "We think to the plan is solid."
+test "Yesterday in order to the draft was sent." "Yesterday to the draft was sent."
+test "We think in order to the plan is solid." "We think to the plan is solid."
+test "Yesterday in order to the draft was sent." "Yesterday to the draft was sent."
+test "We think in order to the plan is solid." "We think to the plan is solid."
+test "In order to the plan." "To the plan."
+
+# True negatives
+allows "We left early to catch the train."
+allows "In order, please."
+allows "Put the files in order."
+allows "She is in order of height."
+allows "The order to ship arrived."
+allows "In orderly fashion, they left."
+allows "Order the books by date."

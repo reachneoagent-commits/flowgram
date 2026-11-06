@@ -57,7 +57,7 @@ const sizeClasses: Record<ButtonSize, string> = {
 
 const colorClasses: Record<ButtonColor, string> = {
 	primary:
-		'text-white bg-primary-600 hover:bg-primary-700 focus:ring-primary-300 dark:bg-primary-500 dark:hover:bg-primary-600 dark:focus:ring-primary-700',
+		'text-[#2b2c23] bg-[#b8e62e] hover:bg-[#a6d41f] focus:ring-[#2b2c23]/40 dark:text-[#2b2c23] dark:bg-[#b8e62e] dark:hover:bg-[#a6d41f] dark:focus:ring-[#b8e62e]/50',
 	gray: 'text-white bg-gray-800 hover:bg-gray-900 focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-900',
 	white:
 		'text-gray-900 bg-white border border-gray-200 hover:bg-gray-100 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700',

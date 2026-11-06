@@ -1,0 +1,27 @@
+expr main <([any, some, no, many, much, few, little] [questions, concerns, problems, issues, doubts, trouble, time] at all), ( at all)>
+
+let message "`at all` adds nothing here. Shorter is clearer."
+let description "Replaces wordy phrases like `any questions at all` with a shorter form."
+let kind "Style"
+let becomes [""]
+
+# True positives
+test "We think any questions at all the plan is solid." "We think any questions the plan is solid."
+test "My manager said any concerns at all the budget." "My manager said any concerns the budget."
+test "She wrote any problems at all the summary." "She wrote any problems the summary."
+test "Honestly, any questions at all this is fine." "Honestly, any questions this is fine."
+test "Maybe any concerns at all the results will help." "Maybe any concerns the results will help."
+test "We think any problems at all the plan is solid." "We think any problems the plan is solid."
+test "Yesterday any questions at all the draft was sent." "Yesterday any questions the draft was sent."
+test "I noticed any concerns at all the update." "I noticed any concerns the update."
+test "Honestly, any problems at all this is fine." "Honestly, any problems this is fine."
+test "Any questions at all the plan." "Any questions the plan."
+
+# True negatives
+allows "Do you have any questions?"
+allows "Not at all."
+allows "I do not like it at all."
+allows "Is it at all possible?"
+allows "If at all, call me."
+allows "She was not tired at all."
+allows "She left at all hours."

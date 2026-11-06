@@ -1,0 +1,27 @@
+expr main [(i hope this email finds you well), (i hope this message finds you well), (hope this email finds you well), (hope this finds you well), (i hope this finds you well)]
+
+let message "A stock opener. A direct greeting reads warmer."
+let description "Suggests warmer, clearer wording than `i hope this email finds you well` in emails."
+let kind "Style"
+let becomes ["I hope you are well"]
+
+# True positives
+test "We think i hope this email finds you well the plan is solid." "We think i hope you are well the plan is solid."
+test "My manager said i hope this message finds you well the budget." "My manager said i hope you are well the budget."
+test "She wrote hope this email finds you well the summary." "She wrote i hope you are well the summary."
+test "After the call, hope this finds you well the team agreed." "After the call, i hope you are well the team agreed."
+test "Yesterday i hope this finds you well the draft was sent." "Yesterday i hope you are well the draft was sent."
+test "We think i hope this email finds you well the plan is solid." "We think i hope you are well the plan is solid."
+test "My manager said i hope this message finds you well the budget." "My manager said i hope you are well the budget."
+test "She wrote hope this email finds you well the summary." "She wrote i hope you are well the summary."
+test "After the call, hope this finds you well the team agreed." "After the call, i hope you are well the team agreed."
+test "I hope this email finds you well the plan." "I hope you are well the plan."
+
+# True negatives
+allows "I hope you are well."
+allows "I hope this works."
+allows "I hope the email arrives."
+allows "She hopes you are well."
+allows "This email is about the budget."
+allows "Hope you find it useful."
+allows "The report is ready."

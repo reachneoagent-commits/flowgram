@@ -1,0 +1,26 @@
+expr main (seamlessly connects)
+
+let message "Drop `seamlessly`; it is a stock intensifier. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `seamlessly connects` with `connects`."
+let kind "Style"
+let becomes "connects"
+
+# True positives
+test "The app seamlessly connects with Slack." "The app connects with Slack."
+test "The app also seamlessly connects with email." "The app also connects with email."
+test "Today the app seamlessly connects with the calendar." "Today the app connects with the calendar."
+test "Seamlessly connects with every tool you use." "Connects with every tool you use."
+test "Our API seamlessly connects everywhere." "Our API connects everywhere."
+test "It seamlessly connects into the editor." "It connects into the editor."
+test "They say it seamlessly connects with phones." "They say it connects with phones."
+test "Reportedly, it seamlessly connects with the cloud." "Reportedly, it connects with the cloud."
+
+# True negatives
+allows "The app connects with Slack."
+allows "He moved seamlessly between rooms."
+allows "The pieces fit together seamlessly."
+allows "A seamless garment is rare."
+allows "She spoke seamlessly."
+allows "The sleeves joined without a seam."
+allows "Seamless transitions are hard."
+allows "It runs smoothly."

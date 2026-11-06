@@ -1,0 +1,26 @@
+expr main (delves into)
+
+let message "Prefer a plainer verb than `delves into`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `delves into` with a simpler verb."
+let kind "Style"
+let becomes ["explores", "examines"]
+
+# True positives
+test "We will delves into the data next week." "We will explores the data next week."
+test "The team delves into the results at noon." "The team explores the results at noon."
+test "Delves into the details before you decide." "Explores the details before you decide."
+test "Please delves into this topic in the report." "Please explores this topic in the report."
+test "Today they delves into the budget again." "Today they explores the budget again."
+test "She wanted to delves into the archive after lunch." "She wanted to explores the archive after lunch."
+test "Nobody asked us to delves into the old logs." "Nobody asked us to explores the old logs."
+test "The paper may delves into the question, but not answer it." "The paper may explores the question, but not answer it."
+
+# True negatives
+allows "We looked at the data next week."
+allows "The team reviewed the results at noon."
+allows "Dig into the details before you decide."
+allows "She delved deeper than anyone expected."
+allows "He loves to delve."
+allows "The mine goes deep into the hill."
+allows "They explored the archive after lunch."
+allows "Into the woods we went."

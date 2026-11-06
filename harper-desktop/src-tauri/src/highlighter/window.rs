@@ -27,6 +27,8 @@ pub struct Window {
     egui_state: egui_winit::State,
     painter: Painter,
     viewport_id: egui::ViewportId,
+    /// This monitor's rectangle in global logical points, the space accessibility reports in.
+    viewport: egui::Rect,
 }
 
 impl Window {
@@ -34,10 +36,15 @@ impl Window {
         let context = egui::Context::default();
         let position = monitor.position();
         let size = monitor.size();
+        let scale = monitor.scale_factor() as f32;
+        let viewport = egui::Rect::from_min_size(
+            egui::pos2(position.x as f32 / scale, position.y as f32 / scale),
+            egui::vec2(size.width as f32 / scale, size.height as f32 / scale),
+        );
         let window = Arc::new(
             event_loop.create_window(
                 WinitWindow::default_attributes()
-                    .with_title("Harper")
+                    .with_title("Flowgram")
                     .with_inner_size(size)
                     .with_position(position)
                     .with_resizable(false)
@@ -84,7 +91,12 @@ impl Window {
             egui_state,
             painter,
             viewport_id,
+            viewport,
         })
+    }
+
+    pub fn viewport(&self) -> egui::Rect {
+        self.viewport
     }
 
     pub fn id(&self) -> WindowId {
@@ -124,10 +136,11 @@ impl Window {
     }
 
     pub fn render(&mut self, render_state: &mut RenderState) {
+        let viewport = self.viewport;
         let context = self.egui_state.egui_ctx().clone();
         let input = self.egui_state.take_egui_input(&self.inner);
         let output = context.run_ui(input, |ui| {
-            render_state.render(ui);
+            render_state.render(ui, viewport);
         });
 
         self.egui_state

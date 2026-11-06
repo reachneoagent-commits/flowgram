@@ -52,7 +52,8 @@ use self::window_stability::{
 };
 
 /// Must match `identifier` in `tauri.conf.json`.
-const BUNDLE_ID: &str = "com.elijahpotter.harper-desktop";
+/// Must match `identifier` in `tauri.conf.json`.
+const BUNDLE_ID: &str = "com.flowgram.app";
 
 /// macOS implementation of the OS data the highlighter needs.
 ///

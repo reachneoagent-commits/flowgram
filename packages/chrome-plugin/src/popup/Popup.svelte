@@ -1,35 +1,16 @@
 <script lang="ts">
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Button, Link } from 'components';
-import { onMount } from 'svelte';
 import { fly } from 'svelte/transition';
 import Fa from 'svelte-fa';
 import logo from '/logo.png';
-import detectBrowserEngine from '../detectBrowserEngine';
 import { main, type PopupState } from '../PopupState';
-import DomainReview from './DomainReview.svelte';
 import Main from './Main.svelte';
 import Onboarding from './Onboarding.svelte';
-import ReportProblematicLint from './ReportProblematicLint.svelte';
 
 let popupState: PopupState = $state({ page: 'main' });
 
 let version = `v${chrome.runtime.getManifest().version}`;
-let latestVersion: string | null = $state(null);
-let versionMismatch = $state(false);
-
-onMount(async () => {
-	try {
-		const response = await fetch('https://writewithharper.com/latestversion');
-		if (!response.ok) return;
-
-		const fetchedVersion = (await response.text()).trim();
-		latestVersion = fetchedVersion;
-		versionMismatch = !!fetchedVersion && fetchedVersion !== version;
-	} catch (err) {
-		console.error('Failed to fetch latest version', err);
-	}
-});
 
 $effect(() => {
 	chrome.storage.local.get({ popupState: { page: 'onboarding' } }).then((result) => {
@@ -43,20 +24,6 @@ $effect(() => {
 
 function openSettings() {
 	chrome.runtime?.openOptionsPage?.();
-}
-
-function openUpdateHelpPage() {
-	let url: string;
-
-	if (detectBrowserEngine() == 'chromium') {
-		url = 'https://writewithharper.com/docs/integrations/chrome-extension#Updating-the-Extension';
-	} else {
-		url = 'https://writewithharper.com/docs/integrations/firefox-extension#Updating-the-Extension';
-	}
-
-	chrome.tabs.create({
-		url,
-	});
 }
 
 // Per-page heights: compact for the main view, taller for forms.
@@ -87,8 +54,8 @@ $effect(() => {
         class="flex shrink-0 flex-row items-center justify-between gap-2 border-b border-gray-100 px-4 py-3 dark:border-slate-800"
     >
         <div class="flex flex-row items-center gap-2.5">
-            <img src={logo} alt="Harper logo" class="h-6 w-6 rounded-md" />
-            <span class="text-sm font-semibold tracking-tight">Harper</span>
+            <img src={logo} alt="Flowgram logo" class="h-6 w-6 rounded-md" />
+            <span class="text-sm font-semibold tracking-tight">Flowgram</span>
         </div>
 
         {#if popupState.page != 'main'}
@@ -101,22 +68,7 @@ $effect(() => {
                 <Fa icon={faArrowLeft} />
             </Button>
         {:else}
-            <button
-                type="button"
-                class="flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-0.5 font-mono text-xs transition-colors
-                    {versionMismatch
-                        ? 'border border-primary text-primary hover:bg-primary hover:text-black'
-                        : 'text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white'}"
-                onclick={openUpdateHelpPage}
-                title={versionMismatch
-                    ? `Newer version available: ${latestVersion ?? ''}. Click to find out more.`
-                    : 'How to update'}
-            >
-                {#if versionMismatch}
-                    <span class="text-xs" aria-label="Update available">⚠️</span>
-                {/if}
-                <span class="text-xs font-mono">{version}</span>
-            </button>
+            <span class="px-1.5 py-0.5 font-mono text-xs text-gray-500 dark:text-slate-400">{version}</span>
         {/if}
     </header>
 
@@ -132,41 +84,12 @@ $effect(() => {
             </div>
         {:else if popupState.page == 'main'}
             <div class="flex h-full flex-col" in:fly={{ y: 12, duration: 250 }}>
-                <Main
-                    onReviewDomain={(works, domain) => {
-                        popupState = { page: 'domain-review', works, domain, feedback: '' };
-                    }}
-                />
-            </div>
-        {:else if popupState.page == 'report-error'}
-            <div class="flex h-full flex-col" in:fly={{ y: 12, duration: 250 }}>
-                <ReportProblematicLint
-                    example={popupState.example}
-                    rule_id={popupState.rule_id}
-                    feedback={popupState.feedback}
-                    onSubmit={() => {
-                        popupState = main();
-                    }}
-                />
-            </div>
-        {:else if popupState.page == 'domain-review'}
-            <div class="flex h-full flex-col" in:fly={{ y: 12, duration: 250 }}>
-                <DomainReview
-                    works={popupState.works}
-                    domain={popupState.domain}
-                    feedback={popupState.feedback}
-                    onSubmit={() => {
-                        popupState = main();
-                    }}
-                />
+                <Main />
             </div>
         {/if}
     </div>
 
     <footer class="flex items-center justify-center gap-6 px-3 py-2 text-sm border-t border-gray-100 rounded-b-lg bg-white/60 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100">
-        <Link href="https://github.com/Automattic/harper" target="_blank" rel="noopener" class="text-primary">GitHub</Link>
-        <Link href="https://discord.com/invite/JBqcAaKrzQ" target="_blank" rel="noopener" class="text-primary">Discord</Link>
-        <Link href="https://writewithharper.com" target="_blank" rel="noopener" class="text-primary">Discover</Link>
         <Link on:click={openSettings}>Settings</Link>
     </footer>
 </div>

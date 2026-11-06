@@ -1,0 +1,26 @@
+expr main (plays a [vital, crucial, pivotal, key, significant, critical] role in)
+
+let message "Say what it does instead of calling its role crucial. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `plays a crucial role in` with a direct phrase."
+let kind "Style"
+let becomes ["is key to", "matters for"]
+
+# True positives
+test "Sleep plays a vital role in memory." "Sleep is key to memory."
+test "Water plays a crucial role in the garden." "Water is key to the garden."
+test "Trust plays a pivotal role in teams." "Trust is key to teams."
+test "Timing plays a key role in comedy." "Timing is key to comedy."
+test "Diet plays a significant role in health." "Diet is key to health."
+test "Testing plays a critical role in releases." "Testing is key to releases."
+test "Often, luck plays a vital role in success." "Often, luck is key to success."
+test "Here, context plays a key role in meaning." "Here, context is key to meaning."
+
+# True negatives
+allows "Sleep is key to memory."
+allows "She plays a role in the school play."
+allows "He plays a game with his cousins."
+allows "The actor plays a villain in the film."
+allows "Cells play a vital role in this process."
+allows "Music plays loudly in the cafe."
+allows "Luck plays a part."
+allows "He plays in a band."

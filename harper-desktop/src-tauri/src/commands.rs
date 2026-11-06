@@ -14,7 +14,8 @@ use harper_core::{
 };
 use std::sync::{Arc, RwLock};
 use tauri::ipc::Invoke;
-use tauri::{Manager, Runtime, State};
+use tauri::path::BaseDirectory;
+use tauri::{AppHandle, Manager, Runtime, State};
 use tokio::sync::Mutex;
 
 pub fn application_message_handler<R: Runtime>() -> impl Fn(Invoke<R>) -> bool {
@@ -48,7 +49,12 @@ pub fn application_message_handler<R: Runtime>() -> impl Fn(Invoke<R>) -> bool {
         start_highlighter_service,
         stop_highlighter_service,
         launch_app,
+        prepare_browser_extension,
+        open_browser_extensions_page,
+        get_browser_extension_profiles,
         search_apps,
+        get_theme,
+        set_theme,
     ]
 }
 
@@ -155,6 +161,23 @@ async fn set_dialect(
 ) -> Result<(), String> {
     let mut config = config.lock().await;
     config.dialect = dialect;
+    config
+        .save_to_system()
+        .await
+        .map_err(|error| error.to_string())?;
+
+    Ok(())
+}
+
+#[tauri::command]
+async fn get_theme(config: State<'_, Arc<Mutex<Config>>>) -> Result<String, String> {
+    Ok(config.lock().await.theme.clone())
+}
+
+#[tauri::command]
+async fn set_theme(theme: String, config: State<'_, Arc<Mutex<Config>>>) -> Result<(), String> {
+    let mut config = config.lock().await;
+    config.theme = theme;
     config
         .save_to_system()
         .await
@@ -439,4 +462,103 @@ fn search_apps(
         .read()
         .map_err(|error| format!("Failed to read platform broker: {error}"))?
         .search_apps(&query)
+}
+
+/// Copy the bundled browser extension to a stable, visible folder and open it in Finder.
+///
+/// Chrome loads unpacked extensions from a fixed path, so the copy must live outside the app bundle
+/// and survive app updates. Returns the folder path so the UI can show it.
+#[tauri::command]
+fn prepare_browser_extension<R: Runtime>(app: AppHandle<R>) -> Result<String, String> {
+    let source = app
+        .path()
+        .resolve("browser-extension/chrome", BaseDirectory::Resource)
+        .map_err(|error| format!("Could not find the bundled extension: {error}"))?;
+    let destination = app
+        .path()
+        .resolve("Flowgram Browser Extension", BaseDirectory::Document)
+        .map_err(|error| format!("Could not find your Documents folder: {error}"))?;
+
+    if destination.exists() {
+        std::fs::remove_dir_all(&destination)
+            .map_err(|error| format!("Could not refresh the extension folder: {error}"))?;
+    }
+    copy_dir_recursive(&source, &destination)
+        .map_err(|error| format!("Could not copy the extension: {error}"))?;
+
+    reveal_in_file_manager(&destination)?;
+
+    Ok(destination.to_string_lossy().into_owned())
+}
+
+fn copy_dir_recursive(from: &std::path::Path, to: &std::path::Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(to)?;
+    for entry in std::fs::read_dir(from)? {
+        let entry = entry?;
+        let target = to.join(entry.file_name());
+        if entry.file_type()?.is_dir() {
+            copy_dir_recursive(&entry.path(), &target)?;
+        } else {
+            std::fs::copy(entry.path(), target)?;
+        }
+    }
+    Ok(())
+}
+
+fn reveal_in_file_manager(path: &std::path::Path) -> Result<(), String> {
+    let opener = if cfg!(target_os = "macos") {
+        "open"
+    } else if cfg!(target_os = "windows") {
+        "explorer"
+    } else {
+        "xdg-open"
+    };
+    std::process::Command::new(opener)
+        .arg(path)
+        .spawn()
+        .map(|_| ())
+        .map_err(|error| format!("Could not open the folder: {error}"))
+}
+
+/// Lists each browser profile and whether the Flowgram extension is loaded in it.
+#[tauri::command]
+async fn get_browser_extension_profiles()
+-> Result<Vec<crate::browser_extension::BrowserProfileStatus>, String> {
+    tokio::task::spawn_blocking(crate::browser_extension::detect_profiles)
+        .await
+        .map_err(|error| error.to_string())
+}
+
+/// Open the extensions page of a supported browser (`chrome`, `edge`, `brave`), optionally in a
+/// specific profile (the profile directory name, e.g. `Profile 1`).
+#[tauri::command]
+fn open_browser_extensions_page(
+    browser: String,
+    profile_directory: Option<String>,
+) -> Result<(), String> {
+    let (app_name, url) = match browser.as_str() {
+        "chrome" => ("Google Chrome", "chrome://extensions"),
+        "edge" => ("Microsoft Edge", "edge://extensions"),
+        "brave" => ("Brave Browser", "brave://extensions"),
+        other => return Err(format!("Unsupported browser: {other}")),
+    };
+
+    if !cfg!(target_os = "macos") {
+        return Err("Opening the extensions page is only supported on macOS for now.".into());
+    }
+
+    let mut command = std::process::Command::new("open");
+    match profile_directory.filter(|profile| !profile.is_empty()) {
+        // `-n` is required so `--args` reach an already-running browser.
+        Some(profile) => command
+            .args(["-n", "-a", app_name, "--args"])
+            .arg(format!("--profile-directory={profile}"))
+            .arg(url),
+        None => command.args(["-a", app_name, url]),
+    };
+
+    command
+        .spawn()
+        .map(|_| ())
+        .map_err(|error| format!("Could not open {app_name}: {error}"))
 }

@@ -1,8 +1,8 @@
 {
 	"$schema": "https://schema.tauri.app/config/2",
-	"productName": "Harper",
+	"productName": "Flowgram",
 	"version": "3.0.0",
-	"identifier": "com.elijahpotter.harper-desktop",
+	"identifier": "com.flowgram.app",
 	"build": {
 		"beforeDevCommand": "pnpm dev",
 		"devUrl": "http://localhost:1420",
@@ -25,6 +25,9 @@
 			"icons/icon.icns",
 			"icons/icon.ico"
 		],
+		"resources": {
+			"../../packages/chrome-plugin/build": "browser-extension/chrome"
+		},
 		"createUpdaterArtifacts": true
 	},
 	"plugins": {

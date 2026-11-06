@@ -1,13 +1,20 @@
 @font-face {
-	font-family: Domine;
-	src: url("/fonts/domine/Domine.ttf") format("truetype");
-	font-style: normal;
-	font-weight: 400 700;
+	font-family: "Inter";
+	src: url("../../brand/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+	font-weight: 100 900;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Inter";
+	src: url("../../brand/Inter-Italic-VariableFont_opsz,wght.ttf") format("truetype");
+	font-weight: 100 900;
+	font-style: italic;
 	font-display: swap;
 }
 
 body.settings-view {
-	background: #fbfaf7;
+	background: #ffffff;
 }
 
 * {
@@ -15,24 +22,30 @@ body.settings-view {
 }
 
 .settings-shell {
-	--settings-amber: #b06a1b;
-	--settings-amber-soft: #d98b3a;
-	--settings-bg-window: #fbfaf7;
-	--settings-bg-sidebar: #f1ede5;
-	--settings-ink: #1c1a16;
-	--settings-ink-2: #4a463e;
-	--settings-ink-3: #807a6e;
-	--settings-ink-4: #ada79a;
-	--settings-line: rgba(28, 26, 22, 0.09);
-	--settings-line-strong: rgba(28, 26, 22, 0.14);
-	--settings-accent: #2a6bd8;
+	--fg-brand-dark: #2b2b2b;
+	--fg-brand-light: #e5e5e5;
+	--fg-brand-accent: #ebf66c;
+	--fg-brand-green: #449837;
+	--fg-brand-red: #ea2a2a;
+
+	--settings-bg-window: #ffffff;
+	--settings-bg-sidebar: #f5f5f5;
+	--settings-ink: #2b2b2b;
+	--settings-ink-2: #525252;
+	--settings-ink-3: #737373;
+	--settings-ink-4: #a3a3a3;
+	--settings-line: rgba(43, 43, 43, 0.09);
+	--settings-line-strong: rgba(43, 43, 43, 0.14);
+	--settings-accent: #449837;
 	height: 100vh;
 	width: 100vw;
 	display: flex;
 	overflow: hidden;
 	background: var(--settings-bg-window);
 	color: var(--settings-ink);
-	font-family: Domine, serif;
+	font-family:
+		Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		sans-serif;
 	font-size: 13px;
 	-webkit-font-smoothing: antialiased;
 }
@@ -57,12 +70,14 @@ h1 {
 	font-size: 24px;
 	line-height: 1.2;
 	font-weight: 700;
+	color: var(--settings-ink);
 }
 
 h2 {
 	font-size: 16px;
 	line-height: 1.3;
 	font-weight: 700;
+	color: var(--settings-ink);
 }
 
 p {
@@ -81,11 +96,11 @@ button {
 }
 
 .onboarding-shell {
-	--marketing-amber: #b06a1b;
-	--marketing-amber-soft: #d98b3a;
-	--marketing-ink: #1c1a16;
-	--marketing-ink-2: #4a463e;
-	font-family: Domine, serif;
+	--marketing-ink: #2b2b2b;
+	--marketing-ink-2: #525252;
+	font-family:
+		Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		sans-serif;
 	overflow-wrap: anywhere;
 }
 
@@ -111,7 +126,7 @@ button {
 }
 
 .onboarding-actions [role="alert"] {
-	color: #b42318;
+	color: var(--fg-brand-red);
 }
 
 .onboarding-app {
@@ -144,8 +159,9 @@ button {
 
 .hero-copy .eyebrow {
 	margin-bottom: 8px;
-	color: var(--settings-amber);
+	color: var(--fg-brand-green);
 	letter-spacing: 0.12em;
+	text-transform: uppercase;
 }
 
 .progress-row,
@@ -167,13 +183,13 @@ button {
 	height: 6px;
 	overflow: hidden;
 	border-radius: 999px;
-	background: rgba(0, 0, 0, 0.08);
+	background: rgba(43, 43, 43, 0.08);
 }
 
 .progress-fill {
 	height: 100%;
 	border-radius: inherit;
-	background: linear-gradient(90deg, #d98b3a 0%, #b06a1b 100%);
+	background: linear-gradient(90deg, #ebf66c 0%, #449837 100%);
 	transition: width 160ms ease;
 }
 
@@ -189,16 +205,16 @@ button {
 .warning-banner {
 	margin-bottom: 22px;
 	padding: 14px 18px;
-	border: 0.5px solid rgba(201, 70, 20, 0.3);
-	background: linear-gradient(180deg, #fff2ed 0%, #ffe4d6 100%);
+	border: 0.5px solid rgba(234, 42, 42, 0.3);
+	background: linear-gradient(180deg, #fdf0f0 0%, #fbe7e7 100%);
 }
 
 .success-banner {
 	align-items: center;
 	margin-bottom: 26px;
 	padding: 24px 28px;
-	border: 0.5px solid rgba(30, 120, 70, 0.22);
-	background: linear-gradient(150deg, #e7f5ec 0%, #d5efdf 100%);
+	border: 0.5px solid rgba(68, 152, 55, 0.22);
+	background: linear-gradient(150deg, #f0f8ec 0%, #e7f3e3 100%);
 }
 
 .big-mark {
@@ -213,15 +229,15 @@ button {
 }
 
 .big-mark.amber {
-	background: linear-gradient(180deg, #f07a3a 0%, #c94614 100%);
+	background: linear-gradient(180deg, #ebf66c 0%, #449837 100%);
 }
 
 .big-mark.green {
-	background: linear-gradient(180deg, #3dbd6d 0%, #1f8f5c 100%);
+	background: linear-gradient(180deg, #449837 0%, #2e6a26 100%);
 }
 
 .big-mark.purple {
-	background: linear-gradient(180deg, #b78cf6 0%, #7c3aed 100%);
+	background: linear-gradient(180deg, #7c3aed 0%, #5b21b6 100%);
 }
 
 .big-mark .settings-icon {
@@ -257,7 +273,7 @@ button {
 }
 
 .step-row.done {
-	background: linear-gradient(180deg, rgba(30, 143, 92, 0.04) 0%, transparent 100%);
+	background: linear-gradient(180deg, rgba(68, 152, 55, 0.04) 0%, transparent 100%);
 }
 
 .step-row.locked {
@@ -278,7 +294,7 @@ button {
 
 .done .step-dot {
 	border: 0;
-	background: linear-gradient(180deg, #3dbd6d 0%, #1f8f5c 100%);
+	background: linear-gradient(180deg, #449837 0%, #2e6a26 100%);
 	color: #fff;
 }
 
@@ -296,7 +312,7 @@ button {
 	margin-top: 12px;
 	padding: 12px 14px;
 	border-radius: 8px;
-	background: #faf8f3;
+	background: #fafafa;
 }
 
 .detected-app {
@@ -359,7 +375,7 @@ button {
 	height: 28px;
 	border-radius: 6px;
 	border: 0.5px solid rgba(0, 0, 0, 0.18);
-	background: linear-gradient(180deg, #fff 0%, #f4f1ea 100%);
+	background: linear-gradient(180deg, #fff 0%, #f4f4f4 100%);
 	color: var(--settings-ink);
 	box-shadow:
 		0 0.5px 0 rgba(0, 0, 0, 0.04),
@@ -378,14 +394,15 @@ button {
 
 .button.primary {
 	border-color: transparent;
-	background: linear-gradient(180deg, var(--settings-amber-soft) 0%, var(--settings-amber) 100%);
-	color: #fff;
+	background: linear-gradient(180deg, #ebf66c 0%, #449837 100%);
+	color: #2b2b2b;
+	font-weight: 700;
 }
 
 .button.danger {
-	color: #b42318;
+	color: var(--fg-brand-red);
 	background: #fff;
-	border-color: rgba(180, 35, 24, 0.35);
+	border-color: rgba(234, 42, 42, 0.35);
 }
 
 .button:disabled {
@@ -434,7 +451,7 @@ button {
 .add-row {
 	display: flex;
 	gap: 8px;
-	padding: 8px 0px;
+	padding: 8px 0;
 }
 
 .add-row .text-field {
@@ -446,7 +463,7 @@ button {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	background: #faf8f3;
+	background: #f5f5f5;
 }
 
 .search-strip {
@@ -537,7 +554,7 @@ code {
 }
 
 .shortcut-row:hover {
-	background: rgba(0, 0, 0, 0.025);
+	background: rgba(43, 43, 43, 0.025);
 }
 
 .kbd-group {
@@ -558,7 +575,7 @@ kbd {
 	font-size: 11px;
 }
 
-em,
+em:where(:not([class])),
 .muted {
 	color: var(--settings-ink-3);
 	font-size: 12.5px;
@@ -586,7 +603,7 @@ em,
 	margin: 0 -44px 16px;
 	padding: 10px 44px;
 	border-bottom: 0.5px solid var(--settings-line);
-	background: rgba(251, 250, 247, 0.88);
+	background: rgba(245, 245, 245, 0.88);
 	backdrop-filter: blur(14px);
 }
 
@@ -627,7 +644,7 @@ em,
 }
 
 .group-head:hover {
-	background: #faf8f3;
+	background: #f5f5f5;
 }
 
 .group-head p {
@@ -672,7 +689,7 @@ em,
 }
 
 .rule-row.customized {
-	background: rgba(217, 139, 58, 0.04);
+	background: rgba(235, 246, 108, 0.04);
 }
 
 .rule-row p {
@@ -685,7 +702,7 @@ em,
 	align-items: center;
 	margin-left: 6px;
 	border-radius: 4px;
-	background: rgba(0, 0, 0, 0.05);
+	background: rgba(43, 43, 43, 0.05);
 	color: var(--settings-ink-3);
 	padding: 2px 6px;
 	font-size: 10.5px;
@@ -695,8 +712,9 @@ em,
 }
 
 .pill.amber {
-	background: rgba(217, 139, 58, 0.12);
-	color: var(--settings-amber);
+	background: rgba(235, 246, 108, 0.12);
+	color: #2b2b2b;
+	font-weight: 700;
 }
 
 .pill.purple-text,
@@ -708,15 +726,15 @@ em,
 	display: flex;
 	align-items: center;
 	gap: 16px;
-	border: 1.5px dashed rgba(0, 0, 0, 0.18);
+	border: 1.5px dashed rgba(43, 43, 43, 0.18);
 	border-radius: 10px;
 	background: #fff;
 	padding: 22px 24px;
 }
 
 .drop-zone.dragging {
-	border-color: var(--settings-amber);
-	background: rgba(217, 139, 58, 0.06);
+	border-color: var(--fg-brand-green);
+	background: rgba(235, 246, 108, 0.06);
 }
 
 .drop-zone input {
@@ -744,7 +762,7 @@ em,
 	height: 32px;
 	flex: 0 0 32px;
 	border-radius: 8px;
-	background: linear-gradient(180deg, #b78cf6 0%, #7c3aed 100%);
+	background: linear-gradient(180deg, #449837 0%, #2e6a26 100%);
 }
 
 .pack-icon .settings-icon {
@@ -792,15 +810,15 @@ em,
 	margin-top: 4px;
 	border-radius: 999px;
 	padding: 2px 7px;
-	background: rgba(42, 107, 216, 0.1);
-	color: #1f4fa3;
+	background: rgba(68, 152, 55, 0.1);
+	color: #2e6a26;
 	font-size: 11px;
 	font-weight: 700;
 	text-transform: capitalize;
 }
 
 .status.failed {
-	background: rgba(196, 48, 32, 0.1);
+	background: rgba(234, 42, 42, 0.1);
 	color: #a4291a;
 }
 
@@ -820,7 +838,7 @@ em,
 .about-mark {
 	width: 142px;
 	max-width: 100%;
-	aspect-ratio: 695 / 411;
+	aspect-ratio: 53.97 / 54.65;
 	margin: 0 auto 20px;
 }
 
@@ -856,7 +874,7 @@ em,
 	overflow: hidden;
 	border: 0.5px solid rgba(255, 255, 255, 0.4);
 	border-radius: 12px;
-	background: rgba(246, 243, 236, 0.96);
+	background: rgba(245, 245, 245, 0.96);
 	box-shadow:
 		0 24px 60px rgba(0, 0, 0, 0.32),
 		0 0 0 0.5px rgba(0, 0, 0, 0.15);
@@ -985,5 +1003,609 @@ em,
 	.pack-row,
 	.app-row {
 		gap: 14px;
+	}
+}
+
+/* Dark theme overrides */
+body[data-theme="dark"] .settings-shell,
+body[data-theme="dark"] .content,
+body[data-theme="dark"] section {
+	background: var(--fg-theme-bg);
+	color: var(--fg-theme-ink);
+}
+
+body[data-theme="dark"] .settings-shell {
+	--settings-bg-window: #121212;
+	--settings-bg-sidebar: #1e1e1e;
+	--settings-ink: #e5e5e5;
+	--settings-ink-2: #b3b3b3;
+	--settings-ink-3: #808080;
+	--settings-ink-4: #525252;
+	--settings-line: rgba(255, 255, 255, 0.09);
+	--settings-line-strong: rgba(255, 255, 255, 0.14);
+}
+
+body[data-theme="dark"] .onboarding-shell p {
+	color: #b3b3b3;
+}
+
+:where(body[data-theme="dark"]) :where(button:not([class*="bg-"]), input, select) {
+	background: #1e1e1e;
+	color: #e5e5e5;
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+body[data-theme="dark"] .button {
+	background: linear-gradient(180deg, #1e1e1e 0%, #161616 100%);
+	border-color: rgba(255, 255, 255, 0.18);
+	box-shadow:
+		0 0.5px 0 rgba(0, 0, 0, 0.3),
+		inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] .button.primary {
+	background: linear-gradient(180deg, #ebf66c 0%, #449837 100%);
+	color: #2b2b2b;
+}
+
+body[data-theme="dark"] .text-field {
+	background: #1e1e1e;
+	color: #e5e5e5;
+	box-shadow: inset 0 0.5px 1px rgba(0, 0, 0, 0.3);
+}
+
+body[data-theme="dark"] .step-list,
+body[data-theme="dark"] .rule-group {
+	background: #1e1e1e;
+	border-color: rgba(255, 255, 255, 0.14);
+}
+
+body[data-theme="dark"] .step-row {
+	border-bottom-color: rgba(255, 255, 255, 0.09);
+}
+
+body[data-theme="dark"] .step-row.done {
+	background: linear-gradient(180deg, rgba(68, 152, 55, 0.08) 0%, transparent 100%);
+}
+
+body[data-theme="dark"] .step-dot {
+	border-color: rgba(255, 255, 255, 0.2);
+	color: #808080;
+}
+
+body[data-theme="dark"] .detected-app,
+body[data-theme="dark"] .note-strip {
+	background: #1a1a1a;
+	border-color: rgba(255, 255, 255, 0.14);
+}
+
+body[data-theme="dark"] .modal {
+	background: rgba(18, 18, 18, 0.96);
+	border-color: rgba(255, 255, 255, 0.1);
+}
+
+body[data-theme="dark"] .modal-head {
+	border-bottom-color: rgba(0, 0, 0, 0.3);
+}
+
+body[data-theme="dark"] .app-result:hover {
+	background: rgba(255, 255, 255, 0.04);
+}
+
+body[data-theme="dark"] .progress-track {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="dark"] kbd {
+	background: #1e1e1e;
+	color: #e5e5e5;
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+body[data-theme="dark"] .result-summary {
+	color: #808080;
+}
+
+body[data-theme="dark"] .muted,
+body[data-theme="dark"] em:where(:not([class])) {
+	color: #808080;
+}
+
+body[data-theme="dark"] .about-mark {
+	background: transparent;
+}
+
+/* ==========================================================================
+   Flowgram brand v2 "Meadow"
+   Source of truth: /brand/flowgram-brand-mockup.html and /brand/ACCESSIBILITY.md
+   Light and dark tokens; all text pairs were contrast-checked to WCAG AA.
+   ========================================================================== */
+.settings-shell,
+.onboarding-shell,
+.modal-backdrop {
+	--fg-brand-dark: #2b2c23;
+	--fg-brand-light: #eef1dc;
+	--fg-brand-accent: #b8e62e;
+	--fg-brand-green: #3f6b12;
+	--fg-brand-red: #c8401f;
+
+	--settings-bg-window: #ffffff;
+	--settings-bg-sidebar: #f6f8ec;
+	--settings-surface: #ffffff;
+	--settings-fill: #f6f8ec;
+	--settings-ink: #2b2c23;
+	--settings-ink-2: #5b5e50;
+	--settings-ink-3: #6b6e60;
+	--settings-ink-4: #8d9082;
+	--settings-line: rgba(43, 44, 35, 0.1);
+	--settings-line-strong: rgba(43, 44, 35, 0.2);
+	--settings-accent: #b8e62e;
+	--settings-on-accent: #2b2c23;
+	--settings-focus: #2b2c23;
+	font-size: 14px;
+	letter-spacing: -0.01em;
+}
+
+body[data-theme="dark"] .settings-shell,
+body[data-theme="dark"] .onboarding-shell,
+body[data-theme="dark"] .modal-backdrop {
+	--fg-brand-green: #b8e62e;
+	--fg-brand-red: #ff8f70;
+	--settings-bg-window: #15160e;
+	--settings-bg-sidebar: #20221a;
+	--settings-surface: #2c2f22;
+	--settings-fill: #20221a;
+	--settings-ink: #eef1dc;
+	--settings-ink-2: #c6cbaf;
+	--settings-ink-3: #a9ae93;
+	--settings-ink-4: #7d826b;
+	--settings-line: rgba(238, 241, 220, 0.12);
+	--settings-line-strong: rgba(238, 241, 220, 0.24);
+	--settings-focus: #b8e62e;
+}
+
+/* Focus: always visible (WCAG 2.4.7 / 2.4.11) */
+.settings-shell :focus-visible,
+.onboarding-shell :focus-visible,
+.modal-backdrop :focus-visible {
+	outline: 3px solid var(--settings-focus);
+	outline-offset: 2px;
+	border-radius: 8px;
+}
+
+/* Type: tight display, calm body */
+h1 {
+	font-size: 32px;
+	line-height: 1.02;
+	font-weight: 600;
+	letter-spacing: -0.045em;
+}
+h2 {
+	font-size: 18px;
+	font-weight: 600;
+	letter-spacing: -0.03em;
+}
+.eyebrow {
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+}
+.accent-serif,
+h1 em.accent {
+	font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
+	font-style: italic;
+	font-weight: 400;
+	letter-spacing: -0.02em;
+	color: inherit;
+}
+
+/* Controls: 32px targets, 10px radius, flat */
+.button,
+.select,
+.text-field {
+	height: 32px;
+	border-radius: 10px;
+	border: 1px solid var(--settings-line-strong);
+	background: var(--settings-surface);
+	color: var(--settings-ink);
+	box-shadow: none;
+}
+.button {
+	font-weight: 500;
+}
+.button:hover:not(:disabled) {
+	background: var(--settings-fill);
+}
+.button.primary {
+	border-color: transparent;
+	background: var(--settings-accent);
+	color: var(--settings-on-accent);
+	font-weight: 600;
+}
+.button.primary:hover:not(:disabled) {
+	background: #a6d41f;
+}
+.button.danger {
+	background: var(--settings-surface);
+	color: var(--fg-brand-red);
+	border-color: var(--fg-brand-red);
+}
+.text-field {
+	box-shadow: none;
+}
+.select.compact {
+	height: 28px;
+}
+
+/* Surfaces */
+.step-list,
+.rule-group {
+	border: 1px solid var(--settings-line);
+	border-radius: 16px;
+	background: var(--settings-fill);
+}
+.detected-app,
+.note-strip {
+	background: var(--settings-fill);
+	border: 1px solid var(--settings-line);
+	border-radius: 14px;
+}
+.step-row.done {
+	background: transparent;
+}
+.progress-track {
+	background: var(--settings-line);
+}
+.progress-fill {
+	background: var(--settings-accent);
+}
+.warning-banner {
+	border: 1px solid var(--fg-brand-red);
+	background: var(--settings-fill);
+	border-radius: 14px;
+}
+.success-banner {
+	border: 0;
+	background: #dce99b;
+	color: #2b2c23;
+	border-radius: 16px;
+}
+.success-banner p,
+.success-banner h2 {
+	color: #2b2c23;
+}
+body[data-theme="dark"] .success-banner {
+	background: #323a18;
+	color: #eef1dc;
+}
+body[data-theme="dark"] .success-banner p,
+body[data-theme="dark"] .success-banner h2 {
+	color: #eef1dc;
+}
+.big-mark,
+.big-mark.amber,
+.big-mark.green,
+.big-mark.purple {
+	background: #2b2c23;
+	color: #dce99b;
+	border-radius: 10px;
+}
+body[data-theme="dark"] .big-mark,
+body[data-theme="dark"] .big-mark.amber,
+body[data-theme="dark"] .big-mark.green,
+body[data-theme="dark"] .big-mark.purple {
+	background: #b8e62e;
+	color: #2b2c23;
+}
+.modal {
+	border-radius: 20px;
+}
+kbd {
+	border-radius: 8px;
+}
+.muted,
+em:where(:not([class])) {
+	color: var(--settings-ink-3);
+}
+h1 em.accent {
+	color: inherit;
+}
+
+/* Dark: replace the legacy hard-coded greys */
+:where(body[data-theme="dark"]) :where(button:not([class*="bg-"]), input, select) {
+	background: var(--settings-surface);
+	color: var(--settings-ink);
+	border-color: var(--settings-line-strong);
+}
+body[data-theme="dark"] .button {
+	background: var(--settings-surface);
+	border-color: var(--settings-line-strong);
+	box-shadow: none;
+}
+body[data-theme="dark"] .button.primary {
+	background: var(--settings-accent);
+	color: var(--settings-on-accent);
+}
+body[data-theme="dark"] .text-field {
+	background: var(--settings-surface);
+	color: var(--settings-ink);
+	box-shadow: none;
+}
+body[data-theme="dark"] .step-list,
+body[data-theme="dark"] .rule-group,
+body[data-theme="dark"] .detected-app,
+body[data-theme="dark"] .note-strip {
+	background: var(--settings-fill);
+	border-color: var(--settings-line);
+}
+body[data-theme="dark"] .modal {
+	background: var(--settings-bg-window);
+	border-color: var(--settings-line-strong);
+}
+body[data-theme="dark"] .progress-track {
+	background: var(--settings-line);
+}
+body[data-theme="dark"] kbd {
+	background: var(--settings-surface);
+	color: var(--settings-ink);
+}
+body[data-theme="dark"] .result-summary,
+body[data-theme="dark"] .muted,
+body[data-theme="dark"] em:where(:not([class])) {
+	color: var(--settings-ink-3);
+}
+body[data-theme="dark"] .onboarding-shell p {
+	color: var(--settings-ink-2);
+}
+body[data-theme="dark"] .error,
+body[data-theme="dark"] .button.danger {
+	background: var(--settings-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		transition: none !important;
+		animation: none !important;
+	}
+}
+@media (forced-colors: active) {
+	.button,
+	.select,
+	.text-field {
+		border: 1px solid ButtonText;
+	}
+}
+
+/* Native selects: draw our own chevron so dropdowns are recognisable */
+select.select,
+.select select {
+	appearance: none;
+	-webkit-appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6e60' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 10px center;
+}
+
+/* Surfaces that were hard-coded white or grey: follow the theme tokens */
+.search-strip,
+.modal-search,
+.group-head:hover {
+	background: var(--settings-fill);
+}
+.rule-search,
+.drop-zone,
+.modal-search input,
+kbd {
+	background: var(--settings-surface);
+}
+.rule-group small,
+.group-head small,
+small {
+	color: var(--settings-ink-3);
+	font-size: 12px;
+}
+
+/* Page header: sans headline with one serif-italic accent word, as in the brand mockup */
+.page-head {
+	max-width: 720px;
+	margin-bottom: 28px;
+}
+.page-head h1 {
+	font-size: 40px;
+	line-height: 1;
+	font-weight: 500;
+	letter-spacing: -0.055em;
+}
+.page-head h1 .accent {
+	font-size: 1.1em;
+}
+.page-head p {
+	margin-top: 10px;
+	max-width: 460px;
+	color: var(--settings-ink-2);
+	font-size: 15px;
+	line-height: 1.4;
+}
+.page-head + section > .stanza:first-child > .eyebrow:first-child,
+.page-head + .stanza > .eyebrow:first-child {
+	display: none;
+}
+.about h1 {
+	font-size: 40px;
+	font-weight: 500;
+	letter-spacing: -0.055em;
+}
+.about-mark {
+	color: var(--settings-ink);
+}
+.content {
+	padding: 40px 52px;
+}
+
+/* Onboarding troubleshooting block */
+.help-details {
+	max-width: 36rem;
+	margin-top: 4px;
+	padding: 12px 16px;
+	border: 1px solid var(--settings-line-strong);
+	border-radius: 14px;
+	background: var(--settings-fill);
+	font-size: 14px;
+}
+.help-details summary {
+	cursor: pointer;
+	font-weight: 600;
+	color: var(--settings-ink);
+}
+.help-details p,
+.help-details ol {
+	margin: 10px 0 0;
+	color: var(--settings-ink-2);
+	font-size: 14px;
+	line-height: 1.5;
+}
+.help-details ol {
+	padding-left: 20px;
+}
+.command-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 10px 0 0;
+}
+.command-row code {
+	flex: 1;
+	min-width: 0;
+	padding: 8px 12px;
+	border: 1px solid var(--settings-line-strong);
+	border-radius: 10px;
+	background: var(--settings-surface);
+	color: var(--settings-ink);
+	font-size: 13px;
+	overflow-wrap: anywhere;
+	user-select: all;
+}
+
+/* App picker */
+.added-pill {
+	margin-left: auto;
+	flex: none;
+	background: var(--settings-fill);
+	color: var(--settings-ink-2);
+	border: 1px solid var(--settings-line-strong);
+}
+.modal-note {
+	margin: 0;
+	padding: 10px 18px 0;
+	color: var(--settings-ink-2);
+	font-size: 13px;
+	line-height: 1.4;
+}
+.modal-actions {
+	gap: 10px;
+}
+
+/* Onboarding: choose your apps */
+.onboarding-app-list {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	width: min(420px, 100%);
+	max-height: 220px;
+	margin: 0;
+	padding: 4px;
+	overflow-y: auto;
+	list-style: none;
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	background: var(--card, var(--settings-surface, #fff));
+}
+
+.onboarding-app-list .onboarding-app {
+	padding: 6px 8px;
+}
+
+.onboarding-app-list .onboarding-app strong {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.onboarding-app-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+/* Onboarding: browser extension */
+.onboarding-steps {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin: 0;
+	padding-left: 20px;
+	max-width: 440px;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.onboarding-browser-buttons {
+	display: inline-flex;
+	gap: 8px;
+	margin-left: 8px;
+	vertical-align: middle;
+}
+
+/* Modal: opaque, above everything, readable in both themes (portaled to <body>) */
+.modal-backdrop {
+	z-index: 1000;
+	background: rgba(20, 21, 14, 0.55);
+	backdrop-filter: none;
+	font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+	font-size: 14px;
+	color: var(--settings-ink);
+}
+.modal,
+body[data-theme="dark"] .modal {
+	background: var(--settings-bg-window);
+	color: var(--settings-ink);
+	border: 1px solid var(--settings-line-strong);
+}
+.modal-head {
+	padding: 20px 20px 12px;
+}
+.modal-head strong {
+	font-size: 18px;
+	color: var(--settings-ink);
+}
+.modal-head span {
+	font-size: 13px;
+	color: var(--settings-ink-2);
+}
+.modal-list {
+	min-height: 120px;
+}
+.app-result:hover,
+body[data-theme="dark"] .app-result:hover {
+	background: var(--settings-fill);
+}
+.app-result[aria-selected="true"] {
+	background: var(--settings-fill);
+	outline: 2px solid var(--settings-focus);
+	outline-offset: -2px;
+}
+.modal-actions {
+	padding: 12px 16px;
+	border-top: 1px solid var(--settings-line);
+}
+@media (prefers-reduced-motion: no-preference) {
+	.modal {
+		animation: modal-in 140ms ease-out;
+	}
+	@keyframes modal-in {
+		from { opacity: 0; transform: translateY(6px) scale(0.985); }
+		to { opacity: 1; transform: none; }
 	}
 }

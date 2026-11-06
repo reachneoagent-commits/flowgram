@@ -1,0 +1,27 @@
+expr main [(with regard to), (with regards to), (in regard to), (in regards to)]
+
+let message "`about` is shorter than `with regard to`. Shorter is clearer."
+let description "Replaces wordy phrases like `with regard to` with a shorter form."
+let kind "Style"
+let becomes ["about", "regarding"]
+
+# True positives
+test "We think with regard to the plan is solid." "We think about the plan is solid."
+test "My manager said with regards to the budget." "My manager said about the budget."
+test "She wrote in regard to the summary." "She wrote about the summary."
+test "After the call, in regards to the team agreed." "After the call, about the team agreed."
+test "Maybe with regard to the results will help." "Maybe about the results will help."
+test "We think with regards to the plan is solid." "We think about the plan is solid."
+test "My manager said in regard to the budget." "My manager said about the budget."
+test "She wrote in regards to the summary." "She wrote about the summary."
+test "Honestly, with regard to this is fine." "Honestly, about this is fine."
+test "With regard to the plan." "About the plan."
+
+# True negatives
+allows "She spoke about the plan."
+allows "Kind regards, Sam."
+allows "Please send my regards."
+allows "He holds her in high regard."
+allows "With respect, I disagree."
+allows "They have great respect for her."
+allows "The report is ready."

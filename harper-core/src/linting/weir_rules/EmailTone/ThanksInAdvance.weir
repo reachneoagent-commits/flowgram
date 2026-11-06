@@ -1,0 +1,27 @@
+expr main [(thanks in advance), (thank you in advance), (thx in advance)]
+
+let message "`Thanks in advance` can sound presumptuous. Thank people once the work is done."
+let description "Suggests warmer, clearer wording than `thanks in advance` in emails."
+let kind "Style"
+let becomes ["thank you"]
+
+# True positives
+test "We think thanks in advance the plan is solid." "We think thank you the plan is solid."
+test "My manager said thank you in advance the budget." "My manager said thank you the budget."
+test "She wrote thx in advance the summary." "She wrote thank you the summary."
+test "Honestly, thanks in advance this is fine." "Honestly, thank you this is fine."
+test "Maybe thank you in advance the results will help." "Maybe thank you the results will help."
+test "We think thx in advance the plan is solid." "We think thank you the plan is solid."
+test "Yesterday thanks in advance the draft was sent." "Yesterday thank you the draft was sent."
+test "I noticed thank you in advance the update." "I noticed thank you the update."
+test "Honestly, thx in advance this is fine." "Honestly, thank you this is fine."
+test "Thanks in advance the plan." "Thank you the plan."
+
+# True negatives
+allows "Thank you for your help."
+allows "Thanks for the update."
+allows "Pay in advance."
+allows "Book in advance for a discount."
+allows "Thanks, in any case."
+allows "Advance notice helps."
+allows "The report is ready."

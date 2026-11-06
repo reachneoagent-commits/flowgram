@@ -23,8 +23,8 @@
 		"check:config": "tsc --noEmit --project tsconfig.node.json",
 		"check:svelte": "svelte-check --tsconfig ./tsconfig.json",
 		"preview": "vite preview",
-		"zip-for-chrome": "TARGET_BROWSER=chrome npm run build && node src/zip.js harper-chrome-plugin.zip",
-		"zip-for-firefox": "TARGET_BROWSER=firefox npm run build && node src/zip.js harper-firefox-plugin.zip",
+		"zip-for-chrome": "TARGET_BROWSER=chrome npm run build && node src/zip.js flowgram-chrome-extension.zip",
+		"zip-for-firefox": "TARGET_BROWSER=firefox npm run build && node src/zip.js flowgram-firefox-extension.zip",
 		"test": "playwright test --headed"
 	},
 	"devDependencies": {

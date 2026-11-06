@@ -68,6 +68,36 @@ function selectApp(selectedBundleId: string) {
 	void performSearch(bundleId);
 }
 
+function portal(node: HTMLElement) {
+	const previous = document.activeElement as HTMLElement | null;
+	document.body.appendChild(node);
+	node.querySelector<HTMLInputElement>('input')?.focus();
+	return {
+		destroy() {
+			node.remove();
+			previous?.focus?.();
+		},
+	};
+}
+
+function trapTab(event: KeyboardEvent) {
+	if (event.key !== 'Tab') return;
+	const root = event.currentTarget as HTMLElement;
+	const items = Array.from(
+		root.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), [tabindex="0"]'),
+	);
+	if (items.length === 0) return;
+	const first = items[0];
+	const last = items[items.length - 1];
+	if (event.shiftKey && document.activeElement === first) {
+		event.preventDefault();
+		last.focus();
+	} else if (!event.shiftKey && document.activeElement === last) {
+		event.preventDefault();
+		first.focus();
+	}
+}
+
 function submit() {
 	if (canAdd) {
 		add(trimmedBundleId);
@@ -75,33 +105,24 @@ function submit() {
 }
 </script>
 
-<div
-  class="modal-backdrop"
-  role="button"
-  tabindex="0"
-  aria-label="Close application picker"
-  on:click={close}
-  on:keydown={(event) => {
-    if (event.key === "Escape" || event.key === "Enter" || event.key === " ") {
-      close();
-    }
-  }}
->
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+<div class="modal-backdrop" use:portal on:click|self={close}>
   <div
     class="modal"
     role="dialog"
+    aria-modal="true"
+    aria-labelledby="app-picker-title"
     tabindex="-1"
-    aria-label="Choose an application"
-    on:click|stopPropagation={() => {}}
     on:keydown|stopPropagation={(event) => {
       if (event.key === "Escape") {
         close();
       }
+      trapTab(event);
     }}
   >
     <div class="modal-head">
-      <strong>Add application</strong>
-      <span>Enter the app bundle ID Harper should watch.</span>
+      <strong id="app-picker-title">Add application</strong>
+      <span>Search for an app, select it, then click Add.</span>
     </div>
     <div class="modal-search">
       <SearchIcon className="settings-icon" />
@@ -118,14 +139,15 @@ function submit() {
         }}
       />
     </div>
-    <div class="modal-list">
+    <div class="modal-list" role="listbox" aria-label="Matching applications">
       {#if isSearching}
         <div class="empty">Searching...</div>
       {:else if searchResults.length > 0}
         {#each searchResults as result}
           <div
             class="app-result"
-            role="button"
+            aria-selected={result.bundle_id === trimmedBundleId}
+            role="option"
             tabindex="0"
             on:click={() => selectApp(result.bundle_id)}
             on:keydown={(event) => {
@@ -139,6 +161,9 @@ function submit() {
               <div class="app-result-name">{result.name}</div>
               <div class="app-result-bundle-id">{result.bundle_id}</div>
             </div>
+            {#if existingBundleIds.includes(result.bundle_id)}
+              <span class="pill added-pill">Already added</span>
+            {/if}
           </div>
         {/each}
       {:else if trimmedBundleId}
@@ -151,9 +176,16 @@ function submit() {
         <div class="empty">Search for an app by name, or enter the bundle ID directly.</div>
       {/if}
     </div>
+    {#if isDuplicate}
+      <p class="modal-note" role="status">
+        This app is already in your list. Close this window and make sure its switch is on.
+      </p>
+    {/if}
     <div class="modal-actions">
-      <button class="button" type="button" on:click={close}>Cancel</button>
-      <button class="button primary" type="button" disabled={!canAdd} on:click={submit}>Add</button>
+      <button class="button" type="button" on:click={close}>{isDuplicate ? 'Close' : 'Cancel'}</button>
+      <button class="button primary" type="button" disabled={!canAdd} on:click={submit}>
+        {isDuplicate ? 'Already added' : 'Add'}
+      </button>
     </div>
   </div>
 </div>

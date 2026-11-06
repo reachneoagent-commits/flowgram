@@ -1,0 +1,27 @@
+expr main (during the course of)
+
+let message "`during` is shorter. Shorter is clearer."
+let description "Replaces wordy phrases like `during the course of` with a shorter form."
+let kind "Style"
+let becomes ["during"]
+
+# True positives
+test "We think during the course of the plan is solid." "We think during the plan is solid."
+test "Yesterday during the course of the draft was sent." "Yesterday during the draft was sent."
+test "We think during the course of the plan is solid." "We think during the plan is solid."
+test "Yesterday during the course of the draft was sent." "Yesterday during the draft was sent."
+test "We think during the course of the plan is solid." "We think during the plan is solid."
+test "Yesterday during the course of the draft was sent." "Yesterday during the draft was sent."
+test "We think during the course of the plan is solid." "We think during the plan is solid."
+test "Yesterday during the course of the draft was sent." "Yesterday during the draft was sent."
+test "We think during the course of the plan is solid." "We think during the plan is solid."
+test "During the course of the plan." "During the plan."
+
+# True negatives
+allows "During the call, we agreed."
+allows "The course of action is clear."
+allows "Of course, we agree."
+allows "The course was long."
+allows "During lunch, we talked."
+allows "In due course, we will see."
+allows "The report is ready."

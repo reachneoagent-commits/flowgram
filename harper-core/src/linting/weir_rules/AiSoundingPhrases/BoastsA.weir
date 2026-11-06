@@ -1,0 +1,26 @@
+expr main <(boasts [a, an]), (boasts)>
+
+let message "Prefer `has`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `boasts a` with `has a`."
+let kind "Style"
+let becomes "has"
+
+# True positives
+test "The hotel boasts a pool." "The hotel has a pool."
+test "The town boasts a castle." "The town has a castle."
+test "Our flat boasts an attic." "Our flat has an attic."
+test "The villa boasts a garden." "The villa has a garden."
+test "The school boasts a library." "The school has a library."
+test "This phone boasts a big screen." "This phone has a big screen."
+test "The park boasts an old fountain." "The park has an old fountain."
+test "That cafe boasts a patio." "That cafe has a patio."
+
+# True negatives
+allows "The hotel has a pool."
+allows "He boasts about his car."
+allows "She boasts constantly."
+allows "The team boasts three champions."
+allows "He never boasts."
+allows "They boast about everything."
+allows "The hotel boasts proudly."
+allows "She boasted of her trip."

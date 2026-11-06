@@ -1,0 +1,27 @@
+expr main <(who's [book, car, idea, turn, fault, side, house, phone, bag, coat, bike, dog, job, name, keys]), who's>
+
+let message "Use `whose` for possession. `Who's` means `who is`."
+let description "Fixes the common mistake `who's idea`."
+let kind "Grammar"
+let becomes "whose"
+
+# True positives
+test "Ask who's idea it was." "Ask whose idea it was."
+test "No clue who's turn it is." "No clue whose turn it is."
+test "Tell me who's car it was." "Tell me whose car it was."
+test "I wonder who's fault it is." "I wonder whose fault it is."
+test "Ask who's bag it was." "Ask whose bag it was."
+test "Ask who's idea it was." "Ask whose idea it was."
+test "No clue who's turn it is." "No clue whose turn it is."
+test "Tell me who's car it was." "Tell me whose car it was."
+test "I wonder who's fault it is." "I wonder whose fault it is."
+test "Who's idea the plan." "Whose idea the plan."
+
+# True negatives
+allows "Who's coming tonight?"
+allows "Whose idea was it?"
+allows "Who's the new manager?"
+allows "Who's at the door?"
+allows "Who's been here?"
+allows "The man who's tall left."
+allows "Who's there?"

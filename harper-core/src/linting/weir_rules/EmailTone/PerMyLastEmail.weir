@@ -1,0 +1,27 @@
+expr main [(per my last email), (as per my last email), (per my previous email), (as per my previous email)]
+
+let message "`Per my last email` can read as passive-aggressive. Try a neutral reminder."
+let description "Suggests warmer, clearer wording than `per my last email` in emails."
+let kind "Style"
+let becomes ["as discussed earlier", "as I said in my last email"]
+
+# True positives
+test "We think per my last email the plan is solid." "We think as discussed earlier the plan is solid."
+test "My manager said as per my last email the budget." "My manager said as discussed earlier the budget."
+test "She wrote per my previous email the summary." "She wrote as discussed earlier the summary."
+test "After the call, as per my previous email the team agreed." "After the call, as discussed earlier the team agreed."
+test "Maybe per my last email the results will help." "Maybe as discussed earlier the results will help."
+test "We think as per my last email the plan is solid." "We think as discussed earlier the plan is solid."
+test "My manager said per my previous email the budget." "My manager said as discussed earlier the budget."
+test "She wrote as per my previous email the summary." "She wrote as discussed earlier the summary."
+test "Honestly, per my last email this is fine." "Honestly, as discussed earlier this is fine."
+test "Per my last email the plan." "As discussed earlier the plan."
+
+# True negatives
+allows "As I mentioned earlier, the file is ready."
+allows "My last email had the file."
+allows "Per the contract, we pay monthly."
+allows "She wrote an email last week."
+allows "Per diem rates apply."
+allows "See my previous message."
+allows "The report is ready."

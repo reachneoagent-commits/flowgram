@@ -98,6 +98,16 @@ Suggest:
 
 
 
+Lint:    Style (31 priority)
+Message: |
+      48 | root word will get different parts of speech, resulting in a large number of
+         |                                                            ^~~~~~~~~~~~~~~~~ `many` is shorter. Shorter is clearer.
+      49 | tags. For example, NN for singular common nouns, NNS for plural common nouns, NP
+Suggest:
+  - Replace with: “many”
+
+
+
 Lint:    Spelling (63 priority)
 Message: |
       49 | tags. For example, NN for singular common nouns, NNS for plural common nouns, NP

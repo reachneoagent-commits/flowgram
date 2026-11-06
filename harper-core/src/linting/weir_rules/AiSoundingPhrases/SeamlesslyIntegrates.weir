@@ -1,0 +1,26 @@
+expr main (seamlessly integrates)
+
+let message "Drop `seamlessly`; it is a stock intensifier. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `seamlessly integrates` with `integrates`."
+let kind "Style"
+let becomes "integrates"
+
+# True positives
+test "The tool seamlessly integrates with Slack." "The tool integrates with Slack."
+test "The tool also seamlessly integrates with email." "The tool also integrates with email."
+test "Today the tool seamlessly integrates with the calendar." "Today the tool integrates with the calendar."
+test "Seamlessly integrates with every tool you use." "Integrates with every tool you use."
+test "Our API seamlessly integrates everywhere." "Our API integrates everywhere."
+test "It seamlessly integrates into the editor." "It integrates into the editor."
+test "They say it seamlessly integrates with phones." "They say it integrates with phones."
+test "Reportedly, it seamlessly integrates with the cloud." "Reportedly, it integrates with the cloud."
+
+# True negatives
+allows "The tool integrates with Slack."
+allows "He moved seamlessly between rooms."
+allows "The pieces fit together seamlessly."
+allows "A seamless garment is rare."
+allows "She spoke seamlessly."
+allows "The sleeves joined without a seam."
+allows "Seamless transitions are hard."
+allows "It runs smoothly."

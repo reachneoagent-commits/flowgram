@@ -40,6 +40,17 @@ export interface Integration {
 	display_name: string;
 }
 
+export type BrowserId = 'chrome' | 'edge' | 'brave';
+
+export interface BrowserProfileStatus {
+	browser: BrowserId;
+	profile_dir: string;
+	profile_name: string;
+	email: string | null;
+	installed: boolean;
+	enabled: boolean;
+}
+
 export interface AppSearchResult {
 	name: string;
 	bundle_id: string;
@@ -101,6 +112,16 @@ export class Client {
 	/** Configure the app to auto update. */
 	static async setAutoUpdate(autoUpdate: boolean): Promise<void> {
 		await invoke('set_auto_update', { autoUpdate });
+	}
+
+	/** Get the preferred UI theme: "light", "dark", or "system". */
+	static async getTheme(): Promise<string> {
+		return await invoke<string>('get_theme');
+	}
+
+	/** Set the preferred UI theme: "light", "dark", or "system". */
+	static async setTheme(theme: string): Promise<void> {
+		await invoke('set_theme', { theme });
 	}
 
 	static async getCurrentVersion(): Promise<string> {
@@ -201,6 +222,22 @@ export class Client {
 
 	static async launchApp(bundleId: string): Promise<void> {
 		await invoke('launch_app', { bundleId });
+	}
+
+	/** Copy the bundled browser extension to Documents and open that folder. Returns its path. */
+	static async prepareBrowserExtension(): Promise<string> {
+		return await invoke<string>('prepare_browser_extension');
+	}
+
+	static async openBrowserExtensionsPage(
+		browser: BrowserId,
+		profileDirectory?: string,
+	): Promise<void> {
+		await invoke('open_browser_extensions_page', { browser, profileDirectory });
+	}
+
+	static async getBrowserExtensionProfiles(): Promise<BrowserProfileStatus[]> {
+		return await invoke<BrowserProfileStatus[]>('get_browser_extension_profiles');
 	}
 
 	static async getAccessibilityPermissionStatus(): Promise<AccessibilityPermissionStatus> {

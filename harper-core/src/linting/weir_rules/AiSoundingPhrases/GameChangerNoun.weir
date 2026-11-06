@@ -1,0 +1,26 @@
+expr main [(game-changer), (game changer)]
+
+let message "Name the actual change instead of calling it a `game-changer`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `game-changer` with `major change`."
+let kind "Style"
+let becomes ["major change", "big change"]
+
+# True positives
+test "This update is a game-changer." "This update is a major change."
+test "The new camera is a game changer." "The new camera is a major change."
+test "It was a game-changer for us." "It was a major change for us."
+test "Remote work became a game changer." "Remote work became a major change."
+test "A game-changer arrived today." "A major change arrived today."
+test "Call it a game changer if you like." "Call it a major change if you like."
+test "That tool is a game-changer, truly." "That tool is a major change, truly."
+test "She called it a game changer again." "She called it a major change again."
+
+# True negatives
+allows "This update is a major change."
+allows "The game changed after halftime."
+allows "A game of chess takes patience."
+allows "The changer of tires arrived."
+allows "Change the game plan."
+allows "He changed games twice."
+allows "A coin changer sat by the door."
+allows "Game night is Friday."

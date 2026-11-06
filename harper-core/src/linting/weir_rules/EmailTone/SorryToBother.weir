@@ -1,0 +1,27 @@
+expr main [(sorry to bother you), (sorry for bothering you), (sorry to trouble you)]
+
+let message "Over-apologising weakens a request. Thank the reader instead."
+let description "Suggests warmer, clearer wording than `sorry to bother you` in emails."
+let kind "Style"
+let becomes ["thank you for your time"]
+
+# True positives
+test "We think sorry to bother you the plan is solid." "We think thank you for your time the plan is solid."
+test "My manager said sorry for bothering you the budget." "My manager said thank you for your time the budget."
+test "She wrote sorry to trouble you the summary." "She wrote thank you for your time the summary."
+test "Honestly, sorry to bother you this is fine." "Honestly, thank you for your time this is fine."
+test "Maybe sorry for bothering you the results will help." "Maybe thank you for your time the results will help."
+test "We think sorry to trouble you the plan is solid." "We think thank you for your time the plan is solid."
+test "Yesterday sorry to bother you the draft was sent." "Yesterday thank you for your time the draft was sent."
+test "I noticed sorry for bothering you the update." "I noticed thank you for your time the update."
+test "Honestly, sorry to trouble you this is fine." "Honestly, thank you for your time this is fine."
+test "Sorry to bother you the plan." "Thank you for your time the plan."
+
+# True negatives
+allows "Thank you for your time."
+allows "I am sorry for the delay."
+allows "Sorry about that."
+allows "Do not bother me now."
+allows "It is no bother."
+allows "Sorry, I missed that."
+allows "The report is ready."

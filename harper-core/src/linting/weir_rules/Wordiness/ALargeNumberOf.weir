@@ -1,0 +1,27 @@
+expr main [(a large number of), (a great number of), (a significant number of)]
+
+let message "`many` is shorter. Shorter is clearer."
+let description "Replaces wordy phrases like `a large number of` with a shorter form."
+let kind "Style"
+let becomes ["many"]
+
+# True positives
+test "We think a large number of the plan is solid." "We think many the plan is solid."
+test "My manager said a great number of the budget." "My manager said many the budget."
+test "She wrote a significant number of the summary." "She wrote many the summary."
+test "Honestly, a large number of this is fine." "Honestly, many this is fine."
+test "Maybe a great number of the results will help." "Maybe many the results will help."
+test "We think a significant number of the plan is solid." "We think many the plan is solid."
+test "Yesterday a large number of the draft was sent." "Yesterday many the draft was sent."
+test "I noticed a great number of the update." "I noticed many the update."
+test "Honestly, a significant number of this is fine." "Honestly, many this is fine."
+test "A large number of the plan." "Many the plan."
+
+# True negatives
+allows "Many people came."
+allows "The number of guests grew."
+allows "A large crowd gathered."
+allows "A number of people left."
+allows "A large house stood there."
+allows "The great number is seven."
+allows "The report is ready."

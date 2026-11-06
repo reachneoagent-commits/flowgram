@@ -1,0 +1,27 @@
+expr main <(its [(very [important, likely, possible, difficult, necessary, true, unlikely]), important, necessary, possible, impossible, true, obvious, difficult, worth, likely, unlikely, okay]), its>
+
+let message "Use `it's` (it is) here, not the possessive `its`."
+let description "Fixes the common mistake `its very important`."
+let kind "Punctuation"
+let becomes "it's"
+
+# True positives
+test "Honestly its very important to us." "Honestly it's very important to us."
+test "Honestly its important to us." "Honestly it's important to us."
+test "Honestly its very likely to us." "Honestly it's very likely to us."
+test "Honestly its possible to us." "Honestly it's possible to us."
+test "Honestly its worth to us." "Honestly it's worth to us."
+test "Honestly its obvious to us." "Honestly it's obvious to us."
+test "Honestly its very important to us." "Honestly it's very important to us."
+test "Honestly its important to us." "Honestly it's important to us."
+test "Honestly its very likely to us." "Honestly it's very likely to us."
+test "Its very important the plan." "It's very important the plan."
+
+# True negatives
+allows "It's very important."
+allows "The dog wagged its tail."
+allows "The company lost its way."
+allows "Its very existence is odd."
+allows "The tree lost its leaves."
+allows "Its owner is away."
+allows "The cat licked its paw."

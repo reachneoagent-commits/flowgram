@@ -1,0 +1,27 @@
+expr main <([(to), (will), (would), (might), (may), (could), (cant), (wont), (dont), (not)] loose [the, a, my, your, his, her, our, weight, money, control, track, sight, hope, focus]), loose>
+
+let message "Use `lose` (to misplace). `Loose` means not tight."
+let description "Fixes the common mistake `to loose the`."
+let kind "Spelling"
+let becomes "lose"
+
+# True positives
+test "Be careful to loose the again." "Be careful to lose the again."
+test "Be careful will loose my twice." "Be careful will lose my twice."
+test "Be careful might loose weight again." "Be careful might lose weight again."
+test "Be careful could loose control twice." "Be careful could lose control twice."
+test "Be careful not loose focus again." "Be careful not lose focus again."
+test "Be careful to loose the again." "Be careful to lose the again."
+test "Be careful will loose my twice." "Be careful will lose my twice."
+test "Be careful might loose weight again." "Be careful might lose weight again."
+test "Be careful could loose control twice." "Be careful could lose control twice."
+test "To loose the the plan." "To lose the the plan."
+
+# True negatives
+allows "Try not to lose the keys."
+allows "The screw is loose."
+allows "Keep the dog loose."
+allows "A loose tooth hurts."
+allows "Wear loose clothes."
+allows "Set the horses loose."
+allows "Her hair hung loose."

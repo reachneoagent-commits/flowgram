@@ -1,0 +1,26 @@
+expr main [(it is important to note that), (it's important to note that), (it is worth noting that), (it's worth noting that), (it should be noted that), (it is important to remember that)]
+
+let message "You can usually cut this lead-in and state the point. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Removes filler lead-ins like `it is important to note that`."
+let kind "Style"
+let becomes ""
+
+# True positives
+test "It is important to note that the file is large." " the file is large."
+test "It's important to note that prices vary." " prices vary."
+test "It is worth noting that we shipped late." " we shipped late."
+test "It's worth noting that the test is slow." " the test is slow."
+test "It should be noted that this is optional." " this is optional."
+test "It is important to remember that backups matter." " backups matter."
+test "However, it is worth noting that costs rose." "However,  costs rose."
+test "Still, it's important to note that results differ." "Still,  results differ."
+
+# True negatives
+allows "The file is large."
+allows "It is important to finish on time."
+allows "It is worth the wait."
+allows "Note that prices vary."
+allows "It should be on the shelf."
+allows "She noted the price."
+allows "It's important."
+allows "That is worth noting."

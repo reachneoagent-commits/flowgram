@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flowgram Brand Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ───────── Flowgram brand tokens (v2 · Meadow) ───────── */
+:root{
+  --fg-meadow:#DCE99B;      /* page frame, soft surfaces */
+  --fg-meadow-2:#CFE384;    /* cards on white */
+  --fg-lime:#B8E62E;        /* primary action */
+  --fg-lime-hover:#A6D41F;
+  --fg-ink:#2B2C23;         /* text, dark surfaces, logo */
+  --fg-ink-2:#5B5E50;       /* secondary text */
+  --fg-ink-3:#6B6E60;       /* hints · 5.2:1 on white */
+  --fg-paper:#FFFFFF;
+  --fg-cream:#F6F8EC;       /* app sidebar / quiet fills */
+  --fg-line:rgba(43,44,35,.10);
+  --fg-coral:#C8401F;       /* spelling · 5.0:1 on white */
+  --fg-sky:#1F6FD1;         /* grammar · 4.9:1 */
+  --fg-violet:#6D3FD9;      /* style · 6.2:1 */
+  --fg-amber:#9A6200;       /* clarity · 5.1:1 */
+  --fg-dark:#2B2C23;        /* fixed dark: text on lime, brand cards (both themes) */
+  --fg-inv-bg:#2B2C23;--fg-inv-fg:#FFFFFF; /* inverted chips, active segments */
+  --fg-surface:#FFFFFF;     /* raised controls */
+  --fg-win:#FFFFFF;         /* windows, popovers */
+  --fg-meadow-lt:#DCE99B;   /* fixed meadow for text on dark cards */
+  --r-xl:32px; --r-lg:22px; --r-md:14px; --r-sm:10px;
+  --serif:"Instrument Serif",Georgia,serif;
+  --sans:"Inter Tight","Inter",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0}
+:focus-visible{outline:3px solid var(--fg-ink);outline-offset:2px;border-radius:8px}
+.hero-art :focus-visible,.menubar .head :focus-visible,.step .n:focus-visible{outline-color:var(--fg-lime)}
+.skip{position:absolute;left:12px;top:-60px;background:var(--fg-inv-bg);color:var(--fg-inv-fg);padding:12px 18px;border-radius:12px;z-index:999;text-decoration:none;font-weight:500}
+.skip:focus{top:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media (forced-colors:active){.toggle::after{background:CanvasText}.btn,.chip,.word{border:1px solid ButtonText}}
+html{scroll-behavior:smooth}
+html{color-scheme:light}
+body{font-family:var(--sans);background:var(--fg-meadow);color:var(--fg-ink);-webkit-font-smoothing:antialiased;letter-spacing:-.01em;padding:14px}
+em,.serif{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.02em}
+button{font:inherit;cursor:pointer;border:0;color:inherit;background:none}
+.sheet{background:var(--fg-paper);border-radius:var(--r-xl);max-width:1480px;margin:0 auto 14px;overflow:hidden}
+.pad{padding:56px clamp(20px,5vw,72px)}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-ink-3)}
+h2.sec{font-size:clamp(36px,5vw,64px);line-height:.98;letter-spacing:-.045em;font-weight:500;margin:10px 0 36px}
+.logo{display:inline-flex;align-items:center;gap:10px;color:var(--fg-ink)}
+.logo svg{height:26px;width:auto}
+.logo b{font-weight:600;font-size:26px;letter-spacing:-.05em;line-height:1}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:14px;padding:8px 8px 8px 22px;border-radius:var(--r-md);font-weight:500;font-size:17px;letter-spacing:-.02em;background:var(--fg-lime);color:var(--fg-dark);transition:.15s}
+a.btn{color:var(--fg-dark);text-decoration:none}
+.btn:hover{background:var(--fg-lime-hover)}
+.btn .arr{width:40px;height:40px;border-radius:10px;background:var(--fg-dark);color:#fff;display:grid;place-items:center}
+.btn.sm{font-size:13px;padding:5px 5px 5px 14px;gap:10px}.btn.sm .arr{width:26px;height:26px;border-radius:8px}
+.btn.ghost{background:var(--fg-cream);color:var(--fg-ink)}
+.btn.dark{background:var(--fg-inv-bg);color:var(--fg-inv-fg)}
+.hey{z-index:3}
+.icon-btn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--fg-cream)}
+.icon-btn.dark{background:var(--fg-inv-bg);color:var(--fg-inv-fg)}
+
+:root[data-theme="dark"]{
+  --fg-meadow:#262B13;--fg-meadow-2:#323A18;
+  --fg-ink:#EEF1DC;--fg-ink-2:#C6CBAF;--fg-ink-3:#A9AE93;
+  --fg-paper:#15160E;--fg-cream:#20221A;--fg-surface:#2C2F22;--fg-win:#1B1D14;
+  --fg-line:rgba(238,241,220,.14);
+  --fg-coral:#FF8F70;--fg-sky:#78B6FF;--fg-violet:#B9A3FF;--fg-amber:#F2B83F;
+  --fg-inv-bg:#EEF1DC;--fg-inv-fg:#15160E;
+  color-scheme:dark;
+}
+:root[data-theme="dark"] body{background:#0C0D07}
+:root[data-theme="dark"] .stage{background:#0C0D07}
+:root[data-theme="dark"] .win,:root[data-theme="dark"] .menubar,:root[data-theme="dark"] .overlay-demo{box-shadow:0 30px 60px -20px rgba(0,0,0,.7),0 0 0 1px var(--fg-line)}
+/* hero art is a fixed light illustration in both themes */
+.hero-art{--fg-ink:#2B2C23;--fg-ink-2:#5B5E50;--fg-line:rgba(43,44,35,.1);--fg-meadow-2:#CFE384;--fg-coral:#C8401F;color:#2B2C23}
+.themebtn{position:fixed;right:22px;bottom:22px;z-index:500;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 12px;border-radius:99px;background:var(--fg-inv-bg);color:var(--fg-inv-fg);font-weight:500;font-size:14px;box-shadow:0 10px 30px -8px rgba(0,0,0,.4)}
+.themebtn i{width:18px;height:18px;border-radius:50%;background:linear-gradient(90deg,var(--fg-inv-fg) 50%,var(--fg-lime) 50%);box-shadow:inset 0 0 0 2px var(--fg-inv-fg)}
+.themebtn:focus-visible{outline-color:var(--fg-lime)}
+/* ───────── HERO ───────── */
+.hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);min-height:760px;padding:12px;gap:0}
+.hero-art{position:relative;border-radius:24px;overflow:hidden;min-height:640px;
+  background:
+   radial-gradient(120% 70% at 80% 0%,#cfe6f5 0,#e9f1e6 28%,transparent 45%),
+   linear-gradient(160deg,#89b55b 0%,#4f8a2f 38%,#2f6a22 70%,#244f1a 100%)}
+.hero-art::before{content:"";position:absolute;inset:0;
+  background:
+   radial-gradient(40% 25% at 25% 62%,rgba(255,255,255,.35),transparent 60%),
+   radial-gradient(30% 20% at 70% 85%,rgba(255,244,180,.45),transparent 60%),
+   repeating-linear-gradient(115deg,rgba(255,255,255,0) 0 18px,rgba(20,60,10,.12) 18px 22px)}
+.float{position:absolute;border-radius:24px;padding:22px}
+.score{left:6%;top:9%;width:62%;background:var(--fg-meadow-2);height:42%;display:flex;flex-direction:column;justify-content:space-between}
+.score small{font:500 12px var(--mono);letter-spacing:.04em}
+.score .big{font-size:clamp(44px,5.5vw,80px);letter-spacing:-.06em;font-weight:500;line-height:1}
+.pill{background:#fff;border-radius:10px;padding:8px 12px;font-size:17px;font-weight:500;display:inline-block;letter-spacing:-.03em}
+.score .dot{position:absolute;right:20px;top:20px;width:12px;height:12px;border-radius:50%;background:var(--fg-ink)}
+.underline-link{font:500 12px var(--mono);letter-spacing:.04em;border-bottom:1.5px solid var(--fg-ink);align-self:flex-start;padding-bottom:1px}
+.feed{left:40%;top:36%;width:55%;background:rgba(238,240,230,.78);backdrop-filter:blur(18px);padding:18px 18px 12px}
+.feed .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--fg-line)}
+.feed .row:last-of-type{border:0}
+.feed .row span{font-size:21px;font-weight:500;letter-spacing:-.04em}
+.feed .tag{background:#fff;border-radius:10px;padding:8px 12px;font-weight:500;font-size:16px}
+.feed .tag.bad{color:var(--fg-coral)}
+.feed .note{background:#fff;border-radius:14px;padding:14px;margin-top:8px;font-size:16px;font-weight:500;letter-spacing:-.03em}
+.feed .note small{display:block;margin-top:6px;font:500 12px var(--mono);border-bottom:1px solid;width:max-content}
+.brandcard{left:4%;top:50%;width:34%;background:var(--fg-dark);color:var(--fg-meadow-lt);height:25%;display:flex;flex-direction:column;justify-content:space-between;z-index:2;padding:20px}
+.brandcard div{display:flex;justify-content:space-between;font-size:16px;color:#e9eed2}
+.brandcard .wm{display:flex;align-items:center;gap:10px;font-size:clamp(34px,4vw,60px);font-weight:600;letter-spacing:-.06em;line-height:.9;color:var(--fg-meadow-lt)}
+.brandcard .wm svg{height:.75em;fill:var(--fg-meadow-lt)}
+.hey{position:absolute;left:5%;bottom:5%;color:#fff;font-size:clamp(46px,6vw,92px);line-height:.88;letter-spacing:-.06em;font-weight:500}
+.hero-main{display:flex;flex-direction:column;padding:12px 24px 24px;position:relative}
+.topbar{display:flex;justify-content:space-between;align-items:center}
+.hero-body{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:34px;padding:40px 0}
+.hero-body h1{font-size:clamp(52px,7.4vw,118px);line-height:.88;letter-spacing:-.065em;font-weight:500}
+.hero-body h1 em{font-size:1.08em;letter-spacing:-.05em}
+.hero-body p{color:var(--fg-ink-2);font-size:clamp(17px,1.6vw,22px);max-width:430px;line-height:1.3}
+.hero-foot{display:flex;justify-content:center;gap:26px;color:var(--fg-ink-3);font-size:18px}
+.hero-foot i{width:4px;height:4px;background:var(--fg-ink-3);border-radius:50%;align-self:center}
+
+/* ───────── BRAND SYSTEM ───────── */
+.grid{display:grid;gap:14px}
+.swatches{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.sw{border-radius:var(--r-lg);padding:18px;min-height:170px;display:flex;flex-direction:column;justify-content:space-between}
+.sw b{font-size:20px;font-weight:500;letter-spacing:-.03em}
+.sw code{font:400 12px var(--mono);opacity:.75}
+.sw.l{color:#2B2C23}.sw.d{color:#fff}
+.type-grid{grid-template-columns:1.2fr 1fr}
+.card{background:var(--fg-cream);border-radius:var(--r-lg);padding:28px}
+.card h3{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-ink-3);margin-bottom:18px}
+.spec-a{font-size:clamp(56px,7vw,104px);line-height:.9;letter-spacing:-.065em;font-weight:500}
+.spec-b{font-size:clamp(56px,7vw,104px);line-height:.9}
+.ramp div{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--fg-line)}
+.ramp span{font:400 12px var(--mono);color:var(--fg-ink-3)}
+.logo-grid{grid-template-columns:repeat(4,1fr)}
+.lg{border-radius:var(--r-lg);height:200px;display:grid;place-items:center}
+.lg .logo svg{height:34px}.lg .logo b{font-size:34px}
+.lg.mark svg{height:64px}
+.comp-grid{grid-template-columns:repeat(3,1fr)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 12px;border-radius:999px;font-size:13px;font-weight:500;display:inline-flex;gap:7px;align-items:center}
+.chip i{width:8px;height:8px;border-radius:50%}
+.toggle{width:48px;height:28px;border-radius:99px;background:var(--fg-lime);position:relative;border:2px solid var(--fg-ink);flex:none;padding:0;color:var(--fg-dark)}
+.toggle::after{content:"";position:absolute;right:2px;top:2px;width:20px;height:20px;border-radius:50%;background:var(--fg-dark)}
+.toggle.off{background:var(--fg-surface)}.toggle.off::after{right:auto;left:2px;background:var(--fg-ink)}
+.rules-do{grid-template-columns:1fr 1fr}
+.rules-do li{margin:0 0 10px 18px;color:var(--fg-ink-2);line-height:1.4}
+
+/* ───────── APP MOCKUP ───────── */
+small{font-size:12px}
+.card[style*="--fg-meadow"] h3{color:var(--fg-ink-2)}
+.stage{background:var(--fg-meadow);border-radius:var(--r-xl);padding:clamp(16px,4vw,56px);display:grid;gap:28px;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start}
+.win{background:var(--fg-win);border-radius:18px;box-shadow:0 30px 60px -20px rgba(43,44,35,.35),0 0 0 1px var(--fg-line);overflow:hidden;font-size:14px}
+.win-bar{height:44px;display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--fg-cream);border-bottom:1px solid var(--fg-line)}
+.win-bar i{width:12px;height:12px;border-radius:50%;background:#d6d9c8}
+.win-bar i:nth-child(1){background:#ee6a5f}.win-bar i:nth-child(2){background:#f4bf4f}.win-bar i:nth-child(3){background:#61c554}
+.win-bar span{margin:0 auto;transform:translateX(-30px);font-weight:500;color:var(--fg-ink-2)}
+.settings{display:grid;grid-template-columns:200px 1fr;height:600px}
+.side{background:var(--fg-cream);padding:16px 10px;border-right:1px solid var(--fg-line);display:flex;flex-direction:column;gap:2px}
+.side .logo{padding:4px 10px 16px}.side .logo svg{height:20px}.side .logo b{font-size:20px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:12px;width:100%;text-align:left;font-size:14px;font-weight:500;color:var(--fg-ink-2)}
+.nav svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nav:hover{background:rgba(43,44,35,.05)}
+.nav.on{background:var(--fg-lime);color:var(--fg-dark)}
+.side .spacer{flex:1}
+.pane{padding:32px 36px;overflow:auto;display:none}
+.pane.on{display:block}
+.pane h3{font-size:38px;letter-spacing:-.055em;font-weight:500;line-height:1}
+.pane h3 em{font-size:1.1em}
+.pane .sub{color:var(--fg-ink-2);margin:8px 0 24px;font-size:14px;max-width:440px}
+.set{background:var(--fg-cream);border-radius:16px;padding:4px 18px;margin-bottom:14px}
+.set .r{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--fg-line)}
+.set .r:last-child{border:0}
+.set .r b{font-weight:500;font-size:14px;display:block}.set .r small{color:var(--fg-ink-3);font-size:12px}
+.select{background:var(--fg-surface);border:1px solid var(--fg-line);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:500;min-width:160px;display:flex;justify-content:space-between}
+.seg{display:flex;background:var(--fg-surface);border-radius:10px;padding:3px;border:1px solid var(--fg-line)}
+.seg span{padding:6px 12px;border-radius:7px;font-weight:500;font-size:12px;color:var(--fg-ink-2)}
+.seg .on{background:var(--fg-inv-bg);color:var(--fg-inv-fg)}
+.rule{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--fg-line)}
+.rule:last-child{border:0}.rule div{flex:1}.rule b{font-weight:500;font-size:14px;display:block}.rule small{color:var(--fg-ink-3)}
+.badge{font:500 12px var(--mono);padding:4px 8px;border-radius:99px;background:var(--fg-surface);letter-spacing:.04em}
+.words{display:flex;flex-wrap:wrap;gap:8px}
+.word{background:var(--fg-cream);border-radius:10px;padding:8px 8px 8px 12px;font-weight:500;display:flex;gap:10px;align-items:center}
+.word s{text-decoration:none;color:var(--fg-ink-2);width:26px;height:26px;border-radius:7px;background:var(--fg-surface);display:grid;place-items:center;font-size:15px;cursor:pointer}
+.field{display:flex;gap:8px;margin-bottom:16px}
+.field div{flex:1;background:var(--fg-cream);border-radius:12px;padding:12px 14px;color:var(--fg-ink-3)}
+.apps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.app{background:var(--fg-cream);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px}
+.app i{width:36px;height:36px;border-radius:10px;display:block}
+.app b{display:block;font-weight:500;font-size:14px}.app small{color:var(--fg-ink-3)}
+.steps{display:grid;gap:10px}
+.step{display:flex;gap:14px;align-items:center;background:var(--fg-cream);border-radius:16px;padding:16px}
+.step .n{width:34px;height:34px;border-radius:10px;background:var(--fg-inv-bg);color:var(--fg-inv-fg);display:grid;place-items:center;font-weight:600}
+.step.done .n{background:var(--fg-lime);color:var(--fg-dark)}
+.step b{font-weight:500;font-size:15px;display:block}.step small{color:var(--fg-ink-2)}.step .btn{margin-left:auto}
+
+/* editor */
+.editor{padding:0;height:600px;display:flex;flex-direction:column;position:relative}
+.tools{display:flex;gap:8px;padding:12px 18px;border-bottom:1px solid var(--fg-line);align-items:center;background:var(--fg-cream)}
+.tools .chip{background:var(--fg-surface)}
+.doc{padding:34px 40px;flex:1;overflow:hidden;font-size:17px;line-height:1.7;position:relative}
+.doc h3{font-size:36px;letter-spacing:-.05em;font-weight:500;line-height:1;margin-bottom:18px}
+.doc h3 em{font-size:1.1em}
+.u{text-decoration-line:underline;text-decoration-thickness:2px;text-underline-offset:4px;cursor:pointer;text-decoration-color:var(--c)}
+/* color + line style: never color alone (WCAG 1.4.1) */
+.u.sp{--c:var(--fg-coral);text-decoration-style:wavy}.u.gr{--c:var(--fg-sky);text-decoration-style:solid}.u.st{--c:var(--fg-violet);text-decoration-style:dotted;text-decoration-thickness:3px}.u.cl{--c:var(--fg-amber);text-decoration-style:dashed}
+.suggest{position:absolute;left:40px;bottom:64px;width:min(300px,calc(100% - 80px));background:var(--fg-win);border-radius:18px;padding:14px;box-shadow:0 20px 50px -12px rgba(43,44,35,.4),0 0 0 1px var(--fg-line);font-size:13px;line-height:1.35}
+.suggest .hd{display:flex;gap:8px;align-items:center;margin-bottom:10px;font:500 12px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--fg-ink-2)}
+.suggest .fix{display:flex;align-items:center;gap:8px;background:var(--fg-meadow);border-radius:12px;padding:10px 12px;font-weight:600;font-size:16px;margin-bottom:8px;letter-spacing:-.02em}
+.suggest .fix s{text-decoration:line-through;color:var(--fg-ink-2);font-weight:400}
+.suggest p{color:var(--fg-ink-2);margin-bottom:12px}
+.suggest .acts{display:flex;gap:6px}
+.status{display:flex;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--fg-line);background:var(--fg-cream);font:500 12px var(--mono);color:var(--fg-ink-2)}
+.status b{background:var(--fg-lime);color:var(--fg-dark);padding:2px 8px;border-radius:99px;font-weight:500}
+
+/* side column: menu bar + overlay */
+.col{display:grid;gap:22px}
+.menubar{background:var(--fg-win);border-radius:20px;padding:10px;box-shadow:0 30px 60px -24px rgba(43,44,35,.4);width:300px;justify-self:start}
+.menubar .m{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-weight:500;font-size:14px}
+.menubar .m:hover{background:var(--fg-cream)}.menubar .m kbd{margin-left:auto;font:400 12px var(--mono);color:var(--fg-ink-3)}
+.menubar .head{background:var(--fg-dark);color:var(--fg-meadow-lt);border-radius:14px;padding:16px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:end}
+.menubar .head .logo{color:var(--fg-meadow-lt)}.menubar .head .logo b{font-size:22px}
+.menubar .head small{font:500 12px var(--mono);color:#cbd3a8}
+.overlay-demo{background:var(--fg-win);border-radius:18px;padding:26px;box-shadow:0 30px 60px -24px rgba(43,44,35,.4);font-size:15px;line-height:1.7}
+.overlay-demo .tip{margin-top:14px;display:flex;align-items:center;gap:10px;background:var(--fg-dark);color:#fff;border-radius:14px;padding:10px 10px 10px 14px;font-weight:500;width:max-content;max-width:100%}
+.overlay-demo .tip s{text-decoration:line-through;color:#9a9d8e}
+.overlay-demo .tip button{background:var(--fg-lime);color:var(--fg-dark);border-radius:9px;padding:6px 12px;font-weight:600;font-size:13px}
+.site-foot{text-align:center;color:var(--fg-ink-2);font-size:13px;padding:6px 0 18px}
+
+.brandcard div:first-child{gap:8px;white-space:nowrap;font-size:14px}
+@media(max-width:1000px){
+  .hero-art{min-height:820px}
+  .score{width:66%;height:30%}
+  .feed{left:30%;top:32%;width:66%}
+  .brandcard{top:66%;left:4%;width:56%;height:16%}
+  .hero-art{min-height:900px}
+  .hey{bottom:3%}
+  .hero,.stage,.type-grid,.rules-do{grid-template-columns:1fr}
+  .logo-grid,.comp-grid{grid-template-columns:1fr 1fr}
+  .settings{grid-template-columns:150px 1fr}
+}
+@media(max-width:620px){
+  .logo-grid,.comp-grid,.apps{grid-template-columns:1fr}
+  .settings{display:block;height:auto;min-height:520px}
+  .side{flex-direction:row;overflow-x:auto;padding:10px;border-right:0;border-bottom:1px solid var(--fg-line)}
+  .side .logo,.side .spacer{display:none}
+  .nav{width:auto;white-space:nowrap;flex:none}
+  .pane{padding:24px 20px}
+  .editor .doc{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<main id="main">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="mark" viewBox="0 0 53.97 54.65">
+      <rect x="35.67" width="18.31" height="18.31" rx="1.58" ry="1.58"/>
+      <path d="M52.39,28.87h-15.14c-.87,0-1.58.71-1.58,1.58v15.14c0,.87.71,1.58,1.58,1.58h5.26c1.11,0,1.87,1.11,1.48,2.14l-1.2,3.17c-.39,1.03.37,2.14,1.48,2.14h5.73c.65,0,1.24-.4,1.47-1.01h0c1.66-4.26,2.51-8.8,2.51-13.37v-9.81c0-.87-.71-1.58-1.58-1.58Z"/>
+      <path d="M19.49,27.39c0-9.63,2.38-18.47,6.34-25.33.52-.89-.18-2.02-1.21-1.91C10.79,1.52,0,13.19,0,27.39s10.8,25.88,24.63,27.26c1.03.1,1.72-1.02,1.2-1.92-3.97-6.86-6.35-15.7-6.35-25.34Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ═════════ 1 · WEBSITE HERO ═════════ -->
+<section class="sheet hero" id="site" aria-label="Flowgram home">
+  <div class="hero-art" aria-hidden="true">
+    <div class="float score">
+      <small>WRITING SCORE</small>
+      <div class="big">94.8</div>
+      <span class="pill" style="align-self:flex-start">+12 pts today</span>
+      <span class="underline-link">VIEW REPORT</span>
+      <span class="dot"></span>
+    </div>
+    <div class="float feed">
+      <div class="row"><span>Subject–verb<br/>agreement</span><b class="tag">2 fixes</b></div>
+      <div class="row"><span>Wordy phrase</span><b class="tag bad">−3 words</b></div>
+      <div class="row"><span>Tone</span><b class="tag bad">Too stiff</b></div>
+      <div class="note">Draft “Q3 update” is ready to send<small>REVIEW CHANGES ↗</small></div>
+    </div>
+    <div class="float brandcard">
+      <div><span>Private</span><span>On-device</span></div>
+      <div class="wm"><svg viewBox="0 0 53.97 54.65"><use href="#mark"/></svg>flowgram</div>
+    </div>
+    <div class="hey">Hey,<br/><em>it’s Flowgram!</em></div>
+  </div>
+
+  <div class="hero-main">
+    <header class="topbar">
+      <button class="icon-btn" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <span class="logo"><svg fill="currentColor" viewBox="0 0 53.97 54.65"><use href="#mark"/></svg><b>flowgram</b></span>
+      <button class="icon-btn dark" aria-label="Account"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4-5.5 7-5.5s6 1.5 7 5.5"/></svg></button>
+    </header>
+    <div class="hero-body">
+      <h1>Writing that<br/>flows with<br/><em>every word</em></h1>
+      <p>One assistant for grammar, tone and clarity, in every app you use. Private by design, free of subscriptions, instant on your Mac.</p>
+      <a class="btn" href="#app">Download Flowgram <span class="arr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    </div>
+    <div class="hero-foot"><span>Works offline</span><i></i><span>Open source</span><i></i><span>5 English dialects</span></div>
+  </div>
+</section>
+
+<!-- ═════════ 2 · BRAND SYSTEM ═════════ -->
+<section class="sheet" id="brand"><div class="pad">
+  <div class="eyebrow">Brand system · v2 “Meadow”</div>
+  <h2 class="sec">Fresh like new grass,<br/><em>calm like good prose</em></h2>
+
+  <div class="eyebrow" style="margin-bottom:14px">Color</div>
+  <div class="grid swatches" style="margin-bottom:56px">
+    <div class="sw l" style="background:#DCE99B"><b>Meadow</b><div><code>#DCE99B</code><br/><code>Frame · soft surface</code></div></div>
+    <div class="sw l" style="background:#CFE384"><b>Fern</b><div><code>#CFE384</code><br/><code>Highlight cards</code></div></div>
+    <div class="sw l" style="background:#B8E62E"><b>Lime</b><div><code>#B8E62E</code><br/><code>Primary action</code></div></div>
+    <div class="sw d" style="background:#2B2C23"><b>Ink</b><div><code>#2B2C23</code><br/><code>Text · logo · dark</code></div></div>
+    <div class="sw l" style="background:#F6F8EC;box-shadow:inset 0 0 0 1px var(--fg-line)"><b>Cream</b><div><code>#F6F8EC</code><br/><code>App surfaces</code></div></div>
+    <div class="sw d" style="background:#C8401F"><b>Coral</b><div><code>#C8401F</code><br/><code>Spelling · errors</code></div></div>
+    <div class="sw d" style="background:#1F6FD1"><b>Sky</b><div><code>#1F6FD1</code><br/><code>Grammar</code></div></div>
+    <div class="sw d" style="background:#6D3FD9"><b>Violet</b><div><code>#6D3FD9</code><br/><code>Style · tone</code></div></div>
+    <div class="sw d" style="background:#9A6200"><b>Amber</b><div><code>#9A6200</code><br/><code>Clarity</code></div></div>
+  </div>
+
+  <div class="eyebrow" style="margin-bottom:14px">Dark theme tokens</div>
+  <div class="grid swatches" style="margin-bottom:56px">
+    <div class="sw d" style="background:#0C0D07;box-shadow:inset 0 0 0 1px #333"><b>Night</b><div><code>#0C0D07</code><br/><code>Frame</code></div></div>
+    <div class="sw d" style="background:#15160E;box-shadow:inset 0 0 0 1px #333"><b>Soil</b><div><code>#15160E</code><br/><code>Sheet</code></div></div>
+    <div class="sw d" style="background:#20221A;box-shadow:inset 0 0 0 1px #333"><b>Moss</b><div><code>#20221A</code><br/><code>Cards</code></div></div>
+    <div class="sw d" style="background:#262B13"><b>Olive</b><div><code>#262B13</code><br/><code>Soft fill</code></div></div>
+    <div class="sw l" style="background:#EEF1DC"><b>Pale</b><div><code>#EEF1DC</code><br/><code>Text · 15:1</code></div></div>
+    <div class="sw l" style="background:#B8E62E"><b>Lime</b><div><code>#B8E62E</code><br/><code>Unchanged</code></div></div>
+  </div>
+
+  <div class="eyebrow" style="margin-bottom:14px">Typography</div>
+  <div class="grid type-grid" style="margin-bottom:56px">
+    <div class="card">
+      <h3>Inter Tight · headlines, UI</h3>
+      <div class="spec-a">Aa Write<br/>clearly</div>
+      <div class="ramp" style="margin-top:26px">
+        <div><b style="font-size:48px;letter-spacing:-.06em;font-weight:500">Display</b><span>500 · −6% · 0.9</span></div>
+        <div><b style="font-size:28px;letter-spacing:-.04em;font-weight:500">Heading</b><span>500 · −4% · 1.0</span></div>
+        <div><b style="font-size:16px;font-weight:400">Body copy reads at sixteen pixels.</b><span>400 · −1% · 1.4</span></div>
+        <div><b style="font:500 12px var(--mono);letter-spacing:.08em">LABEL / DATA</b><span>JetBrains Mono · +8%</span></div>
+      </div>
+    </div>
+    <div class="card" style="background:var(--fg-meadow)">
+      <h3>Instrument Serif Italic · the accent</h3>
+      <div class="spec-b serif">every<br/>word</div>
+      <p style="margin-top:22px;color:var(--fg-ink-2);line-height:1.45;max-width:380px">Use serif italic for one phrase per headline, the human moment. Never for body text or UI controls.</p>
+    </div>
+  </div>
+
+  <div class="eyebrow" style="margin-bottom:14px">Logo · unchanged</div>
+  <div class="grid logo-grid" style="margin-bottom:56px">
+    <div class="lg" style="background:var(--fg-cream)"><span class="logo"><svg fill="currentColor" viewBox="0 0 53.97 54.65"><use href="#mark"/></svg><b>flowgram</b></span></div>
+    <div class="lg" style="background:#2B2C23"><span class="logo" style="color:#DCE99B"><svg fill="currentColor" viewBox="0 0 53.97 54.65"><use href="#mark"/></svg><b>flowgram</b></span></div>
+    <div class="lg mark" style="background:var(--fg-lime)"><svg fill="#2B2C23" viewBox="0 0 53.97 54.65"><use href="#mark"/></svg></div>
+    <div class="lg mark" style="background:#DCE99B"><svg fill="#2B2C23" viewBox="0 0 53.97 54.65"><use href="#mark"/></svg></div>
+  </div>
+
+  <div class="eyebrow" style="margin-bottom:14px">Components</div>
+  <div class="grid comp-grid" style="margin-bottom:56px">
+    <div class="card">
+      <h3>Buttons</h3>
+      <div style="display:grid;gap:12px;justify-items:start">
+        <span class="btn">Open Flowgram <span class="arr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+        <span class="btn dark" style="padding:14px 22px">Secondary</span>
+        <span class="btn ghost" style="padding:14px 22px;background:var(--fg-surface)">Tertiary</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Issue categories</h3>
+      <div class="chips">
+        <span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-coral)"></i>Spelling</span>
+        <span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-sky)"></i>Grammar</span>
+        <span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-violet)"></i>Style</span>
+        <span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-amber)"></i>Clarity</span>
+      </div>
+      <h3 style="margin-top:28px">Controls</h3>
+      <div style="display:flex;gap:14px;align-items:center"><span class="toggle"></span><span class="toggle off"></span>
+        <div class="seg"><span class="on">Standard</span><span>Strict</span></div></div>
+    </div>
+    <div class="card">
+      <h3>Principles</h3>
+      <ul class="rules-do" style="list-style:none;display:block">
+        <li style="margin:0 0 10px">Lime means <b>go</b>, one per view.</li>
+        <li style="margin:0 0 10px">Ink, not black. Cream, not grey.</li>
+        <li style="margin:0 0 10px">Tight tracking on big type, loose on mono labels.</li>
+        <li style="margin:0 0 10px">Radii 10 / 14 / 22 / 32, always nested.</li>
+        <li style="margin:0">Underline colors carry meaning, never decoration.</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- ═════════ 3 · APP MOCKUP ═════════ -->
+<section class="sheet" id="app"><div class="pad" style="padding-bottom:28px">
+  <div class="eyebrow">App · Flowgram Desktop</div>
+  <h2 class="sec" style="margin-bottom:28px">Settings, editor<br/>and <em>overlay</em></h2>
+
+  <div class="stage">
+    <!-- settings window -->
+    <div class="win">
+      <div class="win-bar" aria-hidden="true"><i></i><i></i><i></i><span>Flowgram Settings</span></div>
+      <div class="settings">
+        <nav class="side" role="tablist" aria-label="Settings sections" aria-orientation="vertical">
+          <span class="logo"><svg fill="currentColor" viewBox="0 0 53.97 54.65"><use href="#mark"/></svg><b>flowgram</b></span>
+          <button class="nav on" data-p="start"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Getting started</button>
+          <button class="nav" data-p="general"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>General</button>
+          <button class="nav" data-p="dict"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h11"/></svg>Dictionary</button>
+          <button class="nav" data-p="rules"><svg viewBox="0 0 24 24"><path d="M4 6l2 2 3-3M4 14l2 2 3-3M12 7h8M12 15h8"/></svg>Rules</button>
+          <button class="nav" data-p="int"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>Integrations</button>
+          <span class="spacer"></span>
+          <button class="nav" data-p="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></svg>About</button>
+        </nav>
+
+        <div class="pane on" id="p-start">
+          <h3>Let’s get you<br/><em>writing</em></h3>
+          <p class="sub">Three quick steps and Flowgram follows you into every app.</p>
+          <div class="steps">
+            <div class="step done"><span class="n">✓</span><div><b>Grant accessibility access</b><small>Lets Flowgram read text you type</small></div></div>
+            <div class="step"><span class="n">2</span><div><b>Choose your apps</b><small>Mail, Notes, Slack and 20 more</small></div><span class="btn sm">Choose <span class="arr">→</span></span></div>
+            <div class="step"><span class="n">3</span><div><b>Take it for a test drive</b><small>Try a sentence with mistakes</small></div></div>
+          </div>
+        </div>
+
+        <div class="pane" id="p-general">
+          <h3>General</h3><p class="sub">How Flowgram looks, behaves and starts.</p>
+          <div class="set">
+            <div class="r"><div><b>English dialect</b><small>Spelling and phrasing rules</small></div><span class="select">American English <span>⌄</span></span></div>
+            <div class="r"><div><b>Strictness</b><small>How picky suggestions should be</small></div><div class="seg"><span>Relaxed</span><span class="on">Standard</span><span>Strict</span></div></div>
+            <div class="r"><div><b>Theme</b></div><div class="seg"><span class="on">Light</span><span>Dark</span><span>System</span></div></div>
+          </div>
+          <div class="set">
+            <div class="r"><div><b>Check as I type</b><small>Live suggestions after a short pause</small></div><span class="toggle"></span></div>
+            <div class="r"><div><b>Launch at startup</b></div><span class="toggle"></span></div>
+            <div class="r"><div><b>Skip code blocks</b><small>Only check comments and prose</small></div><span class="toggle off"></span></div>
+          </div>
+        </div>
+
+        <div class="pane" id="p-dict">
+          <h3>Dictionary</h3><p class="sub">Words Flowgram should never flag again.</p>
+          <div class="field"><div>Add a word…</div><span class="btn sm" style="align-self:center">Add <span class="arr">+</span></span></div>
+          <div class="words">
+            <span class="word">Flowgram <s>×</s></span><span class="word">Tauri <s>×</s></span><span class="word">Shahzad <s>×</s></span><span class="word">macOS <s>×</s></span><span class="word">Svelte <s>×</s></span><span class="word">Weirpack <s>×</s></span><span class="word">autocorrect <s>×</s></span>
+          </div>
+        </div>
+
+        <div class="pane" id="p-rules">
+          <h3>Rules</h3><p class="sub">Turn individual checks on, off or required.</p>
+          <div class="set">
+            <div class="rule"><span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-coral)"></i></span><div><b>Spelling</b><small>Typos and unknown words</small></div><span class="toggle"></span></div>
+            <div class="rule"><span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-sky)"></i></span><div><b>“could of” → “could have”</b><small>Common phrase corrections</small></div><span class="toggle"></span></div>
+            <div class="rule"><span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-violet)"></i></span><div><b>“utilize” → “use”</b><small>Prefer the shorter word</small></div><span class="badge">REQUIRE</span></div>
+            <div class="rule"><span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-amber)"></i></span><div><b>Sentence length</b><small>Flag sentences over 35 words</small></div><span class="toggle off"></span></div>
+            <div class="rule"><span class="chip" style="background:var(--fg-surface)"><i style="background:var(--fg-sky)"></i></span><div><b>Oxford comma</b><small>Punctuation</small></div><span class="toggle"></span></div>
+          </div>
+        </div>
+
+        <div class="pane" id="p-int">
+          <h3>Integrations</h3><p class="sub">Apps where Flowgram checks your writing.</p>
+          <div class="apps">
+            <div class="app"><i style="background:#C8401F"></i><div><b>Mail</b><small>Enabled</small></div><span class="toggle" style="margin-left:auto"></span></div>
+            <div class="app"><i style="background:#9A6200"></i><div><b>Notes</b><small>Enabled</small></div><span class="toggle" style="margin-left:auto"></span></div>
+            <div class="app"><i style="background:#6D3FD9"></i><div><b>Slack</b><small>Enabled</small></div><span class="toggle" style="margin-left:auto"></span></div>
+            <div class="app"><i style="background:#1F6FD1"></i><div><b>Safari</b><small>Disabled</small></div><span class="toggle off" style="margin-left:auto"></span></div>
+            <div class="app"><i style="background:var(--fg-ink)"></i><div><b>VS Code</b><small>Comments only</small></div><span class="toggle" style="margin-left:auto"></span></div>
+            <div class="app"><i style="background:var(--fg-lime)"></i><div><b>Add app…</b><small>Browse /Applications</small></div></div>
+          </div>
+        </div>
+
+        <div class="pane" id="p-about">
+          <h3>Flow<em>gram</em></h3><p class="sub">Version 0.1.0 · Built on the Harper grammar engine. Everything runs on your device.</p>
+          <div class="set"><div class="r"><div><b>Check for updates</b><small>You’re up to date</small></div><span class="btn sm ghost" style="background:var(--fg-surface)">Check <span class="arr">↻</span></span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <!-- editor -->
+      <div class="win">
+        <div class="win-bar" aria-hidden="true"><i></i><i></i><i></i><span>Untitled · Flowgram</span></div>
+        <div class="editor" style="height:470px">
+          <div class="tools" role="list" aria-label="Issue summary"><span class="chip"><i style="background:var(--fg-coral)"></i>1 spelling</span><span class="chip"><i style="background:var(--fg-sky)"></i>2 grammar</span><span class="chip"><i style="background:var(--fg-violet)"></i>1 style</span></div>
+          <div class="doc">
+            <h3>Q3 <em>update</em></h3>
+            <p>Our team <span class="u gr">have</span> shipped three features this quarter, and we <span class="u st">utilize</span> feedback from <span class="u sp">custmers</span> to decide what comes next. Its <span class="u gr">a lot</span> of progress.</p>
+          </div>
+          <div class="suggest" role="group" aria-labelledby="sg-t">
+            <div class="hd" id="sg-t"><i aria-hidden="true" style="width:8px;height:8px;border-radius:50%;background:var(--fg-violet)"></i>Style suggestion</div>
+            <div class="fix"><s>utilize</s> → use</div>
+            <p>Prefer the shorter word. It reads faster.</p>
+            <div class="acts"><span class="btn sm">Apply <span class="arr">↵</span></span><span class="btn sm ghost">Ignore</span><span class="sr">Press Escape to dismiss</span></div>
+          </div>
+          <div class="status" role="status" aria-live="polite"><span>148 words</span><b>Score 86</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage" style="margin-top:14px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="menubar">
+      <div class="head"><span class="logo"><svg fill="currentColor" height="20" viewBox="0 0 53.97 54.65"><use href="#mark"/></svg><b>flowgram</b></span><small>● ACTIVE</small></div>
+      <div class="m">Pause checking <kbd>⌥P</kbd></div>
+      <div class="m">Quick review <kbd>⌥R</kbd></div>
+      <div class="m">Open editor</div>
+      <div class="m">Settings… <kbd>⌘,</kbd></div>
+      <div class="m" style="color:var(--fg-ink-3)">Quit Flowgram</div>
+    </div>
+    <div class="overlay-demo">
+      <div class="eyebrow" style="margin-bottom:10px">Overlay in any app</div>
+      Thanks for the quick reply, I <span class="u st">could of</span> missed it otherwise.
+      <div class="tip"><s>could of</s> <b>could have</b> <button>Apply</button></div>
+    </div>
+  </div>
+</div></section>
+
+</main>
+<button class="themebtn" id="theme" type="button" aria-pressed="false"><i aria-hidden="true"></i><span>Dark theme</span></button>
+<footer class="site-foot"><p>Flowgram brand mockup · logo unchanged · fonts: Inter Tight, Instrument Serif, JetBrains Mono (Google Fonts)</p></footer>
+
+<script>
+(()=>{const r=document.documentElement,b=document.getElementById('theme');
+ let t=null;try{t=localStorage.getItem('fg-theme')}catch(e){}
+ if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+ const set=v=>{r.dataset.theme=v;b.setAttribute('aria-pressed',v==='dark');b.querySelector('span').textContent=v==='dark'?'Light theme':'Dark theme';try{localStorage.setItem('fg-theme',v)}catch(e){}};
+ set(t);b.addEventListener('click',()=>set(r.dataset.theme==='dark'?'light':'dark'));
+ if(location.hash==='#dark')set('dark');})();
+/* a11y enhancement layer — mirrors the semantics the Svelte app must ship */
+document.querySelectorAll('.toggle').forEach(t=>{
+  const row=t.closest('.r,.rule,.app'); const lab=row&&row.querySelector('b'); const on=!t.classList.contains('off');
+  t.setAttribute('role','switch'); t.setAttribute('tabindex','0'); t.setAttribute('aria-checked',on);
+  if(lab) t.setAttribute('aria-label',lab.textContent.trim());
+  const flip=()=>{t.classList.toggle('off');t.setAttribute('aria-checked',!t.classList.contains('off'))};
+  t.addEventListener('click',flip); t.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}});
+});
+document.querySelectorAll('.btn:not(a), .word s, .seg span').forEach(b=>{
+  b.setAttribute('role','button'); b.setAttribute('tabindex','0');
+  if(b.matches('.word s')) b.setAttribute('aria-label','Remove '+b.parentElement.firstChild.textContent.trim());
+  b.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();b.click()}});
+});
+document.querySelectorAll('.chip i,.tools .chip').forEach(()=>{});
+document.querySelectorAll('.tools .chip').forEach(c=>c.setAttribute('role','listitem'));
+const tabs=[...document.querySelectorAll('.nav[data-p]')];
+tabs.forEach((b,i)=>{b.setAttribute('role','tab');b.id='t-'+b.dataset.p;b.setAttribute('aria-controls','p-'+b.dataset.p);b.setAttribute('aria-selected',b.classList.contains('on'));b.tabIndex=b.classList.contains('on')?0:-1;
+  b.addEventListener('keydown',e=>{const k={ArrowDown:1,ArrowRight:1,ArrowUp:-1,ArrowLeft:-1}[e.key];if(k){e.preventDefault();const n=tabs[(i+k+tabs.length)%tabs.length];n.focus();n.click()}if(e.key==='Home'){tabs[0].focus();tabs[0].click()}if(e.key==='End'){tabs.at(-1).focus();tabs.at(-1).click()}})});
+document.querySelectorAll('.pane').forEach(p=>{p.setAttribute('role','tabpanel');p.setAttribute('aria-labelledby','t-'+p.id.slice(2));p.tabIndex=0});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const g=document.querySelector('.suggest');if(g)g.style.display='none'}});
+document.querySelectorAll('.nav[data-p]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.nav').forEach(n=>{n.classList.toggle('on',n===b);n.setAttribute('aria-selected',n===b);n.tabIndex=n===b?0:-1});
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.p));
+}));
+</script>
+</body>
+</html>

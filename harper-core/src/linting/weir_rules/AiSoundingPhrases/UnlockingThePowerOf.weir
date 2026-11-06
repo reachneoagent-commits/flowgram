@@ -1,0 +1,26 @@
+expr main [(unlocking the power of), (unleashing the power of), (harnessing the power of)]
+
+let message "Say `using` instead of `unlocking the power of`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `unlocking the power of` with `using`."
+let kind "Style"
+let becomes "using"
+
+# True positives
+test "By unlocking the power of data, we won." "By using data, we won."
+test "Unleashing the power of habits takes time." "Using habits takes time."
+test "Harnessing the power of teamwork helps." "Using teamwork helps."
+test "He succeeds by harnessing the power of wind." "He succeeds by using wind."
+test "She wrote about unlocking the power of sleep." "She wrote about using sleep."
+test "Start unleashing the power of your notes." "Start using your notes."
+test "We are harnessing the power of the crowd." "We are using the crowd."
+test "They keep unlocking the power of the cloud." "They keep using the cloud."
+
+# True negatives
+allows "By using data, we won."
+allows "He was unlocking the door."
+allows "The power of the engine surprised us."
+allows "She is unleashing the dogs."
+allows "Harnessing the horse took an hour."
+allows "The power grid is failing."
+allows "Unlocking the phone is easy."
+allows "He keeps harnessing his anger."

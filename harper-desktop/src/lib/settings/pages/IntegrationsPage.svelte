@@ -10,7 +10,7 @@ import {
 	TrashIcon,
 } from 'components';
 import { onMount } from 'svelte';
-import { Client, type Integration } from '$lib/client';
+import { Client, type BrowserProfileStatus, type Integration } from '$lib/client';
 import AppIcon from '../components/AppIcon.svelte';
 import AppPickerModal from '../components/AppPickerModal.svelte';
 
@@ -29,6 +29,16 @@ let isAutoEnableSaving = false;
 let autoEnableError = '';
 let appPickerOpen = false;
 let newBundleId = '';
+let browserProfiles: BrowserProfileStatus[] = [];
+let isProfilesLoading = true;
+let extensionError = '';
+let isPreparingExtension = false;
+
+const BROWSER_LABELS: Record<string, string> = {
+	chrome: 'Chrome',
+	edge: 'Edge',
+	brave: 'Brave',
+};
 
 $: existingBundleIds = integrations.map((integration) => integration.bundle_id);
 
@@ -36,11 +46,44 @@ onMount(() => {
 	const refresh = () => {
 		if (!isIntegrationsSaving) void loadIntegrations();
 		if (!isAutoEnableSaving) void loadAutoEnableNewApps();
+		void loadBrowserProfiles();
 	};
 	refresh();
 	window.addEventListener('focus', refresh);
 	return () => window.removeEventListener('focus', refresh);
 });
+
+async function loadBrowserProfiles() {
+	try {
+		browserProfiles = await Client.getBrowserExtensionProfiles();
+	} catch (error) {
+		extensionError = `Unable to check browser profiles: ${error}`;
+	} finally {
+		isProfilesLoading = false;
+	}
+}
+
+async function openProfileExtensionsPage(profile: BrowserProfileStatus) {
+	extensionError = '';
+	try {
+		await Client.openBrowserExtensionsPage(profile.browser, profile.profile_dir);
+	} catch (error) {
+		extensionError = `${error}`;
+	}
+}
+
+async function showExtensionFolder() {
+	if (isPreparingExtension) return;
+	isPreparingExtension = true;
+	extensionError = '';
+	try {
+		await Client.prepareBrowserExtension();
+	} catch (error) {
+		extensionError = `${error}`;
+	} finally {
+		isPreparingExtension = false;
+	}
+}
 
 async function loadAutoEnableNewApps() {
 	isAutoEnableLoading = true;
@@ -177,7 +220,7 @@ function closeAppPicker() {
 <section>
   <div class="stanza">
     <div class="eyebrow">Selected apps</div>
-    <p class="section-copy">Harper will only watch the apps you enable here.</p>
+    <p class="section-copy">Flowgram will only watch the apps you enable here.</p>
 
     {#if isIntegrationsLoading}
       <p class="result-summary">Loading integrations...</p>
@@ -233,20 +276,62 @@ function closeAppPicker() {
   <div class="divider"></div>
 
   <div class="stanza">
+    <div class="eyebrow">Browser extension</div>
+    <p class="section-copy">Chrome, Edge and Brave keep a separate extension list for each profile, so the extension has to be added to every profile you want checked.</p>
+
+    <Panel>
+      {#if isProfilesLoading}
+        <div class="empty">Checking your browser profiles...</div>
+      {:else if browserProfiles.length === 0}
+        <div class="empty">No Chrome, Edge or Brave profiles found.</div>
+      {:else}
+        {#each browserProfiles as profile}
+          <div class="app-row">
+            <div class="grow">
+              <strong>{BROWSER_LABELS[profile.browser]} · {profile.profile_name}</strong>
+              <p>
+                {profile.email ?? profile.profile_dir} —
+                {#if profile.installed && profile.enabled}Extension active
+                {:else if profile.installed}Extension installed but turned off
+                {:else}Extension not added{/if}
+              </p>
+            </div>
+            {#if profile.installed && profile.enabled}
+              <CheckIcon className="control-icon" />
+            {:else}
+              <Button color="white" size="sm" on:click={() => openProfileExtensionsPage(profile)}>
+                {profile.installed ? 'Open extensions' : 'Set up'}
+              </Button>
+            {/if}
+          </div>
+        {/each}
+      {/if}
+    </Panel>
+
+    <div class="actions-row">
+      <Button unstyled class="button" type="button" disabled={isPreparingExtension} on:click={showExtensionFolder}>
+        {isPreparingExtension ? 'Preparing...' : 'Show extension folder'}
+      </Button>
+      <span class="muted">Set up opens that profile's extensions page: turn on Developer mode, click Load unpacked, and pick the "Flowgram Browser Extension" folder in Documents.</span>
+    </div>
+    {#if extensionError}
+      <p class="result-summary" role="alert">{extensionError}</p>
+    {/if}
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="stanza">
     <div class="eyebrow">New apps</div>
     <SettingRow top>
       <strong>Enable new apps automatically</strong>
-      <p>Automatically add and enable new apps when Harper encounters them. Disabled apps stay disabled; removed apps can be added again.</p>
-      <Checkbox
-        slot="control"
-        appearance="settings"
+      <p>Automatically add and enable new apps when Flowgram encounters them. Disabled apps stay disabled; removed apps can be added again.</p>
+      <Toggle slot="control" appearance="settings"
         checked={autoEnableNewApps}
         disabled={isAutoEnableLoading || isAutoEnableSaving}
         aria-label="Enable new apps automatically"
         on:click={() => setAutoEnableNewApps(!autoEnableNewApps)}
-      >
-        {#if autoEnableNewApps}<CheckIcon className="control-icon" />{/if}
-      </Checkbox>
+       />
     </SettingRow>
     {#if autoEnableError}
       <p class="result-summary" role="alert">{autoEnableError}</p>

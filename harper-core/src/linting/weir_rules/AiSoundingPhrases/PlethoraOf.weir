@@ -1,0 +1,26 @@
+expr main [(a plethora of), (a myriad of)]
+
+let message "Prefer `many`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `a plethora of` and `a myriad of` with `many`."
+let kind "Style"
+let becomes "many"
+
+# True positives
+test "We found a plethora of bugs." "We found many bugs."
+test "There are a myriad of options." "There are many options."
+test "A plethora of tools exists." "Many tools exists."
+test "A myriad of reasons apply." "Many reasons apply."
+test "The store sells a plethora of shoes." "The store sells many shoes."
+test "She named a myriad of places." "She named many places."
+test "He saw a plethora of stars." "He saw many stars."
+test "They offer a myriad of plans." "They offer many plans."
+
+# True negatives
+allows "We found many bugs."
+allows "There are many options."
+allows "A lot of tools exist."
+allows "Myriad reasons apply."
+allows "The plethora was impressive."
+allows "She counted a myriad."
+allows "A myriad stars shone."
+allows "He lacks a plan."

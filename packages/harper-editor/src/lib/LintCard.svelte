@@ -57,7 +57,7 @@ function handleFocus() {
 	bind:this={cardEl}
 	role="group"
 	class={`shrink-0 overflow-hidden rounded-[10px] border-[0.5px] bg-white shadow-sm shadow-stone-950/5 transition-[box-shadow,border-color] duration-150 dark:bg-stone-900 dark:shadow-black/20 ${
-		active ? lintKindStyle.activeClass : 'border-[rgba(28,26,22,0.14)] dark:border-white/10'
+		active ? lintKindStyle.activeClass : 'border-[rgba(43,44,35,0.14)] dark:border-white/10'
 	}`}
 	on:mouseenter={onActivate}
 >
@@ -76,7 +76,7 @@ function handleFocus() {
 			{lintKindStyle.label}
 		</span>
 		<span
-			class={`ml-auto inline-flex shrink-0 text-stone-500 transition-transform duration-150 dark:text-stone-400 ${
+			class={`ml-auto inline-flex shrink-0 text-stone-500 transition-transform duration-150 dark:text-stone-300 ${
 				open ? 'rotate-180' : ''
 			}`}
 		>
@@ -98,18 +98,18 @@ function handleFocus() {
 
 			<button
 				type="button"
-				class="m-0 block max-h-[84px] w-full overflow-hidden rounded-[7px] border-[0.5px] border-[rgba(28,26,22,0.09)] bg-[#fbfaf6] px-3 py-2.5 text-left text-xs leading-[1.45] text-stone-700 dark:border-white/10 dark:bg-stone-950 dark:text-stone-300"
+				class="m-0 block max-h-[84px] w-full overflow-hidden rounded-[7px] border-[0.5px] border-[rgba(43,44,35,0.09)] bg-[#ffffff] px-3 py-2.5 text-left text-xs leading-[1.45] text-stone-700 dark:border-white/10 dark:bg-stone-950 dark:text-stone-300"
 				on:click={handleFocus}
 				aria-label="Focus problem in editor"
 			>
-				<span class="text-stone-500 dark:text-stone-400">
+				<span class="text-stone-500 dark:text-stone-300">
 					{snippet.prefixEllipsis ? '...' : ''}{snippet.prefix}
 				</span>
 				<mark
 					class={`rounded-[3px] px-0.5 font-semibold ${lintKindStyle.softClass} ${lintKindStyle.textClass}`}
 					>{snippet.problem}</mark
 				>
-				<span class="text-stone-500 dark:text-stone-400">
+				<span class="text-stone-500 dark:text-stone-300">
 					{snippet.suffix}{snippet.suffixEllipsis ? '...' : ''}
 				</span>
 			</button>
@@ -136,12 +136,12 @@ function handleFocus() {
 						{/each}
 					</div>
 				{:else}
-					<span class="mr-auto text-xs text-stone-400 dark:text-stone-500">No suggestions available.</span>
+					<span class="mr-auto text-xs text-stone-500 dark:text-stone-500">No suggestions available.</span>
 				{/if}
 
 				<button
 					type="button"
-					class="h-[26px] shrink-0 border-0 bg-transparent px-1 text-[12.5px] font-medium text-stone-500 shadow-none dark:text-stone-400"
+					class="h-[26px] shrink-0 border-0 bg-transparent px-1 text-[12.5px] font-medium text-stone-500 shadow-none dark:text-stone-300"
 					on:click={(event) => {
 						event.stopPropagation();
 						onIgnore();

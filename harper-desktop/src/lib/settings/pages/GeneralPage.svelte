@@ -1,8 +1,9 @@
 <script lang="ts">
-import { Button, Checkbox, CheckIcon, Input, Select, SettingRow } from 'components';
+import { Button, Input, Select, SettingRow, Toggle } from 'components';
 import type { Dialect } from 'harper.js';
 import { onMount } from 'svelte';
 import { Client } from '$lib/client';
+import { applyTheme } from '$lib/theme';
 import { DIALECT_OPTIONS } from '../settings-data';
 
 const DialectValue = {
@@ -34,6 +35,10 @@ let debounceMsInput = '0';
 let isDebounceLoading = true;
 let isDebounceSaving = false;
 let debounceError = '';
+let theme = 'system';
+let isThemeLoading = true;
+let isThemeSaving = false;
+let themeError = '';
 
 onMount(() => {
 	void loadDialect();
@@ -41,33 +46,20 @@ onMount(() => {
 	void loadAutoUpdate();
 	void loadUpdateVersions();
 	void loadDebounceMs();
+	void loadTheme();
+	applyTheme(theme);
 
-	const refreshSettings = () => {
-		if (!isDialectSaving) {
-			void loadDialect();
-		}
-
-		if (!isLaunchAtStartupSaving) {
-			void loadLaunchAtStartup();
-		}
-
-		if (!isAutoUpdateSaving) {
-			void loadAutoUpdate();
-		}
-
-		if (!isCheckingForUpdates) {
-			void loadUpdateVersions();
-		}
-
-		if (!isDebounceSaving) {
-			void loadDebounceMs();
+	// Listen for system theme changes when theme is "system"
+	const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+	const handleSystemThemeChange = () => {
+		if (theme === 'system') {
+			applyTheme(theme);
 		}
 	};
-
-	window.addEventListener('focus', refreshSettings);
+	mediaQuery.addEventListener('change', handleSystemThemeChange);
 
 	return () => {
-		window.removeEventListener('focus', refreshSettings);
+		mediaQuery.removeEventListener('change', handleSystemThemeChange);
 	};
 });
 
@@ -237,6 +229,38 @@ async function saveDebounceMs() {
 	}
 }
 
+async function loadTheme() {
+	isThemeLoading = true;
+	themeError = '';
+
+	try {
+		theme = await Client.getTheme();
+		applyTheme(theme);
+	} catch (error) {
+		themeError = `Unable to load theme: ${error}`;
+	} finally {
+		isThemeLoading = false;
+	}
+}
+
+async function setTheme(value: string) {
+	const previousTheme = theme;
+
+	theme = value;
+	isThemeSaving = true;
+	themeError = '';
+
+	try {
+		await Client.setTheme(value);
+		applyTheme(value);
+	} catch (error) {
+		theme = previousTheme;
+		themeError = `Unable to save theme: ${error}`;
+	} finally {
+		isThemeSaving = false;
+	}
+}
+
 function dialectToSettingsValue(dialect: Dialect): string {
 	switch (dialect) {
 		case DialectValue.British:
@@ -273,17 +297,14 @@ function settingsValueToDialect(value: string): Dialect {
           <div class="eyebrow">General</div>
           <div class="rows">
             <SettingRow top>
-              <strong>Launch Harper at startup</strong>
-              <p>Harper will start silently when you log in.</p>
-              <Checkbox
-                slot="control"
-                appearance="settings"
+              <strong>Launch Flowgram at startup</strong>
+              <p>Flowgram will start silently when you log in.</p>
+              <Toggle slot="control" appearance="settings"
                 checked={launchAtStartup}
+                aria-label="Launch Flowgram at startup"
                 disabled={isLaunchAtStartupLoading || isLaunchAtStartupSaving}
                 on:click={() => setLaunchAtStartup(!launchAtStartup)}
-              >
-                {#if launchAtStartup}<CheckIcon className="control-icon" />{/if}
-              </Checkbox>
+               />
             </SettingRow>
             {#if isLaunchAtStartupLoading}
               <p class="result-summary">Loading startup setting...</p>
@@ -295,19 +316,16 @@ function settingsValueToDialect(value: string): Dialect {
 
             <SettingRow top>
               <strong>Automatically check for updates</strong>
-              <p>Harper will check for new versions daily.</p>
+              <p>Flowgram will check for new versions daily.</p>
               <p class="result-summary">
                 Current version: {currentVersion || 'loading...'} · Latest version: {latestVersion || 'loading...'}
               </p>
-              <Checkbox
-                slot="control"
-                appearance="settings"
+              <Toggle slot="control" appearance="settings"
                 checked={autoUpdate}
+                aria-label="Automatically check for updates"
                 disabled={isAutoUpdateLoading || isAutoUpdateSaving}
                 on:click={() => setAutoUpdate(!autoUpdate)}
-              >
-                {#if autoUpdate}<CheckIcon className="control-icon" />{/if}
-              </Checkbox>
+               />
             </SettingRow>
             <div class="inline-row">
               <Button
@@ -337,8 +355,8 @@ function settingsValueToDialect(value: string): Dialect {
         <div class="stanza">
           <div class="eyebrow">Language</div>
           <p class="section-copy">
-            Choose the dialect Harper uses to check spelling and grammar.
-          </p>
+                      Choose the dialect Flowgram uses to check spelling and grammar.
+                    </p>
           <div class="inline-row">
             <label for="dialect">English dialect:</label>
             <Select
@@ -363,12 +381,41 @@ function settingsValueToDialect(value: string): Dialect {
           {/if}
         </div>
 
+        <div class="stanza">
+          <div class="eyebrow">Appearance</div>
+          <p class="section-copy">
+            Choose how Flowgram looks on your screen.
+          </p>
+          <div class="inline-row">
+            <label for="theme">Theme:</label>
+            <Select
+              unstyled
+              id="theme"
+              class="select wide"
+              disabled={isThemeLoading || isThemeSaving}
+              bind:value={theme}
+              on:change={(event) => setTheme((event.detail.currentTarget as HTMLSelectElement).value)}
+            >
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="system">System</option>
+            </Select>
+          </div>
+          {#if isThemeLoading}
+            <p class="result-summary">Loading theme...</p>
+          {:else if themeError}
+            <p class="result-summary">{themeError}</p>
+          {:else if isThemeSaving}
+            <p class="result-summary">Saving theme...</p>
+          {/if}
+        </div>
+
         <div class="divider"></div>
 
         <div class="stanza">
           <div class="eyebrow">Writing</div>
           <p class="section-copy">
-            Choose how long Harper waits after text changes before checking it. Use 0 ms for
+            Choose how long Flowgram waits after text changes before checking it. Use 0 ms for
             immediate checking.
           </p>
           <div class="inline-row">

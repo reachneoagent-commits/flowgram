@@ -1,0 +1,26 @@
+expr main [(game-changing), (game changing)]
+
+let message "Describe the effect instead of calling it `game-changing`. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `game-changing` with `major`."
+let kind "Style"
+let becomes ["major", "significant"]
+
+# True positives
+test "A game-changing update shipped." "A major update shipped."
+test "It is a game changing feature." "It is a major feature."
+test "The game-changing camera sold out." "The major camera sold out."
+test "This game changing tool is fast." "This major tool is fast."
+test "We built a game-changing app." "We built a major app."
+test "That was game-changing news." "That was major news."
+test "Their game changing idea won." "Their major idea won."
+test "A truly game-changing release." "A truly major release."
+
+# True negatives
+allows "A major update shipped."
+allows "The game was changing hands."
+allows "He is changing the game plan."
+allows "The changing seasons are lovely."
+allows "A game on Friday is changing venue."
+allows "The changing room was empty."
+allows "It is game day."
+allows "Change is hard."

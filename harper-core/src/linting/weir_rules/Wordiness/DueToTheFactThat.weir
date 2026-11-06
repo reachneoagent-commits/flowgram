@@ -1,0 +1,27 @@
+expr main [(due to the fact that), (owing to the fact that), (on account of the fact that)]
+
+let message "Use `because` instead of a long lead-in. Shorter is clearer."
+let description "Replaces wordy phrases like `due to the fact that` with a shorter form."
+let kind "Style"
+let becomes ["because", "since"]
+
+# True positives
+test "We think due to the fact that the plan is solid." "We think because the plan is solid."
+test "My manager said owing to the fact that the budget." "My manager said because the budget."
+test "She wrote on account of the fact that the summary." "She wrote because the summary."
+test "Honestly, due to the fact that this is fine." "Honestly, because this is fine."
+test "Maybe owing to the fact that the results will help." "Maybe because the results will help."
+test "We think on account of the fact that the plan is solid." "We think because the plan is solid."
+test "Yesterday due to the fact that the draft was sent." "Yesterday because the draft was sent."
+test "I noticed owing to the fact that the update." "I noticed because the update."
+test "Honestly, on account of the fact that this is fine." "Honestly, because this is fine."
+test "Due to the fact that the plan." "Because the plan."
+
+# True negatives
+allows "It rained because the front moved in."
+allows "Due to rain, we left."
+allows "The fact that it rained is clear."
+allows "Owing money is stressful."
+allows "On account of her illness, she stayed home."
+allows "That is a fact."
+allows "Due diligence matters."

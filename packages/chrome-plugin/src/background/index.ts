@@ -62,15 +62,6 @@ import { detectBrowserDialect } from './detectDialect';
 
 console.log('background is running');
 
-chrome.runtime.onInstalled.addListener((details) => {
-	if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-		chrome.runtime.setUninstallURL('https://writewithharper.com/uninstall-browser-extension');
-		chrome.tabs.create({
-			url: 'https://writewithharper.com/install-browser-extension',
-		});
-	}
-});
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	handleRequest(request, sender).then(sendResponse);
 
@@ -584,23 +575,9 @@ async function handleOpenReportError(
 	return createUnitResponse();
 }
 
-async function handlePostFormData(req: PostFormDataRequest): Promise<PostFormDataResponse> {
-	const formData = new FormData();
-	for (const [key, value] of Object.entries(req.formData)) {
-		formData.append(key, value);
-	}
-
-	try {
-		const response = await fetch(req.url, {
-			method: 'POST',
-			body: formData,
-		});
-
-		return { kind: 'postFormData', success: response.ok };
-	} catch (error) {
-		console.error('Failed to post form data', error);
-		return { kind: 'postFormData', success: false };
-	}
+/** Flowgram never sends data anywhere; the request type is kept only for protocol compatibility. */
+async function handlePostFormData(_req: PostFormDataRequest): Promise<PostFormDataResponse> {
+	return { kind: 'postFormData', success: false };
 }
 
 async function handleGetInstalledOn(_req: GetInstalledOnRequest): Promise<GetInstalledOnResponse> {

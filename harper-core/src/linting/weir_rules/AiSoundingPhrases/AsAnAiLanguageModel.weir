@@ -1,0 +1,26 @@
+expr main [(as an ai language model), (as a large language model), (as an ai assistant), (as an artificial intelligence)]
+
+let message "Chatbot boilerplate left in the text. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Removes chatbot residue such as `as an AI language model`."
+let kind "Style"
+let becomes ""
+
+# True positives
+test "As an AI language model, I cannot browse the web." ", I cannot browse the web."
+test "As a large language model, I have no opinions." ", I have no opinions."
+test "As an AI assistant, I can help." ", I can help."
+test "As an artificial intelligence, it lacks feelings." ", it lacks feelings."
+test "Well, as an AI language model, I can't say." "Well, , I can't say."
+test "Sorry, as a large language model, I can't." "Sorry, , I can't."
+test "Here as an AI assistant I write drafts." "Here  I write drafts."
+test "Note as an artificial intelligence it learns." "Note  it learns."
+
+# True negatives
+allows "As an assistant manager, she led the team."
+allows "As a language teacher, he loved verbs."
+allows "An AI model was trained on text."
+allows "As an artist, she paints."
+allows "As a model, he walked the runway."
+allows "She studies artificial intelligence."
+allows "The large language was complex."
+allows "As an assistant, I filed the papers."

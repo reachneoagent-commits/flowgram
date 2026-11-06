@@ -1,12 +1,9 @@
 @import "tailwindcss";
+@import "../../../components/src/lib/brand-tokens.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @source "./**/*.{svelte,ts}";
-
-@theme {
-	--font-serif: Domine, serif;
-}
 
 .harper-editor {
 	--harper-editor-font-size: inherit;
@@ -40,13 +37,13 @@
 
 .harper-editor button:focus-visible,
 .harper-editor select:focus-visible {
-	outline: 2px solid var(--color-blue-600);
+	outline: 3px solid var(--ring);
 	outline-offset: 2px;
 }
 
 .dark .harper-editor button:focus-visible,
 .dark .harper-editor select:focus-visible {
-	outline-color: var(--color-blue-400);
+	outline-color: var(--ring);
 }
 
 .harper-editor-quill-container {

@@ -6,7 +6,7 @@ use egui_commonmark::{CommonMarkCache, CommonMarkViewer};
 use harper_core::linting::{Lint, LintKind, Suggestion};
 
 use super::lint_kind_color32;
-use super::popup_layout::{PopupLayout, UNBOUNDED_VIEWPORT, popup_layout};
+use super::popup_layout::{PopupLayout, popup_layout};
 use crate::rect::Rect;
 
 const LIST_WIDTH: f32 = 210.0;
@@ -84,13 +84,14 @@ enum ButtonContent<'a> {
 pub fn render_lint_card(
     ui: &mut egui::Ui,
     rect: &Rect,
+    viewport: egui::Rect,
     lint: &Lint,
     source_text: &str,
     shown_suggestion: Option<usize>,
     sidebar_position: f32,
     markdown_cache: &mut CommonMarkCache,
 ) -> Option<LintCardAction> {
-    let layout = popup_layout_for_lint(rect, lint, sidebar_position);
+    let layout = popup_layout_for_lint(rect, lint, sidebar_position, viewport);
     let problem_text = problem_text(lint, source_text);
     let span = (lint.span.start, lint.span.end);
 
@@ -266,7 +267,7 @@ fn suggestion_row(
     )
 }
 
-/// Renders the list footer: a "Go to Harper settings" row and the close button.
+/// Renders the list footer: a "Go to Flowgram settings" row and the close button.
 ///
 /// The close button sits over the footer's right edge, where
 /// the footer leaves 26 points of padding for it.
@@ -307,7 +308,7 @@ fn render_list_footer(ui: &mut egui::Ui, action: &mut Option<LintCardAction>) {
     let label_left = icon_rect.right() + 6.0;
     let label = single_line_galley(
         ui,
-        "Go to Harper settings",
+        "Go to Flowgram settings",
         12.0,
         settings_rect.right() - 10.0 - label_left,
     );
@@ -321,7 +322,7 @@ fn render_list_footer(ui: &mut egui::Ui, action: &mut Option<LintCardAction>) {
 
     if hover_text(
         settings.on_hover_cursor(egui::CursorIcon::PointingHand),
-        "Click to go to Harper settings",
+        "Click to go to Flowgram settings",
     )
     .clicked()
     {
@@ -544,7 +545,7 @@ fn flyout_button(
     )
 }
 
-/// Renders Harper's markdown-formatted lint message in the popup instead of showing raw markdown
+/// Renders Flowgram's markdown-formatted lint message in the popup instead of showing raw markdown
 /// markers to the user.
 ///
 /// Inline code gets a background tinted with the lint color. The Chrome extension underlines it
@@ -708,7 +709,7 @@ fn is_spelling_kind(lint_kind: LintKind) -> bool {
     }
 }
 
-/// Converts Harper suggestion variants into row labels. Like the Chrome extension, it falls back to
+/// Converts Flowgram suggestion variants into row labels. Like the Chrome extension, it falls back to
 /// the kind of edit when the replacement text is empty.
 fn suggestion_text(suggestion: &Suggestion) -> String {
     match suggestion {
@@ -751,10 +752,15 @@ fn problem_text(lint: &Lint, source_text: &str) -> String {
 ///
 /// `sidebar_position` is the flyout card's current offset from the list card's top, not its target,
 /// so hit-testing follows the card while it moves.
-pub fn popup_layout_for_lint(rect: &Rect, lint: &Lint, sidebar_position: f32) -> PopupLayout {
+pub fn popup_layout_for_lint(
+    rect: &Rect,
+    lint: &Lint,
+    sidebar_position: f32,
+    viewport: egui::Rect,
+) -> PopupLayout {
     popup_layout(
         rect,
-        UNBOUNDED_VIEWPORT,
+        viewport,
         egui::vec2(LIST_CARD_WIDTH, list_card_height(row_count(lint))),
         egui::vec2(FLYOUT_CARD_WIDTH, CARD_HEIGHT),
         sidebar_position,

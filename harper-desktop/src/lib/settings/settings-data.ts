@@ -116,6 +116,7 @@ export interface SettingsState {
 	customApps: AppIntegration[];
 	removedBuiltins: string[];
 	weirpacks: Weirpack[];
+	theme: 'light' | 'dark' | 'system';
 }
 
 export const DIALECT_OPTIONS = [
@@ -265,7 +266,7 @@ export function createInitialSettingsState(): SettingsState {
 		respectCode: true,
 		dictionary: [
 			'HAL',
-			'Harper',
+			'Flowgram',
 			'Automattic',
 			'WordPress',
 			'macOS',
@@ -322,5 +323,6 @@ export function createInitialSettingsState(): SettingsState {
 				installState: 'installed',
 			},
 		],
+		theme: 'system',
 	};
 }

@@ -82,7 +82,7 @@ pub fn show_editor_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     }
 
     let window = WebviewWindowBuilder::new(app, "editor", WebviewUrl::App("index.html".into()))
-        .title("Harper")
+        .title("Flowgram")
         .inner_size(800.0, 600.0)
         .visible(false)
         .build()?;
@@ -97,7 +97,7 @@ pub fn show_settings_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     }
 
     let window = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
-        .title("Harper Settings")
+        .title("Flowgram Settings")
         .inner_size(920.0, 680.0)
         .min_inner_size(780.0, 520.0)
         .center()

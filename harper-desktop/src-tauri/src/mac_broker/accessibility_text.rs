@@ -4,8 +4,8 @@ use accessibility::{Error, TreeVisitor, TreeWalker, TreeWalkerFlow};
 use accessibility_sys::{
     AXUIElementCopyParameterizedAttributeValue, AXValueCreate, AXValueGetType, AXValueGetValue,
     AXValueRef, kAXBoundsForRangeParameterizedAttribute, kAXErrorIllegalArgument, kAXErrorNoValue,
-    kAXErrorParameterizedAttributeUnsupported, kAXErrorSuccess, kAXValueTypeCFRange,
-    kAXValueTypeCGRect,
+    kAXErrorParameterizedAttributeUnsupported, kAXErrorSuccess,
+    kAXStringForRangeParameterizedAttribute, kAXValueTypeCFRange, kAXValueTypeCGRect,
 };
 use core::{ffi::c_void, mem::MaybeUninit};
 use core_foundation::base::{CFRange, CFType, TCFType};
@@ -233,13 +233,20 @@ fn apply_suggestion_to_element(
     }
 }
 
-/// Returns whether an accessibility element has a text role Harper can lint.
+/// Returns whether an accessibility element has a text role Flowgram can lint.
 pub fn is_supported_text_element(el: &AXUIElement) -> bool {
-    if let Ok(role) = el.role() {
-        return is_supported_text_role(&role.to_string());
-    }
+    let Ok(role) = el.role() else {
+        return false;
+    };
 
-    false
+    let subrole = el.subrole().ok().map(|subrole| subrole.to_string());
+
+    is_supported_text_role(&role.to_string()) && !is_secure_subrole(subrole.as_deref())
+}
+
+/// Password fields share the `AXTextField` role. Their contents must never be read.
+fn is_secure_subrole(subrole: Option<&str>) -> bool {
+    subrole == Some("AXSecureTextField")
 }
 
 /// Returns whether an AX role represents editable text supported by the highlighter.
@@ -295,6 +302,82 @@ fn find_char_subslice(haystack: &[char], needle: &[char], from: usize) -> Option
     (from..=end).find(|&i| haystack[i..i + needle.len()] == *needle)
 }
 
+/// Converts a char-based span into the UTF-16 offsets macOS accessibility uses.
+fn char_span_to_utf16(chars: &[char], start: usize, length: usize) -> (isize, isize) {
+    let utf16_len = |slice: &[char]| slice.iter().map(|c| c.len_utf16()).sum::<usize>();
+    let end = (start + length).min(chars.len());
+    let start = start.min(end);
+    (
+        utf16_len(&chars[..start]) as isize,
+        utf16_len(&chars[start..end]) as isize,
+    )
+}
+
+/// Normalises whitespace variants (nbsp, newlines) so web text compares equal.
+fn normalize_for_compare(text: &str) -> String {
+    text.chars()
+        .map(|c| if c.is_whitespace() { ' ' } else { c })
+        .collect::<String>()
+        .trim()
+        .to_owned()
+}
+
+/// Reads the text the element reports for a UTF-16 range, if it supports that query.
+fn string_for_range(element: &AXUIElement, start_index: isize, length: isize) -> Option<String> {
+    let range = CFRange {
+        location: start_index,
+        length,
+    };
+    let range_value_ref = unsafe {
+        AXValueCreate(
+            kAXValueTypeCFRange,
+            &range as *const CFRange as *const c_void,
+        )
+    };
+    if range_value_ref.is_null() {
+        return None;
+    }
+
+    let range_value = unsafe { CFType::wrap_under_create_rule(range_value_ref as _) };
+    let attr = CFString::new(kAXStringForRangeParameterizedAttribute);
+    let mut value = ptr::null();
+    let error = unsafe {
+        AXUIElementCopyParameterizedAttributeValue(
+            element.as_concrete_TypeRef(),
+            attr.as_concrete_TypeRef(),
+            range_value.as_CFTypeRef(),
+            &mut value,
+        )
+    };
+    if error != kAXErrorSuccess || value.is_null() {
+        return None;
+    }
+
+    cf_type_to_string(&unsafe { CFType::wrap_under_create_rule(value) })
+}
+
+/// Returns the bounds only when the element confirms the range really holds `expected`.
+///
+/// Browsers (Gmail's compose box, for one) can report a text value whose offsets do not line up
+/// with their accessibility ranges. Drawing at those offsets underlines the wrong words, so a
+/// range that reads back different text is rejected instead of drawn.
+fn verified_rect_for_text_range(
+    element: &AXUIElement,
+    expected: &str,
+    start_index: isize,
+    length: isize,
+) -> Option<Rect> {
+    if let Some(actual) = string_for_range(element, start_index, length)
+        && normalize_for_compare(&actual) != normalize_for_compare(expected)
+    {
+        return None;
+    }
+
+    element_rect_for_text_range(element, start_index, length)
+        .ok()
+        .flatten()
+}
+
 /// Resolves text-range bounds, falling back to `AXStaticText` descendants
 /// when the element itself reports unusable bounds (Chromium-based apps).
 pub fn element_rect_for_text_range_with_fallback(
@@ -303,9 +386,11 @@ pub fn element_rect_for_text_range_with_fallback(
     start_index: usize,
     length: usize,
 ) -> Option<Rect> {
-    if let Ok(Some(rect)) =
-        element_rect_for_text_range(element, start_index as isize, length as isize)
-    {
+    let full_chars: Vec<char> = full_text.chars().collect();
+    let expected: String = full_chars.iter().skip(start_index).take(length).collect();
+    let (utf16_start, utf16_len) = char_span_to_utf16(&full_chars, start_index, length);
+
+    if let Some(rect) = verified_rect_for_text_range(element, &expected, utf16_start, utf16_len) {
         return Some(rect);
     }
 
@@ -313,7 +398,6 @@ pub fn element_rect_for_text_range_with_fallback(
     let collector = StaticTextCollector::new();
     walker.walk(element, &collector);
 
-    let full_chars: Vec<char> = full_text.chars().collect();
     let mut cursor = 0usize;
 
     for (child, child_text) in collector.into_texts() {
@@ -325,15 +409,15 @@ pub fn element_rect_for_text_range_with_fallback(
         };
         let child_end = child_start + child_chars.len();
 
-        if start_index >= child_start
-            && start_index + length <= child_end
-            && let Ok(Some(rect)) = element_rect_for_text_range(
-                &child,
-                (start_index - child_start) as isize,
-                length as isize,
-            )
-        {
-            return Some(rect);
+        if start_index >= child_start && start_index + length <= child_end {
+            let (child_utf16_start, child_utf16_len) =
+                char_span_to_utf16(&child_chars, start_index - child_start, length);
+
+            if let Some(rect) =
+                verified_rect_for_text_range(&child, &expected, child_utf16_start, child_utf16_len)
+            {
+                return Some(rect);
+            }
         }
 
         cursor = child_end;
@@ -367,6 +451,13 @@ mod tests {
     }
 
     #[test]
+    fn password_fields_are_never_supported() {
+        assert!(is_secure_subrole(Some("AXSecureTextField")));
+        assert!(!is_secure_subrole(Some("AXSearchField")));
+        assert!(!is_secure_subrole(None));
+    }
+
+    #[test]
     fn supported_text_roles_reject_unrelated_roles() {
         assert!(!is_supported_text_role("AXButton"));
         assert!(!is_supported_text_role("AXStaticText"));
@@ -383,6 +474,26 @@ mod tests {
         assert_eq!(find_char_subslice(&haystack, &needle, 9), None);
         assert_eq!(find_char_subslice(&haystack, &[], 0), None);
         assert_eq!(find_char_subslice(&[], &needle, 0), None);
+    }
+
+    #[test]
+    fn char_spans_convert_to_utf16_offsets() {
+        let chars: Vec<char> = "a😀 bad".chars().collect();
+        // "bad" starts at char 3 but UTF-16 offset 4 because the emoji takes two units.
+        assert_eq!(char_span_to_utf16(&chars, 3, 3), (4, 3));
+        assert_eq!(char_span_to_utf16(&chars, 0, 2), (0, 3));
+    }
+
+    #[test]
+    fn compare_ignores_whitespace_variants() {
+        assert_eq!(
+            normalize_for_compare("know\u{a0}that "),
+            normalize_for_compare("know that")
+        );
+        assert_ne!(
+            normalize_for_compare("know"),
+            normalize_for_compare("recieved")
+        );
     }
 
     #[test]

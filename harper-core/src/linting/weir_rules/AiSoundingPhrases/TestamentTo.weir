@@ -1,0 +1,26 @@
+expr main [(stands as a testament to), (stand as a testament to), (serves as a testament to), (serve as a testament to), (is a testament to), (are a testament to), (remains a testament to)]
+
+let message "Say it directly instead of calling it a testament. This phrasing is a common sign of generic, AI-sounding prose."
+let description "Replaces `is a testament to` style phrases with `shows`."
+let kind "Style"
+let becomes ["shows", "demonstrates"]
+
+# True positives
+test "The library stands as a testament to years of work." "The library shows years of work."
+test "These walls stand as a testament to the builders." "These walls shows the builders."
+test "The garden serves as a testament to her patience." "The garden shows her patience."
+test "Old photos serve as a testament to their friendship." "Old photos shows their friendship."
+test "The result is a testament to the whole team." "The result shows the whole team."
+test "Her scars are a testament to a hard season." "Her scars shows a hard season."
+test "The bridge remains a testament to careful design." "The bridge shows careful design."
+test "Stands as a testament to hard work, this shop is still open." "Shows hard work, this shop is still open."
+
+# True negatives
+allows "The library shows years of work."
+allows "The old will was read aloud in the Testament office."
+allows "The New Testament has twenty-seven books."
+allows "She gave testimony to the court."
+allows "He is a tester for the game."
+allows "The result demonstrates the whole team effort."
+allows "Their final stand was brief."
+allows "It serves lunch until two."
