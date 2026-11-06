@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="brand/logo.svg" width="120px" alt="Flowgram" />
   <h1>Flowgram</h1>
   <p><strong>A free, open source, private grammar and spell checker for the Mac and Windows apps you already write in.</strong></p>
 </div>
