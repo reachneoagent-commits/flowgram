@@ -90,15 +90,40 @@ pub fn show_editor_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     show_window(window)
 }
 
+/// Picks a settings window size that suits the screen: most of the display on small screens,
+/// capped on large ones, and never smaller than the layout needs.
+fn settings_window_size(app: &tauri::AppHandle) -> (f64, f64) {
+    const MIN: (f64, f64) = (920.0, 680.0);
+    const MAX: (f64, f64) = (1280.0, 960.0);
+
+    let Some(monitor) = app.primary_monitor().ok().flatten() else {
+        return MIN;
+    };
+    let scale = monitor.scale_factor();
+    let screen_width = monitor.size().width as f64 / scale;
+    let screen_height = monitor.size().height as f64 / scale;
+
+    // Leave room for the menu bar and Dock, then take most of what is left.
+    let width = (screen_width * 0.85)
+        .clamp(MIN.0, MAX.0)
+        .min(screen_width - 40.0);
+    let height = (screen_height * 0.88)
+        .clamp(MIN.1, MAX.1)
+        .min(screen_height - 100.0);
+
+    (width, height)
+}
+
 /// Open the settings window, focusing it if it already exists.
 pub fn show_settings_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     if let Some(window) = app.get_webview_window("settings") {
         return show_window(window);
     }
 
+    let (width, height) = settings_window_size(app);
     let window = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
         .title("Flowgram Settings")
-        .inner_size(920.0, 680.0)
+        .inner_size(width, height)
         .min_inner_size(780.0, 520.0)
         .center()
         .visible(false)
