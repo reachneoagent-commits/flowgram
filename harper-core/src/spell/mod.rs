@@ -289,6 +289,42 @@ pub(crate) fn is_ei_ie_misspelling(a: &[char], b: &[char]) -> bool {
     found_ei_ie
 }
 
+/// Words up to this long have so many one-letter neighbours that a swapped-letters fix gets lost.
+const SHORT_WORD: usize = 4;
+
+/// Whether `candidate` is `typed` with two neighbouring letters swapped (`si` -> `is`).
+///
+/// Swapping neighbouring letters is one of the most common typing slips, but plain edit distance
+/// counts it as two edits, which ranks it below unrelated words like `sci` that are one edit away.
+pub(crate) fn is_transposition(typed: &[char], candidate: &[char]) -> bool {
+    if typed.len() != candidate.len() || typed.len() < 2 {
+        return false;
+    }
+
+    let same = |a: char, b: char| a.eq_ignore_ascii_case(&b);
+    let Some(first) = (0..typed.len()).find(|&i| !same(typed[i], candidate[i])) else {
+        return false;
+    };
+
+    first + 1 < typed.len()
+        && same(typed[first], candidate[first + 1])
+        && same(typed[first + 1], candidate[first])
+        && (first + 2..typed.len()).all(|i| same(typed[i], candidate[i]))
+}
+
+/// Whether `candidate` is `typed` plus one final letter (`righ` -> `right`).
+///
+/// Many words are one letter away (`rich`, `rig`), but a word cut off at the end is usually a
+/// typing slip, so the full word is the likeliest intent.
+pub(crate) fn is_missing_final_letter(typed: &[char], candidate: &[char]) -> bool {
+    candidate.len() == typed.len() + 1
+        && candidate.last().is_some_and(|c| c.is_alphabetic())
+        && typed
+            .iter()
+            .zip(candidate)
+            .all(|(a, b)| a.eq_ignore_ascii_case(b))
+}
+
 /// Scores a possible spelling suggestion based on possible relevance to the user.
 ///
 /// Lower = better.
@@ -367,6 +403,23 @@ fn score_suggestion(misspelled_word: &[char], sug: &FuzzyMatchResult) -> i32 {
         score -= 6;
     }
 
+    // A swapped pair of letters is really one slip, not two edits, so score it like a one-letter
+    // difference (including the "first letter is right" credit, which a swap at the start loses).
+    if misspelled_word.len() <= SHORT_WORD && is_transposition(misspelled_word, sug.word) {
+        score -= 10;
+        if !misspelled_word
+            .first()
+            .unwrap()
+            .eq_ignore_ascii_case(sug.word.first().unwrap())
+        {
+            score -= 10;
+        }
+    }
+
+    if is_missing_final_letter(misspelled_word, sug.word) {
+        score -= 3;
+    }
+
     if sug.edit_distance <= 2 {
         if is_ei_ie_misspelling(misspelled_word, sug.word) {
             score -= 11;
@@ -397,10 +450,36 @@ pub fn suggest_correct_spelling<'a>(
     max_edit_dist: u8,
     dictionary: &'a impl Dictionary,
 ) -> Vec<&'a [char]> {
-    let matches: Vec<FuzzyMatchResult> = dictionary
+    let mut matches: Vec<FuzzyMatchResult> = dictionary
         .fuzzy_match(misspelled_word, max_edit_dist, result_limit)
         .into_iter()
         .collect();
+
+    // The closest-first search can crowd out a swapped-letters fix (`si` -> `is`) when many
+    // unrelated words are one edit away, so look those up directly.
+    let swap_positions = if misspelled_word.len() <= SHORT_WORD {
+        misspelled_word.len().saturating_sub(1)
+    } else {
+        0
+    };
+    for i in 0..swap_positions {
+        let mut swapped = misspelled_word.to_vec();
+        swapped.swap(i, i + 1);
+
+        if swapped == misspelled_word || matches.iter().any(|m| m.word == swapped.as_slice()) {
+            continue;
+        }
+
+        if let Some(word) = dictionary.get_correct_capitalization_of(&swapped)
+            && let Some(metadata) = dictionary.get_word_metadata(word)
+        {
+            matches.push(FuzzyMatchResult {
+                word,
+                edit_distance: 1,
+                metadata,
+            });
+        }
+    }
 
     order_suggestions(misspelled_word, matches)
 }
@@ -589,5 +668,50 @@ mod tests {
     #[test]
     fn missing_apostrophe_childrens_suggests_childrens() {
         assert_suggests_correction("childrens", "children's");
+    }
+
+    #[test]
+    fn swapped_letters_are_suggested_first() {
+        let dict = FstDictionary::curated();
+
+        for (typed, expected) in [
+            ("si", "is"),
+            ("teh", "the"),
+            ("form", "from"),
+            ("adn", "and"),
+        ] {
+            let suggestions = suggest_correct_spelling_str(typed, 5, 3, &*dict);
+            assert_eq!(
+                suggestions.first().map(String::as_str),
+                Some(expected),
+                "{typed}: {suggestions:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_missing_final_letter_prefers_the_full_word() {
+        let dict = FstDictionary::curated();
+        let suggestions = suggest_correct_spelling_str("righ", 5, 3, &*dict);
+
+        assert_eq!(
+            suggestions.first().map(String::as_str),
+            Some("right"),
+            "{suggestions:?}"
+        );
+    }
+
+    #[test]
+    fn transposition_helper_only_matches_adjacent_swaps() {
+        let chars = |s: &str| s.chars().collect::<Vec<_>>();
+
+        assert!(super::is_transposition(&chars("si"), &chars("is")));
+        assert!(super::is_transposition(
+            &chars("recieve"),
+            &chars("receive")
+        ));
+        assert!(!super::is_transposition(&chars("sci"), &chars("is")));
+        assert!(!super::is_transposition(&chars("abc"), &chars("cba")));
+        assert!(!super::is_transposition(&chars("same"), &chars("same")));
     }
 }

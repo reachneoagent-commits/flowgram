@@ -1197,9 +1197,9 @@ Message: |
     1122 | Daisy! Dai———”
          |        ^~~ Did you mean to spell `Dai` this way?
 Suggest:
+  - Replace with: “Dais”
   - Replace with: “Dab”
   - Replace with: “Dad”
-  - Replace with: “Dag”
 
 
 
@@ -1321,7 +1321,7 @@ Message: |
 Suggest:
   - Replace with: “hours”
   - Replace with: “ho's”
-  - Replace with: “hers”
+  - Replace with: “horse”
 
 
 
@@ -2510,9 +2510,9 @@ Message: |
     1871 | afterward strangled his wife. Da Fontano the promoter came there, and Ed Legros
          |                               ^~ Did you mean to spell `Da` this way?
 Suggest:
+  - Replace with: “Ad”
   - Replace with: “Dab”
   - Replace with: “Dad”
-  - Replace with: “Dag”
 
 
 
@@ -2624,9 +2624,9 @@ Message: |
          |                                           ^~~~ Did you mean to spell `Myer` this way?
     1879 | Bull. Also from New York were the Chromes and the Backhyssons and the Dennickers
 Suggest:
+  - Replace with: “Myers”
   - Replace with: “Mayer”
   - Replace with: “Meyer”
-  - Replace with: “Myers”
 
 
 
@@ -2954,9 +2954,9 @@ Message: |
          |                                                                             ^~~~ Did you mean to spell `Bois` this way?
     1982 | de Boulogne.
 Suggest:
+  - Replace with: “Bios”
+  - Replace with: “Obis”
   - Replace with: “Boss”
-  - Replace with: “Boas”
-  - Replace with: “Boris”
 
 
 
@@ -2999,9 +2999,9 @@ Message: |
          |                                                              ^~ Did you mean to spell `di` this way?
     2007 | circular legend, “Montenegro, Nicolas Rex.”
 Suggest:
-  - Replace with: “db”
-  - Replace with: “dc”
-  - Replace with: “dd”
+  - Replace with: “id”
+  - Replace with: “did”
+  - Replace with: “die”
 
 
 
@@ -3179,9 +3179,9 @@ Message: |
     2105 | “I handed the money to Katspaugh and I sid: ‘All right, Katspaugh, don’t pay him
          |                                        ^~~ Did you mean to spell `sid` this way?
 Suggest:
+  - Replace with: “SDI”
+  - Replace with: “side”
   - Replace with: “sad”
-  - Replace with: “said”
-  - Replace with: “sic”
 
 
 
@@ -3707,8 +3707,8 @@ Message: |
          |                                ^~~~~ Did you mean to spell `Coney` this way?
 Suggest:
   - Replace with: “Convey”
+  - Replace with: “Coneys”
   - Replace with: “Conley”
-  - Replace with: “Corey”
 
 
 
@@ -3756,8 +3756,8 @@ Message: |
          | ^~~~~ Did you mean to spell `Coney` this way?
 Suggest:
   - Replace with: “Convey”
+  - Replace with: “Coneys”
   - Replace with: “Conley”
-  - Replace with: “Corey”
 
 
 
@@ -4123,9 +4123,9 @@ Message: |
     2955 | “I don’t play well. I don’t—I hardly play at all. I’m all out of prac———”
          |                                                                  ^~~~ Did you mean to spell `prac` this way?
 Suggest:
+  - Replace with: “PARC”
   - Replace with: “prat”
   - Replace with: “pray”
-  - Replace with: “pram”
 
 
 
@@ -4144,9 +4144,9 @@ Message: |
     2969 | prac—”
          | ^~~~ Did you mean to spell `prac` this way?
 Suggest:
+  - Replace with: “PARC”
   - Replace with: “prat”
   - Replace with: “pray”
-  - Replace with: “pram”
 
 
 
@@ -4418,9 +4418,9 @@ Message: |
     3180 | “Be ver’ nice,” said Mr. Sloane, without gratitude. “Well—think ought to be
          |     ^~~ Did you mean to spell `ver` this way?
 Suggest:
-  - Replace with: “var”
-  - Replace with: “veer”
   - Replace with: “verb”
+  - Replace with: “vert”
+  - Replace with: “very”
 
 
 
@@ -5278,9 +5278,9 @@ Message: |
     4073 | “We're getting old,” said Daisy. “lf we were young we’d rise and dance.”
          |                                   ^~ Did you mean to spell `lf` this way?
 Suggest:
+  - Replace with: “fl”
   - Replace with: “la”
   - Replace with: “lo”
-  - Replace with: “elf”
 
 
 
@@ -5706,9 +5706,9 @@ Message: |
     4479 | “Oh, my Ga-od! Oh, my Ga-od! Oh, Ga-od! Oh, my Ga-od!”
          |            ^~ Did you mean to spell `od` this way?
 Suggest:
+  - Replace with: “do”
   - Replace with: “odd”
   - Replace with: “ode”
-  - Replace with: “of”
 
 
 
@@ -5717,9 +5717,9 @@ Message: |
     4479 | “Oh, my Ga-od! Oh, my Ga-od! Oh, Ga-od! Oh, my Ga-od!”
          |                          ^~ Did you mean to spell `od` this way?
 Suggest:
+  - Replace with: “do”
   - Replace with: “odd”
   - Replace with: “ode”
-  - Replace with: “of”
 
 
 
@@ -5728,9 +5728,9 @@ Message: |
     4479 | “Oh, my Ga-od! Oh, my Ga-od! Oh, Ga-od! Oh, my Ga-od!”
          |                                     ^~ Did you mean to spell `od` this way?
 Suggest:
+  - Replace with: “do”
   - Replace with: “odd”
   - Replace with: “ode”
-  - Replace with: “of”
 
 
 
@@ -5739,9 +5739,9 @@ Message: |
     4479 | “Oh, my Ga-od! Oh, my Ga-od! Oh, Ga-od! Oh, my Ga-od!”
          |                                                   ^~ Did you mean to spell `od` this way?
 Suggest:
+  - Replace with: “do”
   - Replace with: “odd”
   - Replace with: “ode”
-  - Replace with: “of”
 
 
 
@@ -5780,8 +5780,8 @@ Message: |
          |      ^ Did you mean to spell `r` this way?
 Suggest:
   - Replace with: “re”
-  - Replace with: “I”
-  - Replace with: “a”
+  - Replace with: “rd”
+  - Replace with: “rm”
 
 
 
@@ -5791,8 +5791,8 @@ Message: |
          |                                    ^ Did you mean to spell `r` this way?
 Suggest:
   - Replace with: “re”
-  - Replace with: “I”
-  - Replace with: “a”
+  - Replace with: “rd”
+  - Replace with: “rm”
 
 
 
@@ -5822,8 +5822,8 @@ Message: |
          |  ^ Did you mean to spell `r` this way?
 Suggest:
   - Replace with: “re”
-  - Replace with: “I”
-  - Replace with: “a”
+  - Replace with: “rd”
+  - Replace with: “rm”
 
 
 
@@ -5871,9 +5871,9 @@ Message: |
     4503 | “She ran out ina road. Son-of-a-bitch didn’t even stopus car.”
          |              ^~~ Did you mean to spell `ina` this way?
 Suggest:
+  - Replace with: “Ian”
   - Replace with: “in”
   - Replace with: “ind”
-  - Replace with: “inf”
 
 
 
@@ -6910,7 +6910,7 @@ Message: |
 Suggest:
   - Replace with: “eta”
   - Replace with: “etc.”
-  - Replace with: “enc”
+  - Replace with: “etch”
 
 
 
@@ -7249,9 +7249,9 @@ Message: |
     5509 | on have some lunch with me,’ I sid. He ate more than four dollars’ worth of food
          |                                ^~~ Did you mean to spell `sid` this way?
 Suggest:
+  - Replace with: “SDI”
+  - Replace with: “side”
   - Replace with: “sad”
-  - Replace with: “said”
-  - Replace with: “sic”
 
 
 
@@ -7376,9 +7376,9 @@ Message: |
     5613 | great for that. He told me I et like a hog once, and I beat him for it.”
          |                              ^~ Did you mean to spell `et` this way?
 Suggest:
+  - Replace with: “eta”
   - Replace with: “eat”
   - Replace with: “eh”
-  - Replace with: “em”
 
 
 
@@ -7635,8 +7635,8 @@ Message: |
          |                                                                   ^~ Did you mean to spell `El` this way?
 Suggest:
   - Replace with: “Ell”
-  - Replace with: “Eel”
-  - Replace with: “Eh”
+  - Replace with: “Le”
+  - Replace with: “Elf”
 
 
 

@@ -630,9 +630,9 @@ Message: |
      320 | she began again: “Où est ma chatte?” which was the first sentence in her French
          |                             ^~~~~~ Did you mean to spell `chatte` this way?
 Suggest:
-  - Replace with: “chaste”
   - Replace with: “chatted”
   - Replace with: “chattel”
+  - Replace with: “chatter”
 
 
 
@@ -2107,8 +2107,8 @@ Message: |
          |   ^~~ Did you mean to spell `Tis` this way?
 Suggest:
   - Replace with: “This”
+  - Replace with: “Its”
   - Replace with: “T's”
-  - Replace with: “Ti's”
 
 
 
@@ -2119,8 +2119,8 @@ Message: |
     1986 | love, that makes the world go round!’”
 Suggest:
   - Replace with: “this”
+  - Replace with: “its”
   - Replace with: “ti's”
-  - Replace with: “tic”
 
 
 
@@ -2131,8 +2131,8 @@ Message: |
     1986 | love, that makes the world go round!’”
 Suggest:
   - Replace with: “this”
+  - Replace with: “its”
   - Replace with: “ti's”
-  - Replace with: “tic”
 
 
 
@@ -2753,8 +2753,8 @@ Message: |
          |                        ^~~ Did you mean to spell `Tis` this way?
 Suggest:
   - Replace with: “This”
+  - Replace with: “Its”
   - Replace with: “T's”
-  - Replace with: “Ti's”
 
 
 
@@ -2780,8 +2780,8 @@ Message: |
          |     ^~~ Did you mean to spell `Tis` this way?
 Suggest:
   - Replace with: “This”
+  - Replace with: “Its”
   - Replace with: “T's”
-  - Replace with: “Ti's”
 
 
 
@@ -2903,9 +2903,9 @@ Message: |
     2485 | > evening, beautiful Soup! Beau—ootiful Soo—oop! Beau—ootiful Soo—oop! Soo—oop
          |                                         ^~~ Did you mean to spell `Soo` this way?
 Suggest:
+  - Replace with: “Soon”
+  - Replace with: “Soot”
   - Replace with: “So”
-  - Replace with: “Soc”
-  - Replace with: “Sod”
 
 
 
@@ -2945,9 +2945,9 @@ Message: |
     2485 | > evening, beautiful Soup! Beau—ootiful Soo—oop! Beau—ootiful Soo—oop! Soo—oop
          |                                                               ^~~ Did you mean to spell `Soo` this way?
 Suggest:
+  - Replace with: “Soon”
+  - Replace with: “Soot”
   - Replace with: “So”
-  - Replace with: “Soc”
-  - Replace with: “Sod”
 
 
 
@@ -2977,9 +2977,9 @@ Message: |
          |                                                                        ^~~ Did you mean to spell `Soo` this way?
     2486 | > of the e—e—evening, Beautiful, beautiful Soup!
 Suggest:
+  - Replace with: “Soon”
+  - Replace with: “Soot”
   - Replace with: “So”
-  - Replace with: “Soc”
-  - Replace with: “Sod”
 
 
 
@@ -3041,9 +3041,9 @@ Message: |
     2490 | > beautiful Soup? Beau—ootiful Soo—oop! Beau—ootiful Soo—oop! Soo—oop of the
          |                                ^~~ Did you mean to spell `Soo` this way?
 Suggest:
+  - Replace with: “Soon”
+  - Replace with: “Soot”
   - Replace with: “So”
-  - Replace with: “Soc”
-  - Replace with: “Sod”
 
 
 
@@ -3083,9 +3083,9 @@ Message: |
     2490 | > beautiful Soup? Beau—ootiful Soo—oop! Beau—ootiful Soo—oop! Soo—oop of the
          |                                                      ^~~ Did you mean to spell `Soo` this way?
 Suggest:
+  - Replace with: “Soon”
+  - Replace with: “Soot”
   - Replace with: “So”
-  - Replace with: “Soc”
-  - Replace with: “Sod”
 
 
 
@@ -3115,9 +3115,9 @@ Message: |
          |                                                               ^~~ Did you mean to spell `Soo` this way?
     2491 | > e—e—evening, Beautiful, beauti—FUL SOUP!”
 Suggest:
+  - Replace with: “Soon”
+  - Replace with: “Soot”
   - Replace with: “So”
-  - Replace with: “Soc”
-  - Replace with: “Sod”
 
 
 
@@ -3161,8 +3161,8 @@ Message: |
     2491 | > e—e—evening, Beautiful, beauti—FUL SOUP!”
          |                                  ^~~ Did you mean to spell `FUL` this way?
 Suggest:
-  - Replace with: “Full”
   - Replace with: “Flu”
+  - Replace with: “Full”
   - Replace with: “Fol”
 
 
@@ -3200,9 +3200,9 @@ Message: |
     2503 | > “Soo—oop of the e—e—evening, Beautiful, beautiful Soup!”
          |    ^~~ Did you mean to spell `Soo` this way?
 Suggest:
+  - Replace with: “Soon”
+  - Replace with: “Soot”
   - Replace with: “So”
-  - Replace with: “Soc”
-  - Replace with: “Sod”
 
 
 

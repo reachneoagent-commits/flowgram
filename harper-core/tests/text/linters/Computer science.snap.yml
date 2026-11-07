@@ -255,8 +255,8 @@ Message: |
      116 | Peter Naur suggested the term datalogy, to reflect the fact that the scientific
          |       ^~~~ Did you mean to spell `Naur` this way?
 Suggest:
-  - Replace with: “Nair”
   - Replace with: “Nauru”
+  - Replace with: “Nair”
   - Replace with: “Nag”
 
 
@@ -291,8 +291,8 @@ Message: |
      120 | Peter Naur being the first professor in datalogy. The term is used mainly in the
          |       ^~~~ Did you mean to spell `Naur` this way?
 Suggest:
-  - Replace with: “Nair”
   - Replace with: “Nauru”
+  - Replace with: “Nair”
   - Replace with: “Nag”
 
 
@@ -315,8 +315,8 @@ Message: |
          |                                                               ^~~~ Did you mean to spell `Naur` this way?
      122 | science; this is now used for a multi-disciplinary field of data analysis,
 Suggest:
-  - Replace with: “Nair”
   - Replace with: “Nauru”
+  - Replace with: “Nair”
   - Replace with: “Nag”
 
 
@@ -791,9 +791,9 @@ Message: |
          |                                                          ^~~~ Did you mean to spell `CSAB` this way?
      232 | Computing Sciences Accreditation Board—which is made up of representatives of
 Suggest:
+  - Replace with: “Scab”
   - Replace with: “Cab”
   - Replace with: “Crab”
-  - Replace with: “Cad”
 
 
 
@@ -844,9 +844,9 @@ Message: |
      237 | In addition to these four areas, CSAB also identifies fields such as software
          |                                  ^~~~ Did you mean to spell `CSAB` this way?
 Suggest:
+  - Replace with: “Scab”
   - Replace with: “Cab”
   - Replace with: “Crab”
-  - Replace with: “Cad”
 
 
 
@@ -1050,8 +1050,8 @@ Message: |
      346 | Human–computer interaction (HCI) is the field of study and research concerned
          |                             ^~~ Did you mean to spell `HCI` this way?
 Suggest:
-  - Replace with: “Hi”
   - Replace with: “Chi”
+  - Replace with: “Hi”
   - Replace with: “Sci”
 
 
@@ -1062,8 +1062,8 @@ Message: |
          |                                                     ^~~ Did you mean to spell `HCI` this way?
      349 | that focus on the relationship between emotions, social behavior and brain
 Suggest:
-  - Replace with: “Hi”
   - Replace with: “Chi”
+  - Replace with: “Hi”
   - Replace with: “Sci”
 
 

@@ -72,3 +72,18 @@ test('Does not change anything if the text moved after it was checked.', async (
 	expect(final).not.toMatch(/co\s*correct|corecorrect/);
 	expect(final).toMatch(/XXIs this spelled (correct|corect) wrong/);
 });
+
+test('Suggests the swapped-letter word first for a short typo.', async ({ page }) => {
+	test.slow();
+	await page.goto(TEST_PAGE_URL);
+	const editor = await typeLines(page, ['Let me test si this works.']);
+	await waitForHighlightsToSettle(page);
+
+	// "si" is the only misspelling, so its highlight is the first one on the page.
+	expect(await clickHarperHighlight(page, 'si')).toBe(true);
+	const suggestion = page.getByTitle('Click to replace "si" with "is"');
+	await expect(suggestion).toBeVisible();
+	await suggestion.click();
+
+	await expect(editor).toContainText('Let me test is this works.');
+});

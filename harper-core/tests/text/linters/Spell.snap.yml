@@ -22,9 +22,9 @@ Message: |
        7 | My favourite color is blu.
          |                       ^~~ Did you mean to spell `blu` this way?
 Suggest:
-  - Replace with: “bl”
   - Replace with: “blue”
   - Replace with: “blur”
+  - Replace with: “bl”
 
 
 

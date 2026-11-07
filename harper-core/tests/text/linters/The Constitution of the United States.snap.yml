@@ -737,8 +737,8 @@ Message: |
      274 | No Bill of Attainder or ex post facto Law shall be passed.
          |                                 ^~~~~ Did you mean to spell `facto` this way?
 Suggest:
-  - Replace with: “fact”
   - Replace with: “factor”
+  - Replace with: “fact”
   - Replace with: “facts”
 
 
@@ -803,8 +803,8 @@ Message: |
          |                                     ^~~~~ Did you mean to spell `facto` this way?
      309 | of Contracts, or grant any Title of Nobility.
 Suggest:
-  - Replace with: “fact”
   - Replace with: “factor”
+  - Replace with: “fact”
   - Replace with: “facts”
 
 
