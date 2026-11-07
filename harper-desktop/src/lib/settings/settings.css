@@ -603,8 +603,8 @@ em:where(:not([class])),
 	margin: 0 -44px 16px;
 	padding: 10px 44px;
 	border-bottom: 0.5px solid var(--settings-line);
-	background: rgba(245, 245, 245, 0.88);
-	backdrop-filter: blur(14px);
+	/* Follows the theme; a fixed light grey looked like a stray bar in dark mode. */
+	background: var(--settings-bg-window);
 }
 
 .rule-search {
@@ -1657,19 +1657,32 @@ body[data-theme="dark"] .app-result:hover {
 
 .group-status {
 	flex: 0 0 auto;
+	border: 1px solid var(--settings-line-strong);
 	border-radius: 999px;
-	background: rgba(43, 43, 43, 0.06);
-	padding: 3px 10px;
+	background: var(--settings-surface);
+	color: var(--settings-ink-2);
+	padding: 3px 11px;
 	font-size: 12px;
+	font-weight: 500;
 	white-space: nowrap;
 }
 
+/* Some rules in the group are off: use the brand color so it stands out from "all on". */
 .group-status.partial {
-	background: rgba(235, 246, 108, 0.35);
+	border-color: var(--settings-accent);
+	background: color-mix(in srgb, var(--settings-accent) 30%, transparent);
+	color: var(--settings-ink);
 }
 
 .group-status.none {
 	color: var(--settings-ink-3);
+	border-style: dashed;
+}
+
+/* "Reset to recommended" is quiet until something has changed, then it takes the brand color. */
+.reset-recommended:disabled {
+	opacity: 0.45;
+	cursor: default;
 }
 
 .rules-summary {

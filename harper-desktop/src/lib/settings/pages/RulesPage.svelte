@@ -331,8 +331,14 @@ function toggleGroup(groupId: string) {
               </IconButton>
             {/if}
           </SearchField>
-          <Button unstyled class="button" type="button" disabled={isLintConfigLoading || isLintConfigSaving || changedRuleCount === 0} on:click={resetToRecommended}>
-            Reset to recommended
+          <Button
+            unstyled
+            class={`button reset-recommended ${changedRuleCount > 0 ? 'primary' : ''}`}
+            type="button"
+            disabled={isLintConfigLoading || isLintConfigSaving || changedRuleCount === 0}
+            on:click={resetToRecommended}
+          >
+            {changedRuleCount > 0 ? `Reset ${changedRuleCount} to recommended` : 'Reset to recommended'}
           </Button>
         </div>
 
