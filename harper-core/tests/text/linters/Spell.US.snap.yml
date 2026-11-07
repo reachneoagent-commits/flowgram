@@ -1,16 +1,5 @@
 Lint:    Spelling (63 priority)
 Message: |
-       9 | - Afterwards.
-         |   ^~~~~~~~~~ Did you mean to spell `Afterwards` this way?
-Suggest:
-  - Replace with: “Afterwords”
-  - Replace with: “Afterward”
-  - Replace with: “Afterword's”
-
-
-
-Lint:    Spelling (63 priority)
-Message: |
       10 | - Centre.
          |   ^~~~~~ Did you mean to spell `Centre` this way?
 Suggest:

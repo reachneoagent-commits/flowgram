@@ -38,8 +38,8 @@
 # R+    VLPt NSg/I/J+ NSg/I/J/R/C J/R  J          NPr/J/R/P I/C/Ddem+ . NSg/C VXPt NPr+  NSg/VB NSg/ISg+ NSg/I/J/R/C J/R
 > much         out          of the way    to hear the Rabbit  say    to itself , “ Oh     dear     ! Oh     dear     ! I       shall
 # NSg/I/J/R/Dq NSg/VB/J/R/P P  D+  NSg/J+ P  VB   D+  NSg/VB+ NSg/VB P  ISg+   . . NPr/VB NSg/VB/J . NPr/VB NSg/VB/J . ISg/#r+ VXB
-> be       late  ! ” ( when    she  thought it       over    afterwards , it       occurred to her     that     she
-# NSg/VLXB NSg/J . . . NSg/I/C ISg+ N🅪Sg/VP NSg/ISg+ NSg/J/P R/Comm     . NSg/ISg+ VP       P  ISg/D$+ I/C/Ddem ISg+
+> be       late  ! ” ( when    she  thought it       over    afterwards  , it       occurred to her     that     she
+# NSg/VLXB NSg/J . . . NSg/I/C ISg+ N🅪Sg/VP NSg/ISg+ NSg/J/P R/Comm/NoAm . NSg/ISg+ VP       P  ISg/D$+ I/C/Ddem ISg+
 > ought     to have    wondered at    this    , but     at    the time       it       all          seemed quite natural ) ;
 # NSg/I/VXB P  NSg/VXB VP/J     NSg/P I/Ddem+ . NSg/C/P NSg/P D+  N🅪Sg/VB/J+ NSg/ISg+ NSg/I/J/C/Dq VP/J   R     NSg/J   . .
 > but     when    the Rabbit  actually took a    watch   out          of its     waistcoat - pocket    , and
@@ -5856,8 +5856,8 @@
 # I/C/Ddem+ NPr🅪Sg+ .
 >
 #
-> “ No       , no       ! ” said the Queen   . “ Sentence first — verdict afterwards . ”
-# . NSg/Dq/P . NSg/Dq/P . . VP/J D+  NPr/VB+ . . NSg/VB+  NSg/J . NSg+    R/Comm     . .
+> “ No       , no       ! ” said the Queen   . “ Sentence first — verdict afterwards  . ”
+# . NSg/Dq/P . NSg/Dq/P . . VP/J D+  NPr/VB+ . . NSg/VB+  NSg/J . NSg+    R/Comm/NoAm . .
 >
 #
 > “ Stuff and  nonsense ! ” said Alice loudly . “ The idea of having  the sentence

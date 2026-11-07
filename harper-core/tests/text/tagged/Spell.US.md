@@ -18,8 +18,8 @@
 #
 >
 #
-> Afterwards .
-# R/Comm     .
+> Afterwards  .
+# R/Comm/NoAm .
 >
 #
 > Centre       .
