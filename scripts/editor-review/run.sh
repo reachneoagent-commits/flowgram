@@ -12,16 +12,5 @@ cli=target/release/harper-cli
 while IFS= read -r line || [ -n "$line" ]; do
   [ -z "$line" ] && continue
   echo "SENTENCE: $line"
-  "$cli" lint --format json --quiet "$line" 2>/dev/null | python3 -c '
-import json, sys
-try:
-    lints = [l for f in json.load(sys.stdin) for l in f["lints"]]
-except Exception:
-    lints = []
-if not lints:
-    print("  (nothing flagged)")
-for l in lints:
-    sug = " | ".join(s.replace("Replace with: ", "").strip("“”") for s in l["suggestions"][:3]) or "-"
-    print(f"  [{l[\"rule\"]}] \"{l[\"matched_text\"]}\" -> {sug}")
-'
+  "$cli" lint --format json --quiet "$line" 2>/dev/null | python3 scripts/editor-review/format_lints.py
 done < "$file"
