@@ -531,7 +531,7 @@ fn render_flyout(
             });
         });
 
-    if disable_rule_row(ui).clicked() {
+    if disable_rule_row(ui) {
         *action = Some(LintCardAction::DisableRule);
     }
 }
@@ -562,11 +562,23 @@ fn render_kind_header(ui: &mut egui::Ui, lint_kind: LintKind) {
 }
 
 /// Renders the full-width row that disables the rule that produced the lint.
-fn disable_rule_row(ui: &mut egui::Ui) -> egui::Response {
+///
+/// Turning a rule off applies everywhere, so the first click only arms the row and asks for
+/// confirmation. Returns true once the user has clicked a second time.
+fn disable_rule_row(ui: &mut egui::Ui) -> bool {
+    let armed_id = ui.id().with("harper-disable-rule-armed");
     let (rect, response) = ui.allocate_exact_size(
         egui::vec2(FLYOUT_WIDTH, DISABLE_ROW_HEIGHT),
         egui::Sense::click(),
     );
+
+    let mut armed = ui
+        .data(|data| data.get_temp::<bool>(armed_id))
+        .unwrap_or(false);
+    // Moving away cancels the confirmation, so a stray click never lingers.
+    if !response.hovered() {
+        armed = false;
+    }
 
     if response.hovered() {
         // This row can touch the card's bottom corners, so keep the hover inside the curves.
@@ -585,12 +597,19 @@ fn disable_rule_row(ui: &mut egui::Ui) -> egui::Response {
         egui::Stroke::new(DIVIDER_WIDTH, DIVIDER_COLOR),
     );
 
-    let color = if response.hovered() {
+    let color = if armed {
+        egui::Color32::from_rgb(0xE0, 0x6C, 0x4C)
+    } else if response.hovered() {
         MUTED_TEXT_COLOR
     } else {
         SUBTLE_TEXT_COLOR
     };
-    let label = single_line_galley(ui, "Disable this rule", 11.0, FLYOUT_WIDTH - 20.0);
+    let text = if armed {
+        "Click again to turn this rule off"
+    } else {
+        "Disable this rule"
+    };
+    let label = single_line_galley(ui, text, 11.0, FLYOUT_WIDTH - 20.0);
     paint_text(
         ui.painter(),
         rect.left() + 10.0,
@@ -599,10 +618,15 @@ fn disable_rule_row(ui: &mut egui::Ui) -> egui::Response {
         color,
     );
 
-    hover_text(
-        response.on_hover_cursor(egui::CursorIcon::PointingHand),
-        "Disable the rule that produced this lint",
-    )
+    let clicked = response
+        .on_hover_cursor(egui::CursorIcon::PointingHand)
+        .clicked();
+    let confirmed = clicked && armed;
+    ui.data_mut(|data| {
+        data.insert_temp(armed_id, if confirmed { false } else { armed || clicked })
+    });
+
+    confirmed
 }
 
 /// Renders a compact button in the style of the Chrome extension's `.harper-btn`.

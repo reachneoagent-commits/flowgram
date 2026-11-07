@@ -28,12 +28,12 @@ const allSlides: OnboardingSlide[] = [
 	{
 		id: 'apps',
 		title: 'Choose your apps',
-		lede: 'Flowgram checks your writing in the apps you switch on. Notes, Mail, Messages and TextEdit are ready by default.\n\nTurn any off, add your own, or skip this and change it later in Settings → Integrations.',
+		lede: 'Flowgram checks your writing in the apps you switch on. Notes, Mail, Messages and TextEdit are ready by default.\n\nTurn any off or add your own. Click Next to keep what you see; you can change it later in Settings → Integrations.',
 	},
 	{
 		id: 'browser',
 		title: 'Add the browser extension',
-		lede: 'To check your writing on websites and in webmail, add the Flowgram extension to Chrome, Edge, Brave, Opera or Firefox.\n\nThis is optional. You can do it later from Settings → Integrations.',
+		lede: 'To check your writing on websites and in webmail, add the Flowgram extension to Chrome, Edge, Brave, Opera or Firefox.\n\nThis step is optional. Click Next to skip it and add the extension later from Settings → Integrations.',
 	},
 	{
 		id: 'test-drive',
@@ -310,6 +310,9 @@ async function prepareService(request = false) {
     lede={slides[step].lede}
     slideProgress={step / (slides.length - 1)}
     {nextDisabled}
+    onFinish={completeOnboarding}
+    finishDisabled={isCompletingOnboarding || !accessibilityReady}
+    finishLabel={isCompletingOnboarding ? 'Finishing...' : 'Finish'}
     onBack={() => {
       if (!isCompletingOnboarding) step--;
     }}
@@ -417,37 +420,43 @@ async function prepareService(request = false) {
           <Button color="white" disabled={isLoadingIntegrations || isSavingApps} on:click={() => (appPickerOpen = true)}>
             Add application...
           </Button>
-          <Button color="white" on:click={() => step++}>Skip for now</Button>
         </div>
       </div>
     {:else if slides[step].id === 'browser'}
       <div class="onboarding-actions">
-        <ol class="onboarding-steps">
-          <li>
-            <Button disabled={isPreparingExtension} on:click={prepareExtension}>
-              {isPreparingExtension ? 'Preparing...' : extensionFolder ? 'Show the folder again' : 'Get the extension folder'}
-            </Button>
-          </li>
-          <li>
-            Open your browser's extensions page and switch on <strong>Developer mode</strong>.
-            <span class="onboarding-browser-buttons">
-              <Button color="white" size="sm" on:click={() => openExtensionsPage('chrome')}>Chrome</Button>
-              <Button color="white" size="sm" on:click={() => openExtensionsPage('edge')}>Edge</Button>
-              <Button color="white" size="sm" on:click={() => openExtensionsPage('brave')}>Brave</Button>
-              <Button color="white" size="sm" on:click={() => openExtensionsPage('opera')}>Opera</Button>
-            </span>
-          </li>
-          <li>Click <strong>Load unpacked</strong> and choose the <strong>Flowgram Browser Extension</strong> folder{extensionFolder ? ` in Documents` : ''}.</li>
-        </ol>
-        <p>
-          <strong>Firefox:</strong> it needs its own copy.
-          <Button color="white" size="sm" on:click={prepareFirefox}>Set up Firefox</Button>
-          Then, on the page that opens, click <strong>Load Temporary Add-on…</strong> and choose the <strong>manifest.json</strong> file inside the <strong>Flowgram Firefox Extension</strong> folder{firefoxFolder ? ' in Documents' : ''}. Firefox forgets it when it quits, so repeat this after restarting Firefox.
-        </p>
+        <section class="onboarding-browser-group">
+          <h3>Chrome, Edge, Brave and Opera</h3>
+          <ol class="onboarding-steps">
+            <li>
+              <Button disabled={isPreparingExtension} on:click={prepareExtension}>
+                {isPreparingExtension ? 'Preparing...' : extensionFolder ? 'Show the folder again' : 'Get the extension folder'}
+              </Button>
+            </li>
+            <li>
+              Open your browser's extensions page and switch on <strong>Developer mode</strong>.
+              <span class="onboarding-browser-buttons">
+                <Button color="white" size="sm" on:click={() => openExtensionsPage('chrome')}>Chrome</Button>
+                <Button color="white" size="sm" on:click={() => openExtensionsPage('edge')}>Edge</Button>
+                <Button color="white" size="sm" on:click={() => openExtensionsPage('brave')}>Brave</Button>
+                <Button color="white" size="sm" on:click={() => openExtensionsPage('opera')}>Opera</Button>
+              </span>
+            </li>
+            <li>Click <strong>Load unpacked</strong> and choose the <strong>Flowgram Browser Extension</strong> folder{extensionFolder ? ' in Documents' : ''}.</li>
+          </ol>
+        </section>
+        <section class="onboarding-browser-group">
+          <h3>Firefox</h3>
+          <ol class="onboarding-steps">
+            <li>
+              <Button color="white" size="sm" on:click={prepareFirefox}>Set up Firefox</Button>
+            </li>
+            <li>On the page that opens, click <strong>Load Temporary Add-on…</strong> and choose <strong>manifest.json</strong> inside the <strong>Flowgram Firefox Extension</strong> folder{firefoxFolder ? ' in Documents' : ''}.</li>
+            <li>Firefox forgets the extension when it quits, so repeat step 2 after restarting it.</li>
+          </ol>
+        </section>
         {#if extensionError}
           <p role="alert">{extensionError}</p>
         {/if}
-        <Button color="white" on:click={() => step++}>Skip for now</Button>
       </div>
     {:else if slides[step].id === 'test-drive'}
       <div class="onboarding-actions">
@@ -463,9 +472,6 @@ async function prepareService(request = false) {
         {#if onboardingError}
           <p role="alert">{onboardingError}</p>
         {/if}
-        <Button disabled={isCompletingOnboarding || !accessibilityReady} on:click={completeOnboarding}>
-          {isCompletingOnboarding ? 'Finishing...' : 'Finish'}
-        </Button>
       </div>
     {/if}
   </SlideDeck>

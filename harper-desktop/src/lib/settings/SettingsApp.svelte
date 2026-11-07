@@ -3,6 +3,7 @@ import { onMount } from 'svelte';
 import { Client } from '$lib/client';
 import { applyTheme } from '$lib/theme';
 import SettingsSidebar from './SettingsSidebar.svelte';
+import CoreRulesBanner from './components/CoreRulesBanner.svelte';
 import './settings.css';
 import AboutPage from './pages/AboutPage.svelte';
 import DictionaryPage from './pages/DictionaryPage.svelte';
@@ -108,6 +109,7 @@ $: if (contentEl && active) {
           <p>{pageHead.sub}</p>
         </header>
       {/if}
+      <CoreRulesBanner />
       {#if active === "general"}
         <GeneralPage />
       {:else if active === "writing"}

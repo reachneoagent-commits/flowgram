@@ -13,7 +13,8 @@ import ChevronRightIcon from './icons/ChevronRightIcon.svelte';
  * mobile. `onBack` and `onNext` synchronously update the parent's active slide
  * before focus moves.
  * `nextDisabled` blocks forward navigation through both the button and keyboard
- * shortcuts without preventing users from going back. Forward navigation plays a
+ * shortcuts without preventing users from going back. When `onFinish` is set, the last slide shows
+ * a primary `finishLabel` button in the footer, right where Next appeared on earlier slides. Forward navigation plays a
  * diagonal flash across the slide content unless the user prefers reduced motion.
  * The deck switches to its dark palette under a `.dark` ancestor through
  * Tailwind `dark:` variants.
@@ -25,6 +26,10 @@ export let onBack: () => void;
 export let onNext: () => void;
 export let nextDisabled = false;
 export let showAside = false;
+/** On the last slide the primary button becomes this action, in the same place Next occupied. */
+export let onFinish: (() => void) | undefined = undefined;
+export let finishLabel = 'Finish';
+export let finishDisabled = false;
 
 let heading: HTMLElement;
 
@@ -172,6 +177,15 @@ function handleKeydown(event: KeyboardEvent) {
 						onclick={(event: MouseEvent) => changeStep(1, event.detail === 0)}
 					>
 						<span>Next</span>
+						<span class="inline-grid size-9 place-items-center rounded-lg bg-[#2b2c23] text-white">
+							<ChevronRightIcon className="size-4" />
+						</span>
+					</Button>
+				{:else if onFinish}
+					<Button size="lg" color="primary" class="gap-3 rounded-xl py-1.5! pr-1.5! pl-5! text-base! font-medium! motion-reduce:transition-none" disabled={finishDisabled}
+						onclick={() => onFinish?.()}
+					>
+						<span>{finishLabel}</span>
 						<span class="inline-grid size-9 place-items-center rounded-lg bg-[#2b2c23] text-white">
 							<ChevronRightIcon className="size-4" />
 						</span>

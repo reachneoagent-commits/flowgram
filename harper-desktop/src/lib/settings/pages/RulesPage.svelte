@@ -344,7 +344,7 @@ function toggleGroup(groupId: string) {
             {/if}
           </SearchField>
           <Button unstyled class="button" type="button" disabled={isLintConfigLoading || isLintConfigSaving} on:click={resetRules}>
-            Reset to defaults
+            Reset to recommended
           </Button>
           <Button unstyled class="button" type="button" disabled={isLintConfigLoading || isLintConfigSaving} on:click={disableRules}>
             Disable all

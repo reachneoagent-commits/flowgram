@@ -91,6 +91,7 @@ impl ExprLinter for SplitWords {
 
         let mut suggestions = Vec::new();
         let mut has_anchor_split = false;
+        let mut shortest_part = usize::MAX;
         let mut message: Option<String> = None;
 
         // Check positions in middle-outward order
@@ -121,6 +122,8 @@ impl ExprLinter for SplitWords {
                 has_anchor_split = true;
             }
 
+            shortest_part = shortest_part.min(candidate.len()).min(remainder.len());
+
             // Valid split found
             let mut suggestion = Vec::new();
             suggestion.extend(candidate.iter());
@@ -146,7 +149,13 @@ impl ExprLinter for SplitWords {
         if !suggestions.is_empty() {
             let original_word: String = chars.iter().collect();
 
-            if should_defer_to_spellcheck(&self.dict, chars, has_anchor_split, context) {
+            if should_defer_to_spellcheck(
+                &self.dict,
+                chars,
+                has_anchor_split,
+                shortest_part,
+                context,
+            ) {
                 return None;
             }
 
@@ -183,10 +192,22 @@ fn should_defer_to_spellcheck(
     dict: &TrieDictionary<Arc<FstDictionary>>,
     chars: &[char],
     has_anchor_split: bool,
+    shortest_part: usize,
     context: Option<(&[Token], &[Token])>,
 ) -> bool {
     if has_anchor_split {
         return false;
+    }
+
+    // A split that leaves a one- or two-letter fragment (`corect` -> `core ct`) is almost always
+    // a misspelling. Prefer the spelling correction whenever one is a single edit away.
+    let has_close_spelling = || {
+        dict.fuzzy_match(chars, 1, 1)
+            .first()
+            .is_some_and(|suggestion| suggestion.edit_distance == 1)
+    };
+    if shortest_part <= 2 && has_close_spelling() {
+        return true;
     }
 
     let nounish_context = context.is_some_and(|_| {
@@ -205,9 +226,7 @@ fn should_defer_to_spellcheck(
     }
 
     // If the whole word has a strong one-word correction, prefer that over a content-word split.
-    dict.fuzzy_match(chars, 1, 1)
-        .first()
-        .is_some_and(|suggestion| suggestion.edit_distance == 1)
+    has_close_spelling()
 }
 
 #[cfg(test)]
@@ -427,5 +446,28 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn corect_is_left_to_spellcheck() {
+        assert_no_lints(
+            "man this is corect that you need my help",
+            SplitWords::default(),
+        );
+    }
+
+    #[test]
+    fn other_short_fragment_misspellings_are_left_to_spellcheck() {
+        assert_no_lints("This is definately fine.", SplitWords::default());
+        assert_no_lints("It was recieved yesterday.", SplitWords::default());
+    }
+
+    #[test]
+    fn real_missing_spaces_still_split() {
+        assert_suggestion_result(
+            "I want to try this insteadof that.",
+            SplitWords::default(),
+            "I want to try this instead of that.",
+        );
     }
 }
