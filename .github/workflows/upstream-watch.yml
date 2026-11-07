@@ -1,0 +1,50 @@
+name: Watch Harper for updates
+
+# Once a week, look for new commits in Harper (the project Flowgram is forked from) and open
+# an issue that lists them. Nothing is merged. To bring them in, run "Prepare Harper merge".
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Fetch Harper
+        run: |
+          git remote add upstream https://github.com/Automattic/harper.git
+          git fetch upstream master
+      - name: Summarize and open or update the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BASE=$(git merge-base HEAD upstream/master)
+          COUNT=$(git rev-list --count "$BASE..upstream/master")
+          echo "New Harper commits: $COUNT"
+          EXISTING=$(gh issue list --label harper-update --state open --json number -q '.[0].number')
+          if [ "$COUNT" -eq 0 ]; then
+            [ -n "$EXISTING" ] && gh issue close "$EXISTING" --comment "Flowgram is up to date with Harper."
+            exit 0
+          fi
+          {
+            python3 scripts/upstream/summarize.py "$BASE" upstream/master
+            echo "---"
+            echo "**To bring these in:** open the Actions tab, choose **Prepare Harper merge**, and run it."
+            echo "It merges Harper on a separate branch, runs the tests and the branding check, and opens a pull request for you to review. Nothing changes for users until you merge that pull request and publish a release."
+          } > /tmp/body.md
+          TITLE="Harper update available ($COUNT new commits)"
+          if [ -n "$EXISTING" ]; then
+            gh issue edit "$EXISTING" --title "$TITLE" --body-file /tmp/body.md
+          else
+            gh label create harper-update --color 449837 --description "New commits in Harper" 2>/dev/null || true
+            gh issue create --title "$TITLE" --body-file /tmp/body.md --label harper-update
+          fi
