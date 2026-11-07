@@ -1,0 +1,74 @@
+{
+  "spelling": {
+    "sentences": 10,
+    "expected": 10,
+    "found": 10,
+    "first_ok": 9,
+    "top3_ok": 9,
+    "false_alarms": 0
+  },
+  "confused": {
+    "sentences": 9,
+    "expected": 7,
+    "found": 5,
+    "first_ok": 4,
+    "top3_ok": 4,
+    "false_alarms": 0
+  },
+  "agreement": {
+    "sentences": 7,
+    "expected": 6,
+    "found": 5,
+    "first_ok": 5,
+    "top3_ok": 5,
+    "false_alarms": 0
+  },
+  "verbs": {
+    "sentences": 5,
+    "expected": 4,
+    "found": 3,
+    "first_ok": 2,
+    "top3_ok": 2,
+    "false_alarms": 0
+  },
+  "punctuation": {
+    "sentences": 5,
+    "expected": 4,
+    "found": 4,
+    "first_ok": 4,
+    "top3_ok": 4,
+    "false_alarms": 0
+  },
+  "capitalization": {
+    "sentences": 4,
+    "expected": 4,
+    "found": 3,
+    "first_ok": 3,
+    "top3_ok": 3,
+    "false_alarms": 1
+  },
+  "wordiness": {
+    "sentences": 3,
+    "expected": 2,
+    "found": 2,
+    "first_ok": 2,
+    "top3_ok": 2,
+    "false_alarms": 0
+  },
+  "clean": {
+    "sentences": 6,
+    "expected": 0,
+    "found": 0,
+    "first_ok": 0,
+    "top3_ok": 0,
+    "false_alarms": 0
+  },
+  "ALL": {
+    "sentences": 49,
+    "expected": 37,
+    "found": 32,
+    "first_ok": 29,
+    "top3_ok": 29,
+    "false_alarms": 1
+  }
+}

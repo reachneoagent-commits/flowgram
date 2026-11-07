@@ -1,0 +1,49 @@
+{"category":"spelling","text":"Let me test si this works.","errors":[{"text":"si","fix":"is"}]}
+{"category":"spelling","text":"Is this spelled corect on my screen?","errors":[{"text":"corect","fix":"correct"}]}
+{"category":"spelling","text":"I recieved your order yesterday.","errors":[{"text":"recieved","fix":"received"}]}
+{"category":"spelling","text":"We will meet tomorow at noon.","errors":[{"text":"tomorow","fix":"tomorrow"}]}
+{"category":"spelling","text":"That was definately a mistake.","errors":[{"text":"definately","fix":"definitely"}]}
+{"category":"spelling","text":"Please send teh report by Friday.","errors":[{"text":"teh","fix":"the"}]}
+{"category":"spelling","text":"It is not righ to ignore them.","errors":[{"text":"righ","fix":"right"}]}
+{"category":"spelling","text":"She went to the libary after class.","errors":[{"text":"libary","fix":"library"}]}
+{"category":"spelling","text":"The occurence of errors dropped.","errors":[{"text":"occurence","fix":"occurrence"}]}
+{"category":"spelling","text":"Our new neighbour is very kind.","errors":[{"text":"neighbour","fix":"neighbor"}]}
+{"category":"confused","text":"Their going to the store tomorrow.","errors":[{"text":"Their","fix":"They're"}]}
+{"category":"confused","text":"Your welcome to join us anytime.","errors":[{"text":"Your","fix":"You're"}]}
+{"category":"confused","text":"The dog wagged it's tail happily.","errors":[{"text":"it's","fix":"its"}]}
+{"category":"confused","text":"I would rather go then stay home.","errors":[{"text":"then","fix":"than"}]}
+{"category":"confused","text":"Don't lose your keys, the lock is loose.","errors":[]}
+{"category":"confused","text":"I need to loose five pounds.","errors":[{"text":"loose","fix":"lose"}]}
+{"category":"confused","text":"The new policy will effect everyone.","errors":[{"text":"effect","fix":"affect"}]}
+{"category":"confused","text":"Who's coat is this?","errors":[{"text":"Who's","fix":"Whose"}]}
+{"category":"confused","text":"They're bringing their own lunch, and it's over there.","errors":[]}
+{"category":"agreement","text":"She don't like the new schedule.","errors":[{"text":"don't","fix":"doesn't"}]}
+{"category":"agreement","text":"The team are meeting at noon.","errors":[]}
+{"category":"agreement","text":"There is three reasons for this.","errors":[{"text":"is","fix":"are"}]}
+{"category":"agreement","text":"He have already finished the task.","errors":[{"text":"have","fix":"has"}]}
+{"category":"agreement","text":"I saw an dog in the park.","errors":[{"text":"an","fix":"a"}]}
+{"category":"agreement","text":"She is a honest person.","errors":[{"text":"a","fix":"an"}]}
+{"category":"agreement","text":"This is an test.","errors":[{"text":"an","fix":"a"}]}
+{"category":"verbs","text":"I should of called you earlier.","errors":[{"text":"should of","fix":"should have"}]}
+{"category":"verbs","text":"She could care less about the results.","errors":[{"text":"could care less","fix":"couldn't care less"}]}
+{"category":"verbs","text":"We have went to that restaurant before.","errors":[{"text":"went","fix":"gone"}]}
+{"category":"verbs","text":"He seen the accident happen.","errors":[{"text":"seen","fix":"saw"}]}
+{"category":"verbs","text":"They have already left for the airport.","errors":[]}
+{"category":"punctuation","text":"Its a beautiful day outside.","errors":[{"text":"Its","fix":"It's"}]}
+{"category":"punctuation","text":"I cant believe how late it is.","errors":[{"text":"cant","fix":"can't"}]}
+{"category":"punctuation","text":"We dont know what happened.","errors":[{"text":"dont","fix":"don't"}]}
+{"category":"punctuation","text":"The meeting is at 3 p.m. on Tuesday.","errors":[]}
+{"category":"punctuation","text":"Hello,  how are you today?","errors":[{"text":"  ","fix":" "}]}
+{"category":"capitalization","text":"i think we should start now.","errors":[{"text":"i","fix":"I"}]}
+{"category":"capitalization","text":"my brother lives in chicago.","errors":[{"text":"my","fix":"My"}]}
+{"category":"capitalization","text":"We flew to new york last month.","errors":[{"text":"new york","fix":"New York"}]}
+{"category":"capitalization","text":"The meeting is on monday.","errors":[{"text":"monday","fix":"Monday"}]}
+{"category":"wordiness","text":"In order to succeed, you must practice.","errors":[{"text":"In order to","fix":"To"}]}
+{"category":"wordiness","text":"Due to the fact that it rained, we stayed home.","errors":[{"text":"Due to the fact that","fix":"Because"}]}
+{"category":"wordiness","text":"We stayed home because it rained.","errors":[]}
+{"category":"clean","text":"Thanks for sending the report. I will review it this afternoon and reply by five.","errors":[]}
+{"category":"clean","text":"Visit https://example.com/pricing for the latest plans.","errors":[]}
+{"category":"clean","text":"Hi Sarah, the meeting moved to 2:30 p.m. Could you confirm?","errors":[]}
+{"category":"clean","text":"She said, \"We can ship it on Friday,\" and then left.","errors":[]}
+{"category":"clean","text":"The quarterly numbers look strong, and the team is pleased.","errors":[]}
+{"category":"clean","text":"Our new tool helps writers catch mistakes before they hit send.","errors":[]}
