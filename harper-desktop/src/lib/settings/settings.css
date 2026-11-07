@@ -1619,3 +1619,60 @@ body[data-theme="dark"] .app-result:hover {
 	font-size: 14px;
 	font-weight: 600;
 }
+
+/* Rules: scrolling lists, status, link buttons */
+.rules-list.scrollable {
+	max-height: 21rem;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+.rules-toolbar {
+	display: flex;
+	gap: 16px;
+	padding: 8px 16px 8px 48px;
+	border-top: 0.5px solid var(--settings-line);
+	font-size: 12.5px;
+}
+
+.link-button {
+	border: 0;
+	background: transparent;
+	padding: 0;
+	color: var(--settings-ink-2, inherit);
+	font-size: 12.5px;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.link-button:disabled {
+	color: var(--settings-ink-4);
+	text-decoration: none;
+	cursor: default;
+}
+
+.link-button.inline {
+	margin-left: 8px;
+}
+
+.group-status {
+	flex: 0 0 auto;
+	border-radius: 999px;
+	background: rgba(43, 43, 43, 0.06);
+	padding: 3px 10px;
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+.group-status.partial {
+	background: rgba(235, 246, 108, 0.35);
+}
+
+.group-status.none {
+	color: var(--settings-ink-3);
+}
+
+.rules-summary {
+	margin-top: 6px;
+	font-size: 13px;
+}

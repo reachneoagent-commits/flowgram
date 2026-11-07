@@ -4,8 +4,8 @@ import { Button, FlowgramMark } from 'components';
 import { onMount } from 'svelte';
 import { Client } from '$lib/client';
 
-const SOURCE_URL = 'https://github.com/Automattic/flowgram';
-const ISSUE_URL = 'https://github.com/Automattic/flowgram/issues/new/choose';
+const SOURCE_URL = 'https://github.com/reachneoagent-commits/flowgram';
+const ISSUE_URL = 'https://github.com/reachneoagent-commits/flowgram/issues/new/choose';
 
 let currentVersion = '';
 
@@ -24,7 +24,7 @@ async function loadCurrentVersion() {
 
 <section class="about">
         <div class="about-mark" aria-hidden="true"><FlowgramMark className="h-14 w-auto" /></div>
-        <h1>Flowgram for <em class="accent">Mac</em></h1>
+        <h1>Flow<em class="accent">gram</em></h1>
         <p class="muted">Version {currentVersion || 'unknown'}</p>
         <p>
           An open-source grammar checker that runs entirely on your device. No accounts, no
@@ -35,7 +35,7 @@ async function loadCurrentVersion() {
             unstyled
             class="button"
             type="button"
-            on:click={() => void openUrl('https://github.com/Automattic/flowgram/releases/latest')}
+            on:click={() => void openUrl('https://github.com/reachneoagent-commits/flowgram/releases/latest')}
           >Release notes</Button>
           <Button unstyled class="button" type="button" on:click={() => void openUrl(SOURCE_URL)}>Source on GitHub</Button>
           <Button unstyled class="button" type="button" on:click={() => void openUrl(ISSUE_URL)}>Report an issue</Button>

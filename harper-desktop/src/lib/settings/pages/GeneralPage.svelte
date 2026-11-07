@@ -197,7 +197,7 @@ async function loadDebounceMs() {
 		debounceMs = await Client.getDebounceMs();
 		debounceMsInput = String(debounceMs);
 	} catch (error) {
-		debounceError = `Unable to load debounce delay: ${error}`;
+		debounceError = `Unable to load this setting: ${error}`;
 	} finally {
 		isDebounceLoading = false;
 	}
@@ -207,7 +207,7 @@ async function saveDebounceMs() {
 	const parsedDebounceMs = Number(debounceMsInput);
 
 	if (!Number.isInteger(parsedDebounceMs) || parsedDebounceMs < 0) {
-		debounceError = 'Debounce delay must be a non-negative whole number.';
+		debounceError = 'Enter a whole number of 0 or more.';
 		debounceMsInput = String(debounceMs);
 		return;
 	}
@@ -415,11 +415,11 @@ function settingsValueToDialect(value: string): Dialect {
         <div class="stanza">
           <div class="eyebrow">Writing</div>
           <p class="section-copy">
-            Choose how long Flowgram waits after text changes before checking it. Use 0 ms for
-            immediate checking.
+            How long Flowgram waits after you stop typing before it checks your text. Leave it at 0
+            for instant checking; raise it if underlines feel distracting while you type.
           </p>
           <div class="inline-row">
-            <label for="debounce-ms">Debounce delay:</label>
+            <label for="debounce-ms">Wait before checking:</label>
             <Input
               unstyled
               id="debounce-ms"
@@ -431,14 +431,14 @@ function settingsValueToDialect(value: string): Dialect {
               bind:value={debounceMsInput}
               on:change={saveDebounceMs}
             />
-            <span>ms</span>
+            <span>milliseconds</span>
           </div>
           {#if isDebounceLoading}
-            <p class="result-summary">Loading debounce delay...</p>
+            <p class="result-summary">Loading...</p>
           {:else if debounceError}
             <p class="result-summary">{debounceError}</p>
           {:else if isDebounceSaving}
-            <p class="result-summary">Saving debounce delay...</p>
+            <p class="result-summary">Saved.</p>
           {/if}
         </div>
       </section>

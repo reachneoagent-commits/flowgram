@@ -21,6 +21,9 @@ const DialectValue = {
 
 const ACCESSIBILITY_PERMISSION_TIMEOUT_MS = 6_000;
 
+/** Fired on `window` after the rule settings are saved. */
+export const LINT_CONFIG_CHANGED = 'flowgram:lint-config-changed';
+
 let configLinterPromise: Promise<LocalLinterType> | null = null;
 
 function getConfigLinter(): Promise<LocalLinterType> {
@@ -78,6 +81,13 @@ export class Client {
 		const configLinter = await getConfigLinter();
 
 		return JSON.parse(await configLinter.getDefaultLintConfigAsJSON()) as LintConfig;
+	}
+
+	/** Plain-text one-line descriptions of each rule, keyed by rule name. */
+	static async getLintDescriptions(): Promise<Record<string, string>> {
+		const configLinter = await getConfigLinter();
+
+		return await configLinter.getLintDescriptions();
 	}
 
 	static async getStructuredLintConfig(): Promise<StructuredLintConfig> {
@@ -158,6 +168,8 @@ export class Client {
 
 	static async setLintConfig(lintConfig: LintConfig): Promise<void> {
 		await invoke('set_lint_config', { lintConfig });
+		// Lets other parts of Settings (such as the "spell checking is off" banner) update at once.
+		window.dispatchEvent(new CustomEvent(LINT_CONFIG_CHANGED));
 	}
 
 	static async getDictionary(): Promise<string[]> {

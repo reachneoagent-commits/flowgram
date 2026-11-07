@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Button } from 'components';
 import { onMount } from 'svelte';
-import { Client } from '$lib/client';
+import { Client, LINT_CONFIG_CHANGED } from '$lib/client';
 
 /** Rules most people rely on. If one is off, Flowgram looks broken, so say so. */
 const CORE_RULES: Record<string, string> = {
@@ -14,7 +14,11 @@ let isFixing = false;
 onMount(() => {
 	void check();
 	window.addEventListener('focus', check);
-	return () => window.removeEventListener('focus', check);
+	window.addEventListener(LINT_CONFIG_CHANGED, check);
+	return () => {
+		window.removeEventListener('focus', check);
+		window.removeEventListener(LINT_CONFIG_CHANGED, check);
+	};
 });
 
 async function check() {

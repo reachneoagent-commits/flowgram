@@ -137,7 +137,7 @@ pub fn open_issue_report(app: &AppHandle) {
     let _ = app
         .opener()
         .open_url(
-            "https://github.com/Automattic/harper/issues/new/choose",
+            "https://github.com/reachneoagent-commits/flowgram/issues/new/choose",
             None::<&str>,
         )
         .inspect_err(|err| error!("failed to open issue report URL: {err}"));

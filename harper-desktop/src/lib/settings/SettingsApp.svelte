@@ -74,6 +74,11 @@ const pageHeads: Partial<Record<SectionId, { lead: string; accent: string; sub: 
 		accent: 'works',
 		sub: 'Choose the apps where Flowgram checks your writing.',
 	},
+	rules: {
+		lead: 'What Flowgram',
+		accent: 'checks',
+		sub: 'Flowgram starts with our recommended settings, so you don\'t need to change anything. Turn a rule off if it gets in your way.',
+	},
 	shortcuts: {
 		lead: 'Keyboard',
 		accent: 'shortcuts',

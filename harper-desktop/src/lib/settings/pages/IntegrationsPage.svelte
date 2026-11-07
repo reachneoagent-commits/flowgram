@@ -292,7 +292,7 @@ function closeAppPicker() {
 
   <div class="stanza">
     <div class="eyebrow">Browser extension</div>
-    <p class="section-copy">Chrome, Edge and Brave keep a separate extension list for each profile, so the extension has to be added to every profile you want checked.</p>
+    <p class="section-copy">Each browser profile has its own extensions, so add Flowgram to every profile you want checked.</p>
 
     <Panel>
       {#if isProfilesLoading}
@@ -327,20 +327,20 @@ function closeAppPicker() {
       <Button unstyled class="button" type="button" disabled={isPreparingExtension} on:click={showExtensionFolder}>
         {isPreparingExtension ? 'Preparing...' : 'Show extension folder'}
       </Button>
-      <span class="muted">Set up opens that profile's extensions page: turn on Developer mode, click Load unpacked, and pick the "Flowgram Browser Extension" folder in Documents.</span>
+      <span class="muted">Set up opens that profile's extensions page: turn on Developer mode, click Load unpacked, then pick the Flowgram Browser Extension folder in Documents.</span>
     </div>
     <Panel>
       <div class="app-row">
         <div class="grow">
           <strong>Opera</strong>
-          <p>Opera uses the same extension as Chrome. Open its extensions page, turn on Developer mode, click Load unpacked and choose the "Flowgram Browser Extension" folder.</p>
+          <p>Uses the same extension as Chrome. Set up opens its extensions page; turn on Developer mode, then Load unpacked.</p>
         </div>
         <Button color="white" size="sm" on:click={() => Client.openBrowserExtensionsPage('opera').catch((error) => (extensionError = `${error}`))}>Set up</Button>
       </div>
       <div class="app-row">
         <div class="grow">
           <strong>Firefox</strong>
-          <p>Firefox needs its own copy. Click Set up, then on the page that opens choose "Load Temporary Add-on…" and pick manifest.json inside the "Flowgram Firefox Extension" folder in Documents. Firefox forgets it when it quits, so repeat after restarting Firefox.</p>
+          <p>Needs its own copy. Set up opens Firefox; choose Load Temporary Add-on and pick manifest.json in the Flowgram Firefox Extension folder. Firefox forgets it on quit.</p>
         </div>
         <Button color="white" size="sm" disabled={isPreparingFirefox} on:click={setUpFirefox}>{isPreparingFirefox ? 'Preparing...' : 'Set up'}</Button>
       </div>

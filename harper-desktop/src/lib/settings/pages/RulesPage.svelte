@@ -1,36 +1,38 @@
 <script lang="ts">
-import { Button, CloseIcon, IconButton, SearchField, SearchIcon, Select } from 'components';
+import { Button, CloseIcon, IconButton, SearchField, SearchIcon, Toggle } from 'components';
 import type { LintConfig, StructuredLintConfig, StructuredLintSetting } from 'harper.js';
 import { onMount } from 'svelte';
-import { Client } from '$lib/client';
+import { Client, LINT_CONFIG_CHANGED } from '$lib/client';
+import ConfirmDialog from '../components/ConfirmDialog.svelte';
 
-type RuleOverride = 'default' | 'on' | 'off';
 type RuleItem = { id: string; name: string; desc: string };
 type RuleGroup = { id: string; title: string; desc: string; rules: RuleItem[] };
 type MatchedRuleGroup = RuleGroup & { matchedRules: RuleItem[] };
+type PendingOff = { title: string; message: string; ruleIds: string[] };
 
-const defaultRuleOptions: { value: RuleOverride; label: string }[] = [
-	{ value: 'default', label: 'Default' },
-	{ value: 'on', label: 'Enabled' },
-	{ value: 'off', label: 'Disabled' },
-];
+/** Rules most people rely on. Turning one off asks first. */
+const CORE_RULES: Record<string, string> = {
+	SpellCheck: 'Spell checking',
+};
 
 let lintConfig: LintConfig | null = null;
-let defaultLintConfig: LintConfig | null = null;
+/** Flowgram's recommended setting for every rule. */
+let recommended: LintConfig | null = null;
+let descriptions: Record<string, string> = {};
 let structuredLintConfig: StructuredLintConfig | null = null;
-let rules: Record<string, RuleOverride> = {};
 let rulesSearch = '';
 let expandedGroups: Record<string, boolean> = {};
 let isLintConfigLoading = true;
 let isLintConfigSaving = false;
 let lintConfigError = '';
+let pendingOff: PendingOff | null = null;
 
 $: rulesQuery = rulesSearch.trim().toLowerCase();
 $: ruleGroups = structuredLintConfig ? ruleGroupsFromStructuredConfig(structuredLintConfig) : [];
 $: displayedRules = ruleGroups.flatMap((group) => group.rules);
-$: enabledRuleCount = displayedRules.filter((rule) => isRuleEnabled(rule)).length;
-$: customizedRuleCount = Object.values(rules).filter((value) => value !== 'default').length;
-$: filteredRuleGroups = getFilteredRuleGroups(ruleGroups, rulesQuery);
+$: enabledRuleCount = displayedRules.filter((rule) => isOn(rule.id, lintConfig)).length;
+$: changedRuleCount = lintConfig && recommended ? changedRuleIds().length : 0;
+$: filteredRuleGroups = getFilteredRuleGroups(ruleGroups, rulesQuery, descriptions);
 
 onMount(() => {
 	void loadLintConfig();
@@ -42,9 +44,12 @@ onMount(() => {
 	};
 
 	window.addEventListener('focus', refreshLintConfig);
+	// Changes made elsewhere in Settings, such as the banner's "Turn on" button.
+	window.addEventListener(LINT_CONFIG_CHANGED, refreshLintConfig);
 
 	return () => {
 		window.removeEventListener('focus', refreshLintConfig);
+		window.removeEventListener(LINT_CONFIG_CHANGED, refreshLintConfig);
 	};
 });
 
@@ -52,43 +57,24 @@ async function loadLintConfig() {
 	isLintConfigLoading = true;
 	lintConfigError = '';
 
-	const [fetchedLintConfig, fetchedDefaultLintConfig, fetchedStructuredLintConfig] =
-		await Promise.all([
-			Client.getLintConfig(),
-			Client.getDefaultLintConfig(),
-			Client.getStructuredLintConfig(),
-		]);
+	try {
+		const [fetchedLintConfig, fetchedRecommended, fetchedStructured, fetchedDescriptions] =
+			await Promise.all([
+				Client.getLintConfig(),
+				Client.getDefaultLintConfig(),
+				Client.getStructuredLintConfig(),
+				Client.getLintDescriptions(),
+			]);
 
-	lintConfig = fetchedLintConfig;
-	defaultLintConfig = fetchedDefaultLintConfig;
-	structuredLintConfig = fetchedStructuredLintConfig;
-	rules = rulesFromLintConfig(fetchedLintConfig, fetchedDefaultLintConfig);
-	isLintConfigLoading = false;
-}
-
-function rulesFromLintConfig(
-	config: LintConfig,
-	defaultConfig: LintConfig,
-): Record<string, RuleOverride> {
-	return Object.fromEntries(
-		Object.entries(config).map(([ruleId, value]) => [
-			ruleId,
-			value === defaultConfig[ruleId] ? 'default' : lintValueToRuleOverride(value),
-		]),
-	);
-}
-
-function lintValueToRuleOverride(value: boolean | null | undefined): RuleOverride {
-	if (value === true) return 'on';
-	if (value === false) return 'off';
-	return 'default';
-}
-
-function ruleOverrideToLintValue(ruleId: string, value: RuleOverride): boolean {
-	if (value === 'on') return true;
-	if (value === 'off') return false;
-
-	return defaultLintConfig?.[ruleId] ?? false;
+		lintConfig = fetchedLintConfig;
+		recommended = fetchedRecommended;
+		structuredLintConfig = fetchedStructured;
+		descriptions = fetchedDescriptions;
+	} catch (error) {
+		lintConfigError = `Unable to load rules: ${error}`;
+	} finally {
+		isLintConfigLoading = false;
+	}
 }
 
 function ruleLabelFromKey(key: string) {
@@ -154,7 +140,7 @@ function rulesFromSetting(setting: StructuredLintSetting): RuleItem[] {
 			{
 				id: setting.Bool.name,
 				name: setting.Bool.label ?? ruleLabelFromKey(setting.Bool.name),
-				desc: 'Flowgram rule from the curated rule catalog.',
+				desc: '',
 			},
 		];
 	}
@@ -163,49 +149,68 @@ function rulesFromSetting(setting: StructuredLintSetting): RuleItem[] {
 		return setting.OneOfMany.names.map((name, index) => ({
 			id: name,
 			name: setting.OneOfMany.labels?.[index] ?? ruleLabelFromKey(name),
-			desc: 'Flowgram rule option from the curated rule catalog.',
+			desc: '',
 		}));
 	}
 
 	return [];
 }
 
-async function saveLintConfig(nextLintConfig: LintConfig, nextRules: Record<string, RuleOverride>) {
-	const previousLintConfig = lintConfig;
-	const previousRules = rules;
+/** First sentence of a rule's description as plain text, so rows stay short. */
+function shortDescription(rule: RuleItem): string {
+	const raw = descriptions[rule.id] ?? '';
+	const plain = raw
+		.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+		.replace(/[`*_]/g, '')
+		.replace(/\s+/g, ' ')
+		.trim();
+	// Some grouped rules only carry this placeholder text, which tells the reader nothing.
+	if (plain.startsWith('A collection of linters')) return '';
+	const firstSentence = plain.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? plain;
 
-	lintConfig = nextLintConfig;
-	rules = nextRules;
-	isLintConfigSaving = true;
-	lintConfigError = '';
-
-	try {
-		await Client.setLintConfig(nextLintConfig);
-	} catch (error) {
-		lintConfig = previousLintConfig;
-		rules = previousRules;
-		lintConfigError = `Unable to save lint config: ${error}`;
-	} finally {
-		isLintConfigSaving = false;
-	}
+	return firstSentence.length > 160 ? `${firstSentence.slice(0, 157)}...` : firstSentence;
 }
 
-function setLintConfigRuleValue(config: LintConfig, ruleId: string, value: RuleOverride) {
-	config[ruleId] = ruleOverrideToLintValue(ruleId, value);
+/** `config` is a parameter (not read from the component) so Svelte re-renders when it changes. */
+function isOn(ruleId: string, config: LintConfig | null = lintConfig): boolean {
+	return config?.[ruleId] ?? recommended?.[ruleId] ?? false;
 }
 
-function getFilteredRuleGroups(ruleGroups: RuleGroup[], query: string): MatchedRuleGroup[] {
+function recommendedOn(ruleId: string): boolean {
+	return recommended?.[ruleId] ?? false;
+}
+
+function changedRuleIds(): string[] {
+	if (!lintConfig || !recommended) return [];
+
+	return Object.keys(recommended).filter(
+		(ruleId) => (lintConfig?.[ruleId] ?? recommended?.[ruleId]) !== recommended?.[ruleId],
+	);
+}
+
+function groupOnCount(group: RuleGroup, config: LintConfig | null): number {
+	return group.rules.filter((rule) => isOn(rule.id, config)).length;
+}
+
+function getFilteredRuleGroups(
+	groups: RuleGroup[],
+	query: string,
+	rulesDescriptions: Record<string, string>,
+): MatchedRuleGroup[] {
 	if (!query) {
-		return ruleGroups.map((group) => ({ ...group, matchedRules: group.rules }));
+		return groups.map((group) => ({ ...group, matchedRules: group.rules }));
 	}
 
-	return ruleGroups
+	return groups
 		.map((group) => {
 			const groupMatches =
 				group.title.toLowerCase().includes(query) || group.desc.toLowerCase().includes(query);
+			const squashed = query.replace(/\s+/g, '');
 			const matchedRules = group.rules.filter(
 				(rule) =>
-					rule.name.toLowerCase().includes(query) || rule.desc.toLowerCase().includes(query),
+					rule.name.toLowerCase().includes(query) ||
+					rule.id.toLowerCase().includes(squashed) ||
+					(rulesDescriptions[rule.id] ?? '').toLowerCase().includes(query),
 			);
 
 			if (groupMatches) {
@@ -221,96 +226,76 @@ function getFilteredRuleGroups(ruleGroups: RuleGroup[], query: string): MatchedR
 		.filter((group): group is MatchedRuleGroup => group !== null);
 }
 
-function getRuleValue(ruleId: string): RuleOverride {
-	return rules[ruleId] ?? 'default';
-}
+async function saveLintConfig(nextLintConfig: LintConfig) {
+	const previousLintConfig = lintConfig;
 
-function isRuleEnabled(rule: RuleItem) {
-	return lintConfig?.[rule.id] ?? defaultLintConfig?.[rule.id] ?? false;
-}
+	lintConfig = nextLintConfig;
+	isLintConfigSaving = true;
+	lintConfigError = '';
 
-function allKnownRuleIds() {
-	return new Set([
-		...Object.keys(defaultLintConfig ?? {}),
-		...Object.keys(lintConfig ?? {}),
-		...displayedRules.map((rule) => rule.id),
-	]);
-}
-
-async function setRuleOverride(ruleId: string, value: RuleOverride) {
-	const nextRules = { ...rules };
-
-	nextRules[ruleId] = value;
-
-	if (!lintConfig) {
-		rules = nextRules;
-		return;
+	try {
+		await Client.setLintConfig(nextLintConfig);
+	} catch (error) {
+		lintConfig = previousLintConfig;
+		lintConfigError = `Unable to save rules: ${error}`;
+	} finally {
+		isLintConfigSaving = false;
 	}
-
-	const nextLintConfig = { ...lintConfig };
-	setLintConfigRuleValue(nextLintConfig, ruleId, value);
-	await saveLintConfig(nextLintConfig, nextRules);
 }
 
-async function setGroupOverride(group: RuleGroup, value: RuleOverride) {
-	const nextRules = { ...rules };
-	const nextLintConfig = lintConfig ? { ...lintConfig } : null;
+/** Applies a set of rule changes, asking first when something important would be switched off. */
+async function setRules(ruleIds: string[], on: boolean, groupTitle?: string) {
+	if (!lintConfig) return;
 
-	for (const rule of group.rules) {
-		nextRules[rule.id] = value;
+	if (!on) {
+		const coreRules = ruleIds.filter((ruleId) => ruleId in CORE_RULES && isOn(ruleId));
+		const turningOff = ruleIds.filter((ruleId) => isOn(ruleId));
 
-		if (nextLintConfig) {
-			setLintConfigRuleValue(nextLintConfig, rule.id, value);
+		if (coreRules.length > 0) {
+			pendingOff = {
+				title: `Turn off ${coreRules.map((ruleId) => CORE_RULES[ruleId]).join(' and ')}?`,
+				message:
+					'Flowgram will stop catching these mistakes in every app until you turn it back on.',
+				ruleIds,
+			};
+			return;
+		}
+
+		if (groupTitle && turningOff.length > 1) {
+			pendingOff = {
+				title: `Turn off all ${turningOff.length} “${groupTitle}” rules?`,
+				message: 'Flowgram will stop checking for these. You can turn them back on any time.',
+				ruleIds,
+			};
+			return;
 		}
 	}
 
-	if (!nextLintConfig) {
-		rules = nextRules;
-		return;
-	}
-
-	await saveLintConfig(nextLintConfig, nextRules);
+	await applyRules(ruleIds, on);
 }
 
-function getGroupState(group: RuleGroup): RuleOverride | 'mixed' {
-	const values = group.rules.map((rule) => getRuleValue(rule.id));
-	const first = values[0];
-	return values.every((value) => value === first) ? first : 'mixed';
+async function applyRules(ruleIds: string[], on: boolean) {
+	const nextLintConfig = { ...(lintConfig ?? {}) };
+
+	for (const ruleId of ruleIds) {
+		nextLintConfig[ruleId] = on;
+	}
+
+	await saveLintConfig(nextLintConfig);
 }
 
-async function resetRules() {
-	if (!lintConfig) {
-		rules = {};
-		return;
-	}
+async function confirmPendingOff() {
+	const pending = pendingOff;
+	pendingOff = null;
 
-	const nextLintConfig = { ...lintConfig };
-
-	for (const rule of displayedRules) {
-		nextLintConfig[rule.id] = defaultLintConfig?.[rule.id] ?? false;
-	}
-
-	await saveLintConfig(
-		nextLintConfig,
-		rulesFromLintConfig(nextLintConfig, defaultLintConfig ?? {}),
-	);
+	if (pending) await applyRules(pending.ruleIds, false);
 }
 
-async function disableRules() {
-	const nextLintConfig = { ...(lintConfig ?? defaultLintConfig ?? {}) };
+/** Back to Flowgram's recommended settings for every rule, including ones not listed here. */
+async function resetToRecommended() {
+	if (!recommended) return;
 
-	for (const ruleId of allKnownRuleIds()) {
-		nextLintConfig[ruleId] = false;
-	}
-
-	const nextRules = rulesFromLintConfig(nextLintConfig, defaultLintConfig ?? {});
-
-	if (!lintConfig) {
-		rules = nextRules;
-		return;
-	}
-
-	await saveLintConfig(nextLintConfig, nextRules);
+	await saveLintConfig({ ...recommended });
 }
 
 function toggleGroup(groupId: string) {
@@ -321,17 +306,20 @@ function toggleGroup(groupId: string) {
 
 <section>
         <div class="rules-heading">
-          <div class="eyebrow">Rules</div>
-          <h1>{displayedRules.length} Rules Available</h1>
-          <p>{enabledRuleCount} enabled, {customizedRuleCount} customized.</p>
+          <p class="rules-summary">
+            <strong>{enabledRuleCount}</strong> of {displayedRules.length} rules are on.
+            {#if changedRuleCount > 0}
+              <strong>{changedRuleCount}</strong> {changedRuleCount === 1 ? 'differs' : 'differ'} from our recommendation.
+            {:else}
+              All match our recommendation.
+            {/if}
+          </p>
         </div>
 
-        {#if isLintConfigLoading}
-          <p class="result-summary">Loading lint config...</p>
+        {#if isLintConfigLoading && !lintConfig}
+          <p class="result-summary">Loading rules...</p>
         {:else if lintConfigError}
-          <p class="result-summary">{lintConfigError}</p>
-        {:else if isLintConfigSaving}
-          <p class="result-summary">Saving lint config...</p>
+          <p class="result-summary" role="alert">{lintConfigError}</p>
         {/if}
 
         <div class="sticky-tools">
@@ -343,27 +331,24 @@ function toggleGroup(groupId: string) {
               </IconButton>
             {/if}
           </SearchField>
-          <Button unstyled class="button" type="button" disabled={isLintConfigLoading || isLintConfigSaving} on:click={resetRules}>
+          <Button unstyled class="button" type="button" disabled={isLintConfigLoading || isLintConfigSaving || changedRuleCount === 0} on:click={resetToRecommended}>
             Reset to recommended
-          </Button>
-          <Button unstyled class="button" type="button" disabled={isLintConfigLoading || isLintConfigSaving} on:click={disableRules}>
-            Disable all
           </Button>
         </div>
 
         {#if rulesQuery}
           <p class="result-summary">
             {filteredRuleGroups.reduce((total, group) => total + group.matchedRules.length, 0)}
-            rules match "{rulesSearch}" across {filteredRuleGroups.length} groups.
+            rules match "{rulesSearch}" in {filteredRuleGroups.length} {filteredRuleGroups.length === 1 ? 'group' : 'groups'}.
           </p>
         {/if}
 
         <div class="rule-groups">
           {#each filteredRuleGroups as group}
             {@const expanded = rulesQuery || expandedGroups[group.id]}
-            {@const groupState = getGroupState(group)}
+            {@const onCount = groupOnCount(group, lintConfig)}
             <article class="rule-group">
-              <Button unstyled class="group-head" type="button" on:click={() => toggleGroup(group.id)}>
+              <Button unstyled class="group-head" type="button" aria-expanded={!!expanded} on:click={() => toggleGroup(group.id)}>
                 <svg class:expanded class="chevron" viewBox="0 0 16 16" aria-hidden="true">
                   <path
                     fill-rule="evenodd"
@@ -374,47 +359,48 @@ function toggleGroup(groupId: string) {
                 <span class="grow">
                   <strong>{group.title}</strong>
                   <p>{group.desc}</p>
-                  <small>
-                    {group.rules.length} rules, {group.rules.filter((rule) => isRuleEnabled(rule)).length}
-                    enabled
-                  </small>
                 </span>
-                <Select
-                  unstyled
-                  class="select compact"
-                  disabled={isLintConfigLoading || isLintConfigSaving}
-                  value={groupState === "mixed" ? "default" : groupState}
-                  on:click={(event) => event.detail.stopPropagation()}
-                  on:change={(event) => setGroupOverride(group, (event.detail.currentTarget as HTMLSelectElement).value as RuleOverride)}
-                >
-                  <option value="default">{groupState === "mixed" ? "Mixed" : "Default"}</option>
-                  <option value="on">Enable all</option>
-                  <option value="off">Disable all</option>
-                </Select>
+                <span class="group-status" class:partial={onCount > 0 && onCount < group.rules.length} class:none={onCount === 0}>
+                  {#if onCount === group.rules.length}
+                    All {group.rules.length} on
+                  {:else if onCount === 0}
+                    All off
+                  {:else}
+                    {onCount} of {group.rules.length} on
+                  {/if}
+                </span>
               </Button>
 
               {#if expanded}
-                <div class="rules-list">
-                  {#each group.matchedRules as rule}
-                    <div class:customized={getRuleValue(rule.id) !== "default"} class="rule-row">
+                <div class="rules-toolbar">
+                  <Button unstyled class="link-button" type="button" disabled={isLintConfigSaving || onCount === group.rules.length} on:click={() => setRules(group.rules.map((rule) => rule.id), true)}>Turn all on</Button>
+                  <Button unstyled class="link-button" type="button" disabled={isLintConfigSaving || onCount === 0} on:click={() => setRules(group.rules.map((rule) => rule.id), false, group.title)}>Turn all off</Button>
+                </div>
+                <div class="rules-list scrollable" tabindex="-1">
+                  {#each group.matchedRules as rule (rule.id)}
+                    {@const on = isOn(rule.id, lintConfig)}
+                    <div class="rule-row">
                       <div class="grow">
                         <strong>{rule.name}</strong>
-                        {#if getRuleValue(rule.id) !== "default"}
-                          <span class="pill amber">Customized</span>
+                        {#if on !== recommendedOn(rule.id)}
+                          <span class="pill amber">Changed</span>
+                          <Button unstyled class="link-button inline" type="button" on:click={() => setRules([rule.id], recommendedOn(rule.id))}>
+                            Restore to {recommendedOn(rule.id) ? 'on' : 'off'}
+                          </Button>
+                        {:else if !recommendedOn(rule.id)}
+                          <span class="pill">Optional</span>
                         {/if}
-                        <p>{rule.desc}</p>
+                        {#if shortDescription(rule)}
+                          <p>{shortDescription(rule)}</p>
+                        {/if}
                       </div>
-                      <Select
-                        unstyled
-                        class="select compact"
+                      <Toggle
+                        appearance="settings"
+                        checked={on}
                         disabled={isLintConfigLoading || isLintConfigSaving}
-                        value={getRuleValue(rule.id)}
-                        on:change={(event) => setRuleOverride(rule.id, (event.detail.currentTarget as HTMLSelectElement).value as RuleOverride)}
-                      >
-                        {#each defaultRuleOptions as option}
-                          <option value={option.value}>{option.label}</option>
-                        {/each}
-                      </Select>
+                        aria-label={`${rule.name}: ${on ? 'on' : 'off'}`}
+                        on:click={() => setRules([rule.id], !on)}
+                      />
                     </div>
                   {/each}
                 </div>
@@ -423,3 +409,12 @@ function toggleGroup(groupId: string) {
           {/each}
         </div>
       </section>
+
+{#if pendingOff}
+  <ConfirmDialog
+    title={pendingOff.title}
+    message={pendingOff.message}
+    onCancel={() => (pendingOff = null)}
+    onConfirm={confirmPendingOff}
+  />
+{/if}
