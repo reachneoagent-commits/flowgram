@@ -42,6 +42,7 @@ jobs:
           for path in ${{ inputs.skip_paths }}; do
             git checkout HEAD -- "$path" 2>/dev/null || true
           done
+          python3 scripts/upstream/sync_versions.py
           git add -A
           git commit -m "Merge Harper master into Flowgram"
       - name: Branding check
