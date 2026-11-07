@@ -89,7 +89,11 @@ export default function computeLintBoxes(
 					const current = isFormEl(el)
 						? (el as HTMLInputElement | HTMLTextAreaElement).value
 						: el.innerText;
-					replaceValue(el, lint.span, suggestionToReplacementText(sug, lint.span, current));
+					// Never edit text that is not the flagged word: the page may have changed since
+					// the check, or its text offsets may not line up with the DOM.
+					const span = resolveSpanToProblemText(el, lint, current);
+					if (!span) return;
+					replaceValue(el, span, suggestionToReplacementText(sug, span, current));
 				},
 				ignoreLint: opts.ignoreLint ? () => opts.ignoreLint!(lint.context_hash) : undefined,
 			});
@@ -99,6 +103,59 @@ export default function computeLintBoxes(
 		// If there's an error, it's likely because the element no longer exists
 		return [];
 	}
+}
+
+const normalizeForCompare = (text: string) => text.replace(/\s+/g, ' ');
+
+/** The text a span covers in the DOM, or null when it cannot be mapped. */
+function domTextForSpan(el: HTMLElement, span: UnpackedSpan, current: string): string | null {
+	if (isFormEl(el)) return current.slice(span.start, span.end);
+
+	const range = getRangeForTextSpan(el, span as Span);
+	const text = range?.toString() ?? null;
+	range?.detach?.();
+
+	return text;
+}
+
+/**
+ * Finds where the flagged word really is right now.
+ *
+ * Uses the original span when it still covers the flagged word. Otherwise looks for the nearest
+ * copy of the word, and returns null (so nothing is changed) when there is none.
+ */
+export function resolveSpanToProblemText(
+	el: HTMLElement,
+	lint: UnpackedLint,
+	current: string,
+): UnpackedSpan | null {
+	const wanted = normalizeForCompare(lint.problem_text);
+	const matches = (span: UnpackedSpan) => {
+		const text = domTextForSpan(el, span, current);
+		return text != null && normalizeForCompare(text) === wanted;
+	};
+
+	if (matches(lint.span)) return lint.span;
+
+	// Look for the closest occurrence of the word to where it used to be.
+	let best: UnpackedSpan | null = null;
+	let from = 0;
+	for (;;) {
+		const index = current.indexOf(lint.problem_text, from);
+		if (index === -1) break;
+
+		const candidate = { start: index, end: index + lint.problem_text.length };
+		if (
+			matches(candidate) &&
+			(best == null ||
+				Math.abs(candidate.start - lint.span.start) < Math.abs(best.start - lint.span.start))
+		) {
+			best = candidate;
+		}
+		from = index + 1;
+	}
+
+	return best;
 }
 
 /** Transform an arbitrary suggestion to the equivalent replacement text. */
