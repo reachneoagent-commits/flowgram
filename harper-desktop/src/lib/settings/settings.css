@@ -1689,3 +1689,106 @@ body[data-theme="dark"] .app-result:hover {
 	margin-top: 6px;
 	font-size: 13px;
 }
+
+/* ------------------------------------------------------------------------------------------
+   Spacing system. Every gap on a settings page comes from this 4px-based scale so sections
+   breathe evenly and controls line up from one row to the next.
+   ------------------------------------------------------------------------------------------ */
+:root {
+	--space-1: 4px;
+	--space-2: 8px;
+	--space-3: 12px;
+	--space-4: 16px;
+	--space-5: 24px;
+	--space-6: 32px;
+	--form-label-width: 200px;
+	--form-control-width: 260px;
+}
+
+/* A section: small label, short explanation, then its controls. */
+.stanza {
+	margin-bottom: var(--space-6);
+}
+
+.eyebrow {
+	margin-bottom: var(--space-3);
+}
+
+.section-copy {
+	max-width: 560px;
+	margin: 0 0 var(--space-4);
+	line-height: 1.5;
+}
+
+/* The section above already ends with space, so the line only needs space below it. */
+.divider {
+	margin: 0 0 var(--space-6);
+}
+
+.rows {
+	gap: var(--space-5);
+}
+
+/* A labelled control: the label gets a fixed column so every control starts at the same x. */
+.inline-row:has(> label) {
+	display: grid;
+	grid-template-columns: var(--form-label-width) auto auto;
+	justify-content: start;
+	align-items: center;
+	column-gap: var(--space-4);
+}
+
+.inline-row:has(> label) + .inline-row:has(> label) {
+	margin-top: var(--space-3);
+}
+
+.inline-row > label {
+	min-width: 0;
+	margin: 0;
+}
+
+.inline-row > .select:not([type="number"]) {
+	width: var(--form-control-width);
+}
+
+.inline-row > input[type="number"] {
+	width: 120px;
+}
+
+.inline-row > span {
+	color: var(--settings-ink-3);
+	font-size: 13px;
+}
+
+/* Status and error text under a control: tight to the control, clear of what follows. */
+.result-summary {
+	margin: var(--space-2) 0 0;
+}
+
+/* Blocks inside a section (a list, a button row, another list) are always 16px apart. */
+.stanza > * + * {
+	margin-top: var(--space-4);
+}
+
+.stanza > .eyebrow + * {
+	margin-top: 0;
+}
+
+.stanza > .section-copy + * {
+	margin-top: 0;
+}
+
+/* Status pills must be readable in both themes. */
+.pill {
+	margin-left: 0;
+	margin-right: var(--space-2);
+	border: 1px solid var(--settings-line-strong);
+	background: var(--settings-surface);
+	color: var(--settings-ink-2);
+}
+
+.pill.amber {
+	border-color: var(--settings-accent);
+	background: color-mix(in srgb, var(--settings-accent) 28%, transparent);
+	color: var(--settings-ink);
+}

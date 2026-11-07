@@ -41,17 +41,22 @@ export default defineConfig({
 			workers: process.env.CI ? 2 : '50%',
 			use: {
 				...devices['Desktop Chrome'],
-				launchOptions: {
-					executablePath: wrapperPath,
-					args: [
-						'--disable-gpu-sandbox',
-						'--use-gl=desktop',
-						'--use-angle=vulkan',
-						'--enable-features=Vulkan',
-						'--disable-vulkan-surface',
-						'--enable-unsafe-webgpu',
-					],
-				},
+				// The Vulkan/vglrun settings are for Linux test machines; macOS needs Chrome's defaults.
+				launchOptions:
+					process.platform === 'darwin'
+						? // Set CHROMIUM_PATH to use a Chromium you already have instead of downloading one.
+							{ executablePath: process.env.CHROMIUM_PATH || undefined }
+						: {
+								executablePath: wrapperPath,
+								args: [
+									'--disable-gpu-sandbox',
+									'--use-gl=desktop',
+									'--use-angle=vulkan',
+									'--enable-features=Vulkan',
+									'--disable-vulkan-surface',
+									'--enable-unsafe-webgpu',
+								],
+							},
 			},
 		},
 		{

@@ -13,13 +13,14 @@ function hasProgram(program) {
 
 if (hasProgram('vglrun')) {
 	console.log('Has vglrun');
-	spawnSync(`vglrun -d "$DISPLAY" -- ${chromiumExecutablePath} ${args}`, {
+	spawnSync(`vglrun -d "$DISPLAY" -- "${chromiumExecutablePath}" ${args}`, {
 		stdio: [0, 1, 2, 3, 4],
 		shell: true,
 	});
 } else {
 	console.log('Does not have vglrun');
-	spawnSync(`${chromiumExecutablePath} ${args}`, {
+	// Quote the path: on macOS it contains spaces ("Google Chrome for Testing").
+	spawnSync(`"${chromiumExecutablePath}" ${args}`, {
 		stdio: [0, 1, 2, 3, 4],
 		shell: true,
 	});

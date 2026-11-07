@@ -164,8 +164,12 @@ pub fn run_tauri() {
 
     let broker = platform_broker(|_| false);
 
-    let should_start_highlighter = config.highlighter_service_enabled
-        && broker.accessibility_permission_status() == AccessibilityPermissionStatus::Granted;
+    let accessibility_granted =
+        broker.accessibility_permission_status() == AccessibilityPermissionStatus::Granted;
+    let should_start_highlighter = config.highlighter_service_enabled && accessibility_granted;
+    // Without Accessibility access Flowgram cannot see other apps and would silently do nothing,
+    // so bring up Settings, which explains what to do.
+    let show_settings_for_permission = config.highlighter_service_enabled && !accessibility_granted;
     let config = Arc::new(Mutex::new(config));
 
     tauri::Builder::default()
@@ -196,7 +200,7 @@ pub fn run_tauri() {
             warm_app_search_cache(app.handle().clone());
             desktop_updater::start_auto_updates(app.handle().clone());
 
-            if show_onboarding {
+            if show_onboarding || show_settings_for_permission {
                 windows::show_settings_window(app.handle())?;
             }
 
