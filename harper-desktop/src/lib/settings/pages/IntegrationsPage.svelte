@@ -73,6 +73,64 @@ async function openProfileExtensionsPage(profile: BrowserProfileStatus) {
 	}
 }
 
+/** Versions are dotted numbers; compare piece by piece so 3.0.10 is newer than 3.0.9. */
+function isOlder(installed: string | null, bundled: string): boolean {
+	if (!installed) return false;
+	const a = installed.split('.').map(Number);
+	const b = bundled.split('.').map(Number);
+
+	for (let i = 0; i < Math.max(a.length, b.length); i++) {
+		const diff = (a[i] ?? 0) - (b[i] ?? 0);
+		if (diff !== 0) return diff < 0;
+	}
+
+	return false;
+}
+
+let profileNotice: Record<string, string> = {};
+
+function profileKey(profile: BrowserProfileStatus) {
+	return `${profile.browser}:${profile.profile_dir}`;
+}
+
+/** Copies the newest extension files over the old ones, then opens the extension's own page. */
+async function updateProfileExtension(profile: BrowserProfileStatus) {
+	extensionError = '';
+	try {
+		await Client.prepareBrowserExtension(false);
+		await Client.openBrowserExtensionsPage(
+			profile.browser,
+			profile.profile_dir,
+			profile.extension_id ?? undefined,
+		);
+		profileNotice = {
+			...profileNotice,
+			[profileKey(profile)]: 'Files updated. On the page that opened, click the reload arrow (↻) on Flowgram to finish.',
+		};
+		await loadBrowserProfiles();
+	} catch (error) {
+		extensionError = `${error}`;
+	}
+}
+
+/** Chrome does not let other apps delete extensions, so open the extension's page where Remove is one click. */
+async function removeProfileExtension(profile: BrowserProfileStatus) {
+	extensionError = '';
+	try {
+		await Client.openBrowserExtensionsPage(
+			profile.browser,
+			profile.profile_dir,
+			profile.extension_id ?? undefined,
+		);
+		profileNotice = {
+			...profileNotice,
+			[profileKey(profile)]: 'On the page that opened, click Remove, then confirm. This list updates when you come back.',
+		};
+	} catch (error) {
+		extensionError = `${error}`;
+	}
+}
+
 async function showExtensionFolder() {
 	if (isPreparingExtension) return;
 	isPreparingExtension = true;
@@ -300,7 +358,8 @@ function closeAppPicker() {
       {:else if browserProfiles.length === 0}
         <div class="empty">No Chrome, Edge or Brave profiles found.</div>
       {:else}
-        {#each browserProfiles as profile}
+        {#each browserProfiles as profile (profileKey(profile))}
+          {@const outdated = profile.installed && isOlder(profile.folder_version, profile.bundled_version)}
           <div class="app-row">
             <div class="grow">
               <strong>{BROWSER_LABELS[profile.browser]} · {profile.profile_name}</strong>
@@ -309,14 +368,26 @@ function closeAppPicker() {
                 {#if profile.installed && profile.enabled}Extension active
                 {:else if profile.installed}Extension installed but turned off
                 {:else}Extension not added{/if}
+                {#if profile.installed && profile.folder_version}
+                  · version {profile.folder_version}
+                {/if}
               </p>
+              {#if outdated}
+                <p><span class="pill amber">Update available</span> Version {profile.bundled_version} ships with this Flowgram.</p>
+              {:else if profile.installed}
+                <p><span class="pill">Up to date</span></p>
+              {/if}
+              {#if profileNotice[profileKey(profile)]}
+                <p role="status">{profileNotice[profileKey(profile)]}</p>
+              {/if}
             </div>
-            {#if profile.installed && profile.enabled}
-              <CheckIcon className="control-icon" />
+            {#if profile.installed}
+              {#if outdated}
+                <Button size="sm" on:click={() => updateProfileExtension(profile)}>Update</Button>
+              {/if}
+              <Button color="white" size="sm" on:click={() => removeProfileExtension(profile)}>Remove</Button>
             {:else}
-              <Button color="white" size="sm" on:click={() => openProfileExtensionsPage(profile)}>
-                {profile.installed ? 'Open extensions' : 'Set up'}
-              </Button>
+              <Button color="white" size="sm" on:click={() => openProfileExtensionsPage(profile)}>Set up</Button>
             {/if}
           </div>
         {/each}

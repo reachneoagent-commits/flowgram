@@ -470,11 +470,15 @@ fn search_apps(
 /// Chrome loads unpacked extensions from a fixed path, so the copy must live outside the app bundle
 /// and survive app updates. Returns the folder path so the UI can show it.
 #[tauri::command]
-fn prepare_browser_extension<R: Runtime>(app: AppHandle<R>) -> Result<String, String> {
+fn prepare_browser_extension<R: Runtime>(
+    app: AppHandle<R>,
+    reveal: Option<bool>,
+) -> Result<String, String> {
     prepare_extension_folder(
         &app,
         "browser-extension/chrome",
         crate::browser_extension::EXTENSION_FOLDER_NAME,
+        reveal.unwrap_or(true),
     )
 }
 
@@ -485,6 +489,7 @@ fn prepare_firefox_extension<R: Runtime>(app: AppHandle<R>) -> Result<String, St
         &app,
         "browser-extension/firefox",
         crate::browser_extension::FIREFOX_EXTENSION_FOLDER_NAME,
+        true,
     )
 }
 
@@ -492,6 +497,7 @@ fn prepare_extension_folder<R: Runtime>(
     app: &AppHandle<R>,
     resource: &str,
     folder_name: &str,
+    reveal: bool,
 ) -> Result<String, String> {
     let source = app
         .path()
@@ -509,7 +515,9 @@ fn prepare_extension_folder<R: Runtime>(
     copy_dir_recursive(&source, &destination)
         .map_err(|error| format!("Could not copy the extension: {error}"))?;
 
-    reveal_in_file_manager(&destination)?;
+    if reveal {
+        reveal_in_file_manager(&destination)?;
+    }
 
     Ok(destination.to_string_lossy().into_owned())
 }
@@ -558,6 +566,7 @@ async fn get_browser_extension_profiles()
 fn open_browser_extensions_page(
     browser: String,
     profile_directory: Option<String>,
+    extension_id: Option<String>,
 ) -> Result<(), String> {
     let (app_name, url) = match browser.as_str() {
         "chrome" => ("Google Chrome", "chrome://extensions"),
@@ -571,6 +580,19 @@ fn open_browser_extensions_page(
     if !cfg!(target_os = "macos") {
         return Err("Opening the extensions page is only supported on macOS for now.".into());
     }
+
+    // With an extension id, open that extension's own page, which has Remove and Reload buttons.
+    let details_url;
+    let url = match extension_id
+        .as_deref()
+        .filter(|id| !id.is_empty() && browser != "firefox")
+    {
+        Some(id) => {
+            details_url = format!("{url}/?id={id}");
+            details_url.as_str()
+        }
+        None => url,
+    };
 
     let mut command = std::process::Command::new("open");
     // Only Chrome-family browsers take a profile flag.

@@ -23,6 +23,20 @@ pub struct BrowserProfileStatus {
     pub email: Option<String>,
     pub installed: bool,
     pub enabled: bool,
+    /// Chrome's id for the extension in this profile, used to open its details page.
+    pub extension_id: Option<String>,
+    /// Version of the extension files in the folder the profile loads from.
+    pub folder_version: Option<String>,
+    /// Version that ships with this copy of Flowgram.
+    pub bundled_version: String,
+}
+
+/// What a profile's preferences say about the Flowgram extension.
+#[derive(Debug, PartialEq, Eq)]
+struct ExtensionRecord {
+    id: String,
+    path: PathBuf,
+    enabled: bool,
 }
 
 struct BrowserLocation {
@@ -72,7 +86,10 @@ fn profiles_in(browser: &str, root: &Path) -> Vec<BrowserProfileStatus> {
     let mut profiles: Vec<BrowserProfileStatus> = cache
         .iter()
         .map(|(dir, info)| {
-            let (installed, enabled) = extension_state(&root.join(dir));
+            let record = extension_record(&root.join(dir));
+            let folder_version = record
+                .as_ref()
+                .and_then(|record| folder_version(&record.path));
             BrowserProfileStatus {
                 browser: browser.to_owned(),
                 profile_dir: dir.clone(),
@@ -81,8 +98,11 @@ fn profiles_in(browser: &str, root: &Path) -> Vec<BrowserProfileStatus> {
                     .as_str()
                     .filter(|email| !email.is_empty())
                     .map(str::to_owned),
-                installed,
-                enabled,
+                installed: record.is_some(),
+                enabled: record.as_ref().is_some_and(|record| record.enabled),
+                extension_id: record.map(|record| record.id),
+                folder_version,
+                bundled_version: env!("CARGO_PKG_VERSION").to_owned(),
             }
         })
         .collect();
@@ -91,40 +111,50 @@ fn profiles_in(browser: &str, root: &Path) -> Vec<BrowserProfileStatus> {
     profiles
 }
 
-/// Returns `(installed, enabled)` for the extension in one profile directory.
-fn extension_state(profile: &Path) -> (bool, bool) {
+/// Finds the Flowgram extension in one profile directory.
+fn extension_record(profile: &Path) -> Option<ExtensionRecord> {
     // Chrome writes extension records to `Secure Preferences`; older builds used `Preferences`.
     ["Secure Preferences", "Preferences"]
         .iter()
         .filter_map(|file| read_json(&profile.join(file)))
-        .find_map(|prefs| extension_state_from_prefs(&prefs))
-        .unwrap_or((false, false))
+        .find_map(|prefs| extension_record_from_prefs(&prefs))
 }
 
-fn extension_state_from_prefs(prefs: &Value) -> Option<(bool, bool)> {
+fn extension_record_from_prefs(prefs: &Value) -> Option<ExtensionRecord> {
     prefs["extensions"]["settings"]
         .as_object()?
-        .values()
-        .find(|entry| {
+        .iter()
+        .find(|(_, entry)| {
             entry["path"].as_str().is_some_and(|path| {
                 Path::new(path)
                     .file_name()
-                    .is_some_and(|n| n == EXTENSION_FOLDER_NAME)
+                    .is_some_and(|name| name == EXTENSION_FOLDER_NAME)
             })
         })
-        .map(|entry| {
+        .map(|(id, entry)| {
             let has_disable_reasons = entry["disable_reasons"]
                 .as_array()
                 .is_some_and(|reasons| !reasons.is_empty())
                 || entry["disable_reasons"]
                     .as_i64()
                     .is_some_and(|bits| bits != 0);
-            let enabled = entry["state"].as_i64() != Some(0) && !has_disable_reasons;
-            (true, enabled)
+
+            ExtensionRecord {
+                id: id.clone(),
+                path: PathBuf::from(entry["path"].as_str().unwrap_or_default()),
+                enabled: entry["state"].as_i64() != Some(0) && !has_disable_reasons,
+            }
         })
 }
 
-fn read_json(path: &PathBuf) -> Option<Value> {
+/// Reads the version from the extension's `manifest.json` in its folder.
+fn folder_version(folder: &Path) -> Option<String> {
+    read_json(&folder.join("manifest.json"))?["version"]
+        .as_str()
+        .map(str::to_owned)
+}
+
+fn read_json(path: &Path) -> Option<Value> {
     serde_json::from_slice(&std::fs::read(path).ok()?).ok()
 }
 
@@ -148,24 +178,40 @@ mod tests {
             "/Users/a/Documents/Flowgram Browser Extension",
             json!({"disable_reasons": []}),
         );
-        assert_eq!(extension_state_from_prefs(&p), Some((true, true)));
+        let record = extension_record_from_prefs(&p).unwrap();
+        assert!(record.enabled);
+        assert_eq!(record.id, "abc");
+        assert_eq!(
+            record.path,
+            PathBuf::from("/Users/a/Documents/Flowgram Browser Extension")
+        );
     }
 
     #[test]
     fn detects_disabled_extension() {
         let p = prefs("/x/Flowgram Browser Extension", json!({"state": 0}));
-        assert_eq!(extension_state_from_prefs(&p), Some((true, false)));
+        assert!(!extension_record_from_prefs(&p).unwrap().enabled);
         let p = prefs(
             "/x/Flowgram Browser Extension",
             json!({"disable_reasons": [1]}),
         );
-        assert_eq!(extension_state_from_prefs(&p), Some((true, false)));
+        assert!(!extension_record_from_prefs(&p).unwrap().enabled);
     }
 
     #[test]
     fn ignores_other_extensions() {
         let p = prefs("/x/Some Other Extension", json!({}));
-        assert_eq!(extension_state_from_prefs(&p), None);
-        assert_eq!(extension_state_from_prefs(&json!({})), None);
+        assert_eq!(extension_record_from_prefs(&p), None);
+        assert_eq!(extension_record_from_prefs(&json!({})), None);
+    }
+
+    #[test]
+    fn reads_folder_version_from_manifest() {
+        let dir = std::env::temp_dir().join("flowgram-ext-version-test");
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(dir.join("manifest.json"), r#"{"version": "3.0.3"}"#).unwrap();
+
+        assert_eq!(folder_version(&dir), Some("3.0.3".to_owned()));
+        assert_eq!(folder_version(&dir.join("missing")), None);
     }
 }

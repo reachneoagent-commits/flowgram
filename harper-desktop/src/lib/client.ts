@@ -52,6 +52,9 @@ export interface BrowserProfileStatus {
 	email: string | null;
 	installed: boolean;
 	enabled: boolean;
+	extension_id: string | null;
+	folder_version: string | null;
+	bundled_version: string;
 }
 
 export interface AppSearchResult {
@@ -237,8 +240,8 @@ export class Client {
 	}
 
 	/** Copy the bundled browser extension to Documents and open that folder. Returns its path. */
-	static async prepareBrowserExtension(): Promise<string> {
-		return await invoke<string>('prepare_browser_extension');
+	static async prepareBrowserExtension(reveal = true): Promise<string> {
+		return await invoke<string>('prepare_browser_extension', { reveal });
 	}
 
 	/** Copy the bundled Firefox extension to Documents and open that folder. Returns its path. */
@@ -249,8 +252,9 @@ export class Client {
 	static async openBrowserExtensionsPage(
 		browser: BrowserId,
 		profileDirectory?: string,
+		extensionId?: string,
 	): Promise<void> {
-		await invoke('open_browser_extensions_page', { browser, profileDirectory });
+		await invoke('open_browser_extensions_page', { browser, profileDirectory, extensionId });
 	}
 
 	static async getBrowserExtensionProfiles(): Promise<BrowserProfileStatus[]> {
