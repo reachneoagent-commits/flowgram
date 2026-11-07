@@ -159,6 +159,9 @@ pub fn run_tauri() {
         }
     };
 
+    // Show the welcome screens until setup is finished, not only on the very first run.
+    let show_onboarding = is_first_launch || !config.onboarding_completed;
+
     let broker = platform_broker(|_| false);
 
     let should_start_highlighter = config.highlighter_service_enabled
@@ -193,7 +196,7 @@ pub fn run_tauri() {
             warm_app_search_cache(app.handle().clone());
             desktop_updater::start_auto_updates(app.handle().clone());
 
-            if is_first_launch {
+            if show_onboarding {
                 windows::show_settings_window(app.handle())?;
             }
 
@@ -205,6 +208,18 @@ pub fn run_tauri() {
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
         .run(|_app, event| {
+            // Clicking the app icon (Dock, Finder, Spotlight) while it is running with no window
+            // open should bring up Settings, which is also where onboarding lives.
+            #[cfg(target_os = "macos")]
+            if let tauri::RunEvent::Reopen {
+                has_visible_windows: false,
+                ..
+            } = &event
+            {
+                let _ = windows::show_settings_window(_app)
+                    .inspect_err(|err| error!("Could not open the settings window: {err}"));
+            }
+
             #[cfg(target_os = "macos")]
             if let tauri::RunEvent::WindowEvent {
                 label,
