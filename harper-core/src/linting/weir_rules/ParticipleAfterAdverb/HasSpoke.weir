@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] spoke), (spoke)>
+
+let message "Use the past participle `spoken` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `spoken`."
+let kind "Grammar"
+let becomes "spoken"
+let strategy "MatchCase"
+
+test "She has already spoke it." "She has already spoken it."
+test "She have just spoke it." "She have just spoken it."
+test "She had never spoke it." "She had never spoken it."
+test "She has just spoke it." "She has just spoken it."
+test "She have already spoke it." "She have already spoken it."
+test "She had already spoke it." "She had already spoken it."
+test "She has never spoke it." "She has never spoken it."
+test "She have never spoke it." "She have never spoken it."
+test "She has still spoke it." "She has still spoken it."
+test "She had just spoke it." "She had just spoken it."
+test "She have ever spoke it." "She have ever spoken it."
+test "She has ever spoke it." "She has ever spoken it."
+test "They have already spoke twice." "They have already spoken twice."
+
+allows "She has already spoken it."
+allows "They have just spoken it."
+allows "She spoke it yesterday."
+allows "He already spoke it."
+allows "We never spoke it."
+allows "She has finished."

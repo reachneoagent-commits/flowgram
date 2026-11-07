@@ -1,0 +1,27 @@
+expr main <(mathematics are), (are)>
+
+let message "`Mathematics` is singular."
+let description "The field of study `mathematics` takes a singular verb."
+let kind "Agreement"
+let becomes "is"
+
+test "Mathematics are hard." "Mathematics is hard."
+test "Mathematics are fun." "Mathematics is fun."
+test "Mathematics are my major." "Mathematics is my major."
+test "I think mathematics are hard." "I think mathematics is hard."
+test "I think mathematics are fun." "I think mathematics is fun."
+test "I think mathematics are useful." "I think mathematics is useful."
+test "I think mathematics are vast." "I think mathematics is vast."
+test "I think mathematics are important." "I think mathematics is important."
+test "I think mathematics are old." "I think mathematics is old."
+test "I think mathematics are new." "I think mathematics is new."
+test "I think mathematics are key." "I think mathematics is key."
+test "I think mathematics are clear." "I think mathematics is clear."
+test "Mathematics are taught here." "Mathematics is taught here."
+
+allows "Mathematics is hard."
+allows "The mathematics students are tired."
+allows "Mathematics classes are full."
+allows "The rules are clear."
+allows "Sciences are fun."
+allows "Her notes are good."

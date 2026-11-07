@@ -97,6 +97,7 @@ mod dot_initialisms;
 mod double_click;
 mod double_modal;
 mod double_possessive_noun_phrase;
+mod each_plural_noun;
 mod ellipsis_length;
 mod else_possessive;
 mod ever_every;

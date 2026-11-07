@@ -1,0 +1,27 @@
+expr main <(a couple of * [is, was]), ([is, was])>
+
+let message "Use a plural verb here."
+let description "After `a couple of` plus a plural noun, the verb is plural."
+let kind "Agreement"
+let becomes "are"
+let strategy "MatchCase"
+
+test "A couple of people is waiting." "A couple of people are waiting."
+test "A couple of students is waiting." "A couple of students are waiting."
+test "A couple of cars is waiting." "A couple of cars are waiting."
+test "A couple of files is waiting." "A couple of files are waiting."
+test "A couple of guests is waiting." "A couple of guests are waiting."
+test "A couple of books is waiting." "A couple of books are waiting."
+test "a couple of men is here." "a couple of men are here."
+test "A couple of kids is late." "A couple of kids are late."
+test "A couple of ideas is ready." "A couple of ideas are ready."
+test "A couple of things is wrong." "A couple of things are wrong."
+test "A couple of fans is here." "A couple of fans are here."
+test "A couple of dogs is barking." "A couple of dogs are barking."
+
+allows "A couple of people are waiting."
+allows "The couple of people is large."
+allows "The couple of options is wide."
+allows "A lot of water is gone."
+allows "A group of students is waiting."
+allows "A pair of shoes is here."

@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] drove), (drove)>
+
+let message "Use the past participle `driven` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `driven`."
+let kind "Grammar"
+let becomes "driven"
+let strategy "MatchCase"
+
+test "She has already drove it." "She has already driven it."
+test "She have just drove it." "She have just driven it."
+test "She had never drove it." "She had never driven it."
+test "She has just drove it." "She has just driven it."
+test "She have already drove it." "She have already driven it."
+test "She had already drove it." "She had already driven it."
+test "She has never drove it." "She has never driven it."
+test "She have never drove it." "She have never driven it."
+test "She has still drove it." "She has still driven it."
+test "She had just drove it." "She had just driven it."
+test "She have ever drove it." "She have ever driven it."
+test "She has ever drove it." "She has ever driven it."
+test "They have already drove twice." "They have already driven twice."
+
+allows "She has already driven it."
+allows "They have just driven it."
+allows "She drove it yesterday."
+allows "He already drove it."
+allows "We never drove it."
+allows "She has finished."

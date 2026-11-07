@@ -1,0 +1,27 @@
+expr main <(a number of * [is, was]), ([is, was])>
+
+let message "Use a plural verb here."
+let description "After `a number of` plus a plural noun, the verb is plural."
+let kind "Agreement"
+let becomes "are"
+let strategy "MatchCase"
+
+test "A number of people is waiting." "A number of people are waiting."
+test "A number of students is waiting." "A number of students are waiting."
+test "A number of cars is waiting." "A number of cars are waiting."
+test "A number of files is waiting." "A number of files are waiting."
+test "A number of guests is waiting." "A number of guests are waiting."
+test "A number of books is waiting." "A number of books are waiting."
+test "a number of men is here." "a number of men are here."
+test "A number of kids is late." "A number of kids are late."
+test "A number of ideas is ready." "A number of ideas are ready."
+test "A number of things is wrong." "A number of things are wrong."
+test "A number of fans is here." "A number of fans are here."
+test "A number of dogs is barking." "A number of dogs are barking."
+
+allows "A number of people are waiting."
+allows "The number of people is large."
+allows "The number of options is wide."
+allows "A lot of water is gone."
+allows "A group of students is waiting."
+allows "A pair of shoes is here."

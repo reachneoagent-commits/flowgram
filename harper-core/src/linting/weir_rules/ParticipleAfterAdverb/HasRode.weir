@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] rode), (rode)>
+
+let message "Use the past participle `ridden` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `ridden`."
+let kind "Grammar"
+let becomes "ridden"
+let strategy "MatchCase"
+
+test "She has already rode it." "She has already ridden it."
+test "She have just rode it." "She have just ridden it."
+test "She had never rode it." "She had never ridden it."
+test "She has just rode it." "She has just ridden it."
+test "She have already rode it." "She have already ridden it."
+test "She had already rode it." "She had already ridden it."
+test "She has never rode it." "She has never ridden it."
+test "She have never rode it." "She have never ridden it."
+test "She has still rode it." "She has still ridden it."
+test "She had just rode it." "She had just ridden it."
+test "She have ever rode it." "She have ever ridden it."
+test "She has ever rode it." "She has ever ridden it."
+test "They have already rode twice." "They have already ridden twice."
+
+allows "She has already ridden it."
+allows "They have just ridden it."
+allows "She rode it yesterday."
+allows "He already rode it."
+allows "We never rode it."
+allows "She has finished."

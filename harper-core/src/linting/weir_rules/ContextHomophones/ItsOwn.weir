@@ -1,0 +1,28 @@
+expr main <(it's [own, owner, purpose, tail, paw, leash, color, colour]), (it's)>
+
+let message "Did you mean `its` (belonging to it)?"
+let description "Use `its` for possession; `it's` means `it is` or `it has`."
+let kind "Spelling"
+let becomes "its"
+let strategy "MatchCase"
+
+test "The dog wagged it's tail." "The dog wagged its tail."
+test "The dog wagged it's paw." "The dog wagged its paw."
+test "It has it's own rules." "It has its own rules."
+test "The tool has it's purpose." "The tool has its purpose."
+test "The cat lost it's leash." "The cat lost its leash."
+test "It changed it's color." "It changed its color."
+test "It changed it's colour." "It changed its colour."
+test "The shop and it's owner left." "The shop and its owner left."
+test "A bird flapped it's tail." "A bird flapped its tail."
+test "The robot has it's own mind." "The robot has its own mind."
+test "Each tool has it's own use, own." "Each tool has its own use, own."
+test "The firm kept it's own books." "The firm kept its own books."
+test "The idea has it's own purpose." "The idea has its own purpose."
+
+allows "Its own rules apply."
+allows "It's cold outside."
+allows "It's a good day."
+allows "The dog wagged its tail."
+allows "I think it's true."
+allows "It's been a while."

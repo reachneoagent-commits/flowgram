@@ -1,0 +1,27 @@
+expr main <(a variety of * [is, was]), ([is, was])>
+
+let message "Use a plural verb here."
+let description "After `a variety of` plus a plural noun, the verb is plural."
+let kind "Agreement"
+let becomes "are"
+let strategy "MatchCase"
+
+test "A variety of people is waiting." "A variety of people are waiting."
+test "A variety of students is waiting." "A variety of students are waiting."
+test "A variety of cars is waiting." "A variety of cars are waiting."
+test "A variety of files is waiting." "A variety of files are waiting."
+test "A variety of guests is waiting." "A variety of guests are waiting."
+test "A variety of books is waiting." "A variety of books are waiting."
+test "a variety of men is here." "a variety of men are here."
+test "A variety of kids is late." "A variety of kids are late."
+test "A variety of ideas is ready." "A variety of ideas are ready."
+test "A variety of things is wrong." "A variety of things are wrong."
+test "A variety of fans is here." "A variety of fans are here."
+test "A variety of dogs is barking." "A variety of dogs are barking."
+
+allows "A variety of people are waiting."
+allows "The variety of people is large."
+allows "The variety of options is wide."
+allows "A lot of water is gone."
+allows "A group of students is waiting."
+allows "A pair of shoes is here."

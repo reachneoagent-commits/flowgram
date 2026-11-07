@@ -1,0 +1,28 @@
+expr main <(one of [the, my, our, your, his, her, their, these, those] * [are, were]), ([are, were])>
+
+let message "`One` is singular."
+let description "In `one of the ...`, the verb agrees with `one`, so it is singular."
+let kind "Agreement"
+let becomes "is"
+
+test "One of the reasons are late." "One of the reasons is late."
+test "One of the students are late." "One of the students is late."
+test "One of the cars are late." "One of the cars is late."
+test "One of the files are late." "One of the files is late."
+test "One of the books are late." "One of the books is late."
+test "One of the reasons are cost." "One of the reasons is cost."
+test "one of our players are hurt." "one of our players is hurt."
+test "One of their ideas are wrong." "One of their ideas is wrong."
+test "One of those things are broken." "One of those things is broken."
+test "One of these options are better." "One of these options is better."
+test "One of his books are missing." "One of his books is missing."
+test "One of her friends are here." "One of her friends is here."
+test "One of your answers are off." "One of your answers is off."
+test "One of my cats are sick." "One of my cats is sick."
+
+allows "One of the reasons is cost."
+allows "One of my friends is here."
+allows "Some of the reasons are clear."
+allows "Two of the students are late."
+allows "Both of the cars are red."
+allows "One of them is gone."

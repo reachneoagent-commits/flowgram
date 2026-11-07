@@ -60,7 +60,17 @@ impl<D: Dictionary> ExprLinter for RegularIrregulars<D> {
         handle_past_verbs(&self.dict, &mut suggs, chars);
         handle_adjectives(&mut suggs, chars);
 
-        let suggestions: Vec<_> = suggs
+        // Keep the order stable, and offer the simple past ("drove") before the participle ("driven").
+        let verbs = crate::irregular_verbs::IrregularVerbs::curated();
+        let mut ordered: Vec<&String> = suggs.iter().collect();
+        ordered.sort_by_key(|s| {
+            (
+                verbs.get_past_participle_for_preterite(s).is_none(),
+                s.to_string(),
+            )
+        });
+
+        let suggestions: Vec<_> = ordered
             .iter()
             .map(|good_str| Suggestion::replace_with_match_case(good_str.chars().collect(), chars))
             .collect();

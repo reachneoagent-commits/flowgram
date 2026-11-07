@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] broke), (broke)>
+
+let message "Use the past participle `broken` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `broken`."
+let kind "Grammar"
+let becomes "broken"
+let strategy "MatchCase"
+
+test "She has already broke it." "She has already broken it."
+test "She have just broke it." "She have just broken it."
+test "She had never broke it." "She had never broken it."
+test "She has just broke it." "She has just broken it."
+test "She have already broke it." "She have already broken it."
+test "She had already broke it." "She had already broken it."
+test "She has never broke it." "She has never broken it."
+test "She have never broke it." "She have never broken it."
+test "She has still broke it." "She has still broken it."
+test "She had just broke it." "She had just broken it."
+test "She have ever broke it." "She have ever broken it."
+test "She has ever broke it." "She has ever broken it."
+test "They have already broke twice." "They have already broken twice."
+
+allows "She has already broken it."
+allows "They have just broken it."
+allows "She broke it yesterday."
+allows "He already broke it."
+allows "We never broke it."
+allows "She has finished."

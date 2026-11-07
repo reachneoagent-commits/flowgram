@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] swam), (swam)>
+
+let message "Use the past participle `swum` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `swum`."
+let kind "Grammar"
+let becomes "swum"
+let strategy "MatchCase"
+
+test "She has already swam it." "She has already swum it."
+test "She have just swam it." "She have just swum it."
+test "She had never swam it." "She had never swum it."
+test "She has just swam it." "She has just swum it."
+test "She have already swam it." "She have already swum it."
+test "She had already swam it." "She had already swum it."
+test "She has never swam it." "She has never swum it."
+test "She have never swam it." "She have never swum it."
+test "She has still swam it." "She has still swum it."
+test "She had just swam it." "She had just swum it."
+test "She have ever swam it." "She have ever swum it."
+test "She has ever swam it." "She has ever swum it."
+test "They have already swam twice." "They have already swum twice."
+
+allows "She has already swum it."
+allows "They have just swum it."
+allows "She swam it yesterday."
+allows "He already swam it."
+allows "We never swam it."
+allows "She has finished."

@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] went), (went)>
+
+let message "Use the past participle `gone` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `gone`."
+let kind "Grammar"
+let becomes "gone"
+let strategy "MatchCase"
+
+test "She has already went it." "She has already gone it."
+test "She have just went it." "She have just gone it."
+test "She had never went it." "She had never gone it."
+test "She has just went it." "She has just gone it."
+test "She have already went it." "She have already gone it."
+test "She had already went it." "She had already gone it."
+test "She has never went it." "She has never gone it."
+test "She have never went it." "She have never gone it."
+test "She has still went it." "She has still gone it."
+test "She had just went it." "She had just gone it."
+test "She have ever went it." "She have ever gone it."
+test "She has ever went it." "She has ever gone it."
+test "They have already went twice." "They have already gone twice."
+
+allows "She has already gone it."
+allows "They have just gone it."
+allows "She went it yesterday."
+allows "He already went it."
+allows "We never went it."
+allows "She has finished."

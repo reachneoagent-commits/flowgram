@@ -1,0 +1,27 @@
+expr main <(linguistics are), (are)>
+
+let message "`Linguistics` is singular."
+let description "The field of study `linguistics` takes a singular verb."
+let kind "Agreement"
+let becomes "is"
+
+test "Linguistics are hard." "Linguistics is hard."
+test "Linguistics are fun." "Linguistics is fun."
+test "Linguistics are my major." "Linguistics is my major."
+test "I think linguistics are hard." "I think linguistics is hard."
+test "I think linguistics are fun." "I think linguistics is fun."
+test "I think linguistics are useful." "I think linguistics is useful."
+test "I think linguistics are vast." "I think linguistics is vast."
+test "I think linguistics are important." "I think linguistics is important."
+test "I think linguistics are old." "I think linguistics is old."
+test "I think linguistics are new." "I think linguistics is new."
+test "I think linguistics are key." "I think linguistics is key."
+test "I think linguistics are clear." "I think linguistics is clear."
+test "Linguistics are taught here." "Linguistics is taught here."
+
+allows "Linguistics is hard."
+allows "The linguistics students are tired."
+allows "Linguistics classes are full."
+allows "The rules are clear."
+allows "Sciences are fun."
+allows "Her notes are good."

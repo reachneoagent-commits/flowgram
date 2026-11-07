@@ -97,6 +97,7 @@ use super::dot_initialisms::DotInitialisms;
 use super::double_click::DoubleClick;
 use super::double_modal::DoubleModal;
 use super::double_possessive_noun_phrase::DoublePossessiveNounPhrase;
+use super::each_plural_noun::EachPluralNoun;
 use super::ellipsis_length::EllipsisLength;
 use super::else_possessive::ElsePossessive;
 use super::ever_every::EverEvery;
@@ -810,6 +811,7 @@ impl LintGroup {
         insert_struct_rule_with_dict!(InflectedVerbAfterTo);
         insert_struct_rule_with_dict!(ModalVerbInflection);
         insert_struct_rule!(PluralNounSingularBe);
+        insert_struct_rule_with_dict!(EachPluralNoun);
         insert_struct_rule!(SubjectSeen);
         insert_expr_rule!(InterestedIn);
         insert_expr_rule!(ItAreTheOne);

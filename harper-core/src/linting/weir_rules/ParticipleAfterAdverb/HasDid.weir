@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] did), (did)>
+
+let message "Use the past participle `done` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `done`."
+let kind "Grammar"
+let becomes "done"
+let strategy "MatchCase"
+
+test "She has already did it." "She has already done it."
+test "She have just did it." "She have just done it."
+test "She had never did it." "She had never done it."
+test "She has just did it." "She has just done it."
+test "She have already did it." "She have already done it."
+test "She had already did it." "She had already done it."
+test "She has never did it." "She has never done it."
+test "She have never did it." "She have never done it."
+test "She has still did it." "She has still done it."
+test "She had just did it." "She had just done it."
+test "She have ever did it." "She have ever done it."
+test "She has ever did it." "She has ever done it."
+test "They have already did twice." "They have already done twice."
+
+allows "She has already done it."
+allows "They have just done it."
+allows "She did it yesterday."
+allows "He already did it."
+allows "We never did it."
+allows "She has finished."

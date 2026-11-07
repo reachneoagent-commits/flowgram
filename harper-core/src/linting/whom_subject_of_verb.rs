@@ -54,6 +54,25 @@ impl ExprLinter for WhomSubjectOfVerb {
             return None;
         }
 
+        // "Whom did you invite?" is a correct question: the auxiliary is followed by its own subject.
+        if let Some((_, after)) = ctx
+            && toks.last().is_some_and(|verb| {
+                verb.get_ch(src).eq_any_ignore_ascii_case_str(&[
+                    "did", "do", "does", "should", "would", "will", "can", "could", "shall", "may",
+                    "might", "must", "have", "has", "had", "is", "are", "was", "were",
+                ])
+            })
+            && let [ws, next, ..] = after
+            && ws.kind.is_whitespace()
+            && next.get_ch(src).eq_any_ignore_ascii_case_str(&[
+                "i", "you", "he", "she", "it", "we", "they", "the", "a", "an", "my", "our", "your",
+                "his", "her", "their", "this", "that", "these", "those", "one", "everyone",
+                "anyone", "someone", "people",
+            ])
+        {
+            return None;
+        }
+
         let whom_span = toks.first()?.span;
         let whom_chars = whom_span.get_content(src);
 
@@ -73,6 +92,32 @@ impl ExprLinter for WhomSubjectOfVerb {
 mod tests {
     use super::WhomSubjectOfVerb;
     use crate::linting::tests::{assert_lint_count, assert_no_lints, assert_suggestion_result};
+
+    #[test]
+    fn allow_whom_did_you() {
+        assert_no_lints(
+            "Whom did you invite to the party?",
+            WhomSubjectOfVerb::default(),
+        );
+    }
+
+    #[test]
+    fn allow_whom_should_we() {
+        assert_no_lints("Whom should we ask about it?", WhomSubjectOfVerb::default());
+    }
+
+    #[test]
+    fn allow_to_whom_did_she() {
+        assert_no_lints("To whom did she speak?", WhomSubjectOfVerb::default());
+    }
+
+    #[test]
+    fn allow_whom_will_the_committee() {
+        assert_no_lints(
+            "Whom will the committee choose?",
+            WhomSubjectOfVerb::default(),
+        );
+    }
 
     #[test]
     fn flag_whom_has() {

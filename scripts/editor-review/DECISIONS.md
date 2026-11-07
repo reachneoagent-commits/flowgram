@@ -21,3 +21,9 @@ Add a line whenever a rule is switched or a debated usage is decided.
 - `WrongNegative` ignores doubled-letter typos (`untill` is `until`, not `distill`).
 - New checks: `ModalVerbInflection` (`can sings`), `PluralNounSingularBe` (`the books is`, skips `of`/preposition phrases and singular-looking plurals such as `news`), `SubjectSeen` (`he seen`, skips `have you seen`), `EachOfHave`, `EveryoneHave` (only with perfect-tense or `to` follow-ups, so `Let everyone have a say` is safe), `BeGoing`, `ToBuy`, `AcceptFor`, `WontContraction`, `ThereIsPluralNumber`, `ThereWasPluralNumber`, `YourWelcomeTo`, `RatherThen`, `LookForwardToGerund`.
 - Deliberately not added: `The reason is because` (debated style), `principle`/`principal` (needs meaning), `french`/`google` lowercase (valid lowercase words), `I is` suggestion (needs a pronoun-aware fix).
+
+## Audit additions (3.0.7)
+- `alright` is not flagged (accepted in AP and Merriam-Webster; Chicago prefers `all right`).
+- `the reason why`, `exact same`, `plan ahead`, `refer back`, `rise up` are not flagged: common and defensible.
+- `whilst`/`amongst`/`learnt` are left alone until Weir rules can see the dialect setting.
+- Phrase rules live in `scripts/editor-review/gen_rules.py`; edit the data there and regenerate rather than editing the generated `.weir` files by hand.

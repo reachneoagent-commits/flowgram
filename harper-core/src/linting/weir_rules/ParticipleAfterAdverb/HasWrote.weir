@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] wrote), (wrote)>
+
+let message "Use the past participle `written` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `written`."
+let kind "Grammar"
+let becomes "written"
+let strategy "MatchCase"
+
+test "She has already wrote it." "She has already written it."
+test "She have just wrote it." "She have just written it."
+test "She had never wrote it." "She had never written it."
+test "She has just wrote it." "She has just written it."
+test "She have already wrote it." "She have already written it."
+test "She had already wrote it." "She had already written it."
+test "She has never wrote it." "She has never written it."
+test "She have never wrote it." "She have never written it."
+test "She has still wrote it." "She has still written it."
+test "She had just wrote it." "She had just written it."
+test "She have ever wrote it." "She have ever written it."
+test "She has ever wrote it." "She has ever written it."
+test "They have already wrote twice." "They have already written twice."
+
+allows "She has already written it."
+allows "They have just written it."
+allows "She wrote it yesterday."
+allows "He already wrote it."
+allows "We never wrote it."
+allows "She has finished."

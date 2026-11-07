@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] ate), (ate)>
+
+let message "Use the past participle `eaten` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `eaten`."
+let kind "Grammar"
+let becomes "eaten"
+let strategy "MatchCase"
+
+test "She has already ate it." "She has already eaten it."
+test "She have just ate it." "She have just eaten it."
+test "She had never ate it." "She had never eaten it."
+test "She has just ate it." "She has just eaten it."
+test "She have already ate it." "She have already eaten it."
+test "She had already ate it." "She had already eaten it."
+test "She has never ate it." "She has never eaten it."
+test "She have never ate it." "She have never eaten it."
+test "She has still ate it." "She has still eaten it."
+test "She had just ate it." "She had just eaten it."
+test "She have ever ate it." "She have ever eaten it."
+test "She has ever ate it." "She has ever eaten it."
+test "They have already ate twice." "They have already eaten twice."
+
+allows "She has already eaten it."
+allows "They have just eaten it."
+allows "She ate it yesterday."
+allows "He already ate it."
+allows "We never ate it."
+allows "She has finished."

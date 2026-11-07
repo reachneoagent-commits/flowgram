@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] sang), (sang)>
+
+let message "Use the past participle `sung` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `sung`."
+let kind "Grammar"
+let becomes "sung"
+let strategy "MatchCase"
+
+test "She has already sang it." "She has already sung it."
+test "She have just sang it." "She have just sung it."
+test "She had never sang it." "She had never sung it."
+test "She has just sang it." "She has just sung it."
+test "She have already sang it." "She have already sung it."
+test "She had already sang it." "She had already sung it."
+test "She has never sang it." "She has never sung it."
+test "She have never sang it." "She have never sung it."
+test "She has still sang it." "She has still sung it."
+test "She had just sang it." "She had just sung it."
+test "She have ever sang it." "She have ever sung it."
+test "She has ever sang it." "She has ever sung it."
+test "They have already sang twice." "They have already sung twice."
+
+allows "She has already sung it."
+allows "They have just sung it."
+allows "She sang it yesterday."
+allows "He already sang it."
+allows "We never sang it."
+allows "She has finished."

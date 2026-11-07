@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] took), (took)>
+
+let message "Use the past participle `taken` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `taken`."
+let kind "Grammar"
+let becomes "taken"
+let strategy "MatchCase"
+
+test "She has already took it." "She has already taken it."
+test "She have just took it." "She have just taken it."
+test "She had never took it." "She had never taken it."
+test "She has just took it." "She has just taken it."
+test "She have already took it." "She have already taken it."
+test "She had already took it." "She had already taken it."
+test "She has never took it." "She has never taken it."
+test "She have never took it." "She have never taken it."
+test "She has still took it." "She has still taken it."
+test "She had just took it." "She had just taken it."
+test "She have ever took it." "She have ever taken it."
+test "She has ever took it." "She has ever taken it."
+test "They have already took twice." "They have already taken twice."
+
+allows "She has already taken it."
+allows "They have just taken it."
+allows "She took it yesterday."
+allows "He already took it."
+allows "We never took it."
+allows "She has finished."

@@ -1,0 +1,28 @@
+expr main <([take, takes, took, taken, taking] [it, them, that, this, him, her] for granite), (granite)>
+
+let message "Did you mean `for granted`?"
+let description "The idiom is `take for granted`, not `for granite`."
+let kind "Spelling"
+let becomes "granted"
+let strategy "MatchCase"
+
+test "Don't take it for granite." "Don't take it for granted."
+test "Don't took it for granite." "Don't took it for granted."
+test "She took it for granite." "She took it for granted."
+test "He takes them for granite." "He takes them for granted."
+test "We took that for granite." "We took that for granted."
+test "I take this for granite." "I take this for granted."
+test "They took him for granite." "They took him for granted."
+test "Never take her for granite." "Never take her for granted."
+test "Don't take it for granite, friend." "Don't take it for granted, friend."
+test "Taking it for granite hurts." "Taking it for granted hurts."
+test "You take them for granite." "You take them for granted."
+test "We take that for granite daily." "We take that for granted daily."
+test "Sadly, he took it for granite." "Sadly, he took it for granted."
+
+allows "Don't take it for granted."
+allows "The counter is granite."
+allows "A granite wall stands."
+allows "We take it as given."
+allows "Granite is hard."
+allows "She took it for a test."

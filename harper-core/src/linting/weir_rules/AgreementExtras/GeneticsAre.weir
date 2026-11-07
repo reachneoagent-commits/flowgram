@@ -1,0 +1,27 @@
+expr main <(genetics are), (are)>
+
+let message "`Genetics` is singular."
+let description "The field of study `genetics` takes a singular verb."
+let kind "Agreement"
+let becomes "is"
+
+test "Genetics are hard." "Genetics is hard."
+test "Genetics are fun." "Genetics is fun."
+test "Genetics are my major." "Genetics is my major."
+test "I think genetics are hard." "I think genetics is hard."
+test "I think genetics are fun." "I think genetics is fun."
+test "I think genetics are useful." "I think genetics is useful."
+test "I think genetics are vast." "I think genetics is vast."
+test "I think genetics are important." "I think genetics is important."
+test "I think genetics are old." "I think genetics is old."
+test "I think genetics are new." "I think genetics is new."
+test "I think genetics are key." "I think genetics is key."
+test "I think genetics are clear." "I think genetics is clear."
+test "Genetics are taught here." "Genetics is taught here."
+
+allows "Genetics is hard."
+allows "The genetics students are tired."
+allows "Genetics classes are full."
+allows "The rules are clear."
+allows "Sciences are fun."
+allows "Her notes are good."

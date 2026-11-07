@@ -1,0 +1,128 @@
+{"category": "eggcorn", "text": "For all intensive purposes, we are done.", "errors": [{"text": "intensive", "fix": "intents and"}]}
+{"category": "eggcorn", "text": "I could care less, irregardless of the cost.", "errors": [{"text": "irregardless", "fix": "regardless"}]}
+{"category": "eggcorn", "text": "He supposably left early.", "errors": [{"text": "supposably", "fix": "supposedly"}]}
+{"category": "eggcorn", "text": "It was a mute point anyway.", "errors": [{"text": "mute", "fix": "moot"}]}
+{"category": "eggcorn", "text": "She took it for granite.", "errors": [{"text": "granite", "fix": "granted"}]}
+{"category": "eggcorn", "text": "We will wait with baited breath.", "errors": [{"text": "baited", "fix": "bated"}]}
+{"category": "eggcorn", "text": "He is chomping at the bit to start.", "errors": [{"text": "chomping", "fix": "champing"}]}
+{"category": "eggcorn", "text": "That is a doggy dog world.", "errors": [{"text": "doggy dog", "fix": "dog-eat-dog"}]}
+{"category": "eggcorn", "text": "Nip it in the butt before it grows.", "errors": [{"text": "butt", "fix": "bud"}]}
+{"category": "eggcorn", "text": "I'm a self-proclaimed expert, but its just a hunch.", "errors": [{"text": "its", "fix": "it's"}]}
+{"category": "eggcorn", "text": "He escaped scott free.", "errors": [{"text": "scott", "fix": "scot"}]}
+{"category": "eggcorn", "text": "She is a shoe-in for the job.", "errors": [{"text": "shoe-in", "fix": "shoo-in"}]}
+{"category": "eggcorn", "text": "Hone in on the problem.", "errors": [{"text": "Hone in", "fix": "Home in"}]}
+{"category": "eggcorn", "text": "The tow the line policy is strict.", "errors": [{"text": "tow", "fix": "toe"}]}
+{"category": "compound", "text": "I go there every day, its an everyday habit alot.", "errors": [{"text": "alot", "fix": "a lot"}]}
+{"category": "compound", "text": "Its alright with me.", "errors": [{"text": "alright", "fix": "all right"}]}
+{"category": "compound", "text": "They went to the store inspite of the rain.", "errors": [{"text": "inspite", "fix": "in spite"}]}
+{"category": "compound", "text": "Thankyou for your help.", "errors": [{"text": "Thankyou", "fix": "Thank you"}]}
+{"category": "compound", "text": "I have to go, infact right now.", "errors": [{"text": "infact", "fix": "in fact"}]}
+{"category": "compound", "text": "Atleast we tried.", "errors": [{"text": "Atleast", "fix": "At least"}]}
+{"category": "compound", "text": "He did it all by himself aswell.", "errors": [{"text": "aswell", "fix": "as well"}]}
+{"category": "compound", "text": "Eachother's help matters.", "errors": [{"text": "Eachother's", "fix": "Each other's"}]}
+{"category": "compound", "text": "Your going to love it.", "errors": [{"text": "Your", "fix": "You're"}]}
+{"category": "confused", "text": "He is more taller than me.", "errors": [{"text": "more taller", "fix": "taller"}]}
+{"category": "confused", "text": "Less people came than expected.", "errors": [{"text": "Less", "fix": "Fewer"}]}
+{"category": "confused", "text": "Me and him went to the store.", "errors": [{"text": "Me and him", "fix": "He and I"}]}
+{"category": "confused", "text": "Between you and I, it was boring.", "errors": [{"text": "you and I", "fix": "you and me"}]}
+{"category": "confused", "text": "Who did you give it too?", "errors": [{"text": "too", "fix": "to"}]}
+{"category": "confused", "text": "The company is lead by a former teacher.", "errors": [{"text": "lead", "fix": "led"}]}
+{"category": "confused", "text": "She laid down for a nap.", "errors": [{"text": "laid", "fix": "lay"}]}
+{"category": "confused", "text": "He was suppose to call.", "errors": [{"text": "suppose", "fix": "supposed"}]}
+{"category": "confused", "text": "I use to live in Texas.", "errors": [{"text": "use", "fix": "used"}]}
+{"category": "confused", "text": "She is prejudice against them.", "errors": [{"text": "prejudice", "fix": "prejudiced"}]}
+{"category": "confused", "text": "The cite was beautiful.", "errors": [{"text": "cite", "fix": "site"}]}
+{"category": "confused", "text": "I herd a noise outside.", "errors": [{"text": "herd", "fix": "heard"}]}
+{"category": "confused", "text": "Wait for the brake in traffic.", "errors": [{"text": "brake", "fix": "break"}]}
+{"category": "confused", "text": "She wore a plane white dress.", "errors": [{"text": "plane", "fix": "plain"}]}
+{"category": "confused", "text": "The whole class waited patiently, eager to no.", "errors": [{"text": "no", "fix": "know"}]}
+{"category": "confused", "text": "The weather to go is undecided.", "errors": [{"text": "weather", "fix": "whether"}]}
+{"category": "confused", "text": "Thanks for you're help.", "errors": [{"text": "you're", "fix": "your"}]}
+{"category": "confused", "text": "Its time to go, the cat licked it's paw.", "errors": [{"text": "it's", "fix": "its"}]}
+{"category": "confused", "text": "He is to tired to drive.", "errors": [{"text": "to", "fix": "too"}]}
+{"category": "confused", "text": "I want to compliment my coffee with a cookie.", "errors": [{"text": "compliment", "fix": "complement"}]}
+{"category": "confused", "text": "He apprised the antique rug.", "errors": [{"text": "apprised", "fix": "appraised"}]}
+{"category": "confused", "text": "Please site your sources properly.", "errors": [{"text": "site", "fix": "cite"}]}
+{"category": "confused", "text": "Their going to arrive late.", "errors": [{"text": "Their", "fix": "They're"}]}
+{"category": "punct", "text": "However we decided to stay.", "errors": [{"text": "However", "fix": "However,"}]}
+{"category": "agree", "text": "Neither the teacher nor the students was ready.", "errors": [{"text": "was", "fix": "were"}]}
+{"category": "agree", "text": "A number of people is waiting.", "errors": [{"text": "is", "fix": "are"}]}
+{"category": "agree", "text": "He and I is friends.", "errors": [{"text": "is", "fix": "are"}]}
+{"category": "agree", "text": "The news were shocking.", "errors": [{"text": "were", "fix": "was"}]}
+{"category": "agree", "text": "Mathematics are hard.", "errors": [{"text": "are", "fix": "is"}]}
+{"category": "agree", "text": "She don't like it.", "errors": [{"text": "don't", "fix": "doesn't"}]}
+{"category": "agree", "text": "My parents is home.", "errors": [{"text": "is", "fix": "are"}]}
+{"category": "agree", "text": "One of the reasons are cost.", "errors": [{"text": "are", "fix": "is"}]}
+{"category": "agree", "text": "The criteria is clear.", "errors": [{"text": "is", "fix": "are"}]}
+{"category": "agree", "text": "The people was angry.", "errors": [{"text": "was", "fix": "were"}]}
+{"category": "agree", "text": "Each employees must sign.", "errors": [{"text": "employees", "fix": "employee"}]}
+{"category": "agree", "text": "These kind of problems are common.", "errors": [{"text": "These kind", "fix": "This kind"}]}
+{"category": "agree", "text": "Those book are heavy.", "errors": [{"text": "Those book", "fix": "Those books"}]}
+{"category": "agree", "text": "I have many informations.", "errors": [{"text": "informations", "fix": "information"}]}
+{"category": "agree", "text": "We need more equipments.", "errors": [{"text": "equipments", "fix": "equipment"}]}
+{"category": "verb", "text": "He should of known better.", "errors": [{"text": "should of", "fix": "should have"}]}
+{"category": "verb", "text": "I seen him yesterday.", "errors": [{"text": "seen", "fix": "saw"}]}
+{"category": "verb", "text": "She has already ate.", "errors": [{"text": "ate", "fix": "eaten"}]}
+{"category": "verb", "text": "They was running late.", "errors": [{"text": "was", "fix": "were"}]}
+{"category": "verb", "text": "He go to school every day.", "errors": [{"text": "go", "fix": "goes"}]}
+{"category": "verb", "text": "I am agree with you.", "errors": [{"text": "am agree", "fix": "agree"}]}
+{"category": "verb", "text": "She said me that.", "errors": [{"text": "said me", "fix": "told me"}]}
+{"category": "verb", "text": "He didn't went home.", "errors": [{"text": "went", "fix": "go"}]}
+{"category": "verb", "text": "They have been waiting since three hours.", "errors": [{"text": "since", "fix": "for"}]}
+{"category": "verb", "text": "If I would have known, I would have come.", "errors": [{"text": "would have known", "fix": "had known"}]}
+{"category": "verb", "text": "I wish I was taller.", "errors": [{"text": "was", "fix": "were"}]}
+{"category": "verb", "text": "The boy drived the car.", "errors": [{"text": "drived", "fix": "drove"}]}
+{"category": "verb", "text": "She buyed a new dress.", "errors": [{"text": "buyed", "fix": "bought"}]}
+{"category": "verb", "text": "We goed to the park.", "errors": [{"text": "goed", "fix": "went"}]}
+{"category": "verb", "text": "He has did his homework.", "errors": [{"text": "did", "fix": "done"}]}
+{"category": "verb", "text": "I will definately be there.", "errors": [{"text": "definately", "fix": "definitely"}]}
+{"category": "wordy", "text": "The past history of the town is long.", "errors": [{"text": "past history", "fix": "history"}]}
+{"category": "wordy", "text": "It was a free gift.", "errors": [{"text": "free gift", "fix": "gift"}]}
+{"category": "wordy", "text": "We will reply back soon.", "errors": [{"text": "reply back", "fix": "reply"}]}
+{"category": "wordy", "text": "The end result was good.", "errors": [{"text": "end result", "fix": "result"}]}
+{"category": "wordy", "text": "Due to the fact that it rained, we left.", "errors": [{"text": "Due to the fact that", "fix": "Because"}]}
+{"category": "wordy", "text": "In the event that it fails, call me.", "errors": [{"text": "In the event that", "fix": "If"}]}
+{"category": "wordy", "text": "The reason why is unknown.", "errors": [{"text": "The reason why", "fix": "The reason"}]}
+{"category": "wordy", "text": "Each and every day, I walk.", "errors": [{"text": "Each and every", "fix": "Every"}]}
+{"category": "wordy", "text": "Please revert back to me.", "errors": [{"text": "revert back", "fix": "reply"}]}
+{"category": "wordy", "text": "We need to join together as one.", "errors": [{"text": "join together", "fix": "join"}]}
+{"category": "wordy", "text": "The final outcome is unclear.", "errors": [{"text": "final outcome", "fix": "outcome"}]}
+{"category": "wordy", "text": "I personally think so.", "errors": [{"text": "personally", "fix": ""}]}
+{"category": "wordy", "text": "He repeated it again.", "errors": [{"text": "repeated it again", "fix": "repeated it"}]}
+{"category": "wordy", "text": "At the present time, we are closed.", "errors": [{"text": "At the present time", "fix": "Currently"}]}
+{"category": "natural", "text": "According to me, this is wrong.", "errors": [{"text": "According to me", "fix": "In my opinion"}]}
+{"category": "natural", "text": "Please do the needful.", "errors": [{"text": "do the needful", "fix": "do what is needed"}]}
+{"category": "natural", "text": "I will explain you the plan.", "errors": [{"text": "explain you", "fix": "explain to you"}]}
+{"category": "natural", "text": "She is more better than him.", "errors": [{"text": "more better", "fix": "better"}]}
+{"category": "natural", "text": "He discussed about the topic.", "errors": [{"text": "discussed about", "fix": "discussed"}]}
+{"category": "natural", "text": "We are discussing about the budget.", "errors": [{"text": "discussing about", "fix": "discussing"}]}
+{"category": "natural", "text": "I look forward to hear from you.", "errors": [{"text": "hear", "fix": "hearing"}]}
+{"category": "natural", "text": "The informations are correct.", "errors": [{"text": "informations", "fix": "information"}]}
+{"category": "dialect", "text": "The colour of the neighbour's centre is grey.", "errors": [{"text": "colour", "fix": "color"}, {"text": "neighbour's", "fix": "neighbor's"}, {"text": "centre", "fix": "center"}]}
+{"category": "dialect", "text": "We travelled to the theatre for the programme.", "errors": [{"text": "travelled", "fix": "traveled"}, {"text": "theatre", "fix": "theater"}]}
+{"category": "dialect", "text": "I'll organise the defence of our licence.", "errors": [{"text": "organise", "fix": "organize"}, {"text": "defence", "fix": "defense"}]}
+{"category": "dialect", "text": "He learnt it at the grey old cheque office.", "errors": [{"text": "learnt", "fix": "learned"}]}
+{"category": "dialect", "text": "I'm going to the pharmacy for some aluminium foil.", "errors": [{"text": "aluminium", "fix": "aluminum"}]}
+{"category": "dialect", "text": "Whilst I agree, amongst us we differ.", "errors": [{"text": "Whilst", "fix": "While"}]}
+{"category": "cap", "text": "i love new york in december.", "errors": [{"text": "i", "fix": "I"}, {"text": "new york", "fix": "New York"}]}
+{"category": "cap", "text": "I'm learning Spanish and french.", "errors": [{"text": "french", "fix": "French"}]}
+{"category": "clean", "text": "The committee reviewed the proposal and approved it.", "errors": []}
+{"category": "clean", "text": "I appreciate your patience while we resolve this issue.", "errors": []}
+{"category": "clean", "text": "Let's schedule a call for next Tuesday at 2 p.m.", "errors": []}
+{"category": "clean", "text": "She's the best candidate we've interviewed.", "errors": []}
+{"category": "clean", "text": "Whom did you invite to the party?", "errors": []}
+{"category": "clean", "text": "The software, which we released in May, is stable.", "errors": []}
+{"category": "clean", "text": "He asked whether the meeting had been moved.", "errors": []}
+{"category": "clean", "text": "Fewer people attended than we expected.", "errors": []}
+{"category": "clean", "text": "The lead engineer led the team through the migration.", "errors": []}
+{"category": "clean", "text": "I lay down for a nap after lunch.", "errors": []}
+{"category": "clean", "text": "Between you and me, the plan is risky.", "errors": []}
+{"category": "clean", "text": "We're reviewing the data and will follow up soon.", "errors": []}
+{"category": "clean", "text": "Their offices are in Boston, and they're hiring.", "errors": []}
+{"category": "clean", "text": "Who's coming to dinner, and whose car are we taking?", "errors": []}
+{"category": "clean", "text": "It's important to check that the dog has its leash.", "errors": []}
+{"category": "clean", "text": "The effects of the policy were significant.", "errors": []}
+{"category": "clean", "text": "Every day I walk to work; it's an everyday routine.", "errors": []}
+{"category": "clean", "text": "She said it was fine, so I took her at her word.", "errors": []}
+{"category": "clean", "text": "He worked all night, yet he felt great.", "errors": []}
+{"category": "clean", "text": "Please let me know if you have any questions.", "errors": []}

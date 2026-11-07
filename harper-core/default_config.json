@@ -2521,6 +2521,62 @@
 						},
 						{
 							"Bool": {
+								"name": "EachPluralNoun",
+								"state": true,
+								"label": "Each Plural Noun"
+							}
+						},
+						{
+							"Bool": {
+								"name": "RedundantPhrases",
+								"state": true,
+								"label": "Redundant Phrases"
+							}
+						},
+						{
+							"Bool": {
+								"name": "ContextHomophones",
+								"state": true,
+								"label": "Context Homophones"
+							}
+						},
+						{
+							"Bool": {
+								"name": "Eggcorns",
+								"state": true,
+								"label": "Eggcorns"
+							}
+						},
+						{
+							"Bool": {
+								"name": "NaturalPhrasing",
+								"state": true,
+								"label": "Natural Phrasing"
+							}
+						},
+						{
+							"Bool": {
+								"name": "AgreementExtras",
+								"state": true,
+								"label": "Agreement Extras"
+							}
+						},
+						{
+							"Bool": {
+								"name": "UsageExtras",
+								"state": true,
+								"label": "Usage Extras"
+							}
+						},
+						{
+							"Bool": {
+								"name": "ParticipleAfterAdverb",
+								"state": true,
+								"label": "Participle After Adverb"
+							}
+						},
+						{
+							"Bool": {
 								"name": "YourPredicateAdjective",
 								"state": true,
 								"label": "Your Predicate Adjective"

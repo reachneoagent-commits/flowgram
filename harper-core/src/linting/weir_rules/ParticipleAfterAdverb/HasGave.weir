@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] gave), (gave)>
+
+let message "Use the past participle `given` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `given`."
+let kind "Grammar"
+let becomes "given"
+let strategy "MatchCase"
+
+test "She has already gave it." "She has already given it."
+test "She have just gave it." "She have just given it."
+test "She had never gave it." "She had never given it."
+test "She has just gave it." "She has just given it."
+test "She have already gave it." "She have already given it."
+test "She had already gave it." "She had already given it."
+test "She has never gave it." "She has never given it."
+test "She have never gave it." "She have never given it."
+test "She has still gave it." "She has still given it."
+test "She had just gave it." "She had just given it."
+test "She have ever gave it." "She have ever given it."
+test "She has ever gave it." "She has ever given it."
+test "They have already gave twice." "They have already given twice."
+
+allows "She has already given it."
+allows "They have just given it."
+allows "She gave it yesterday."
+allows "He already gave it."
+allows "We never gave it."
+allows "She has finished."

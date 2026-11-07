@@ -1,0 +1,27 @@
+expr main <(physics are), (are)>
+
+let message "`Physics` is singular."
+let description "The field of study `physics` takes a singular verb."
+let kind "Agreement"
+let becomes "is"
+
+test "Physics are hard." "Physics is hard."
+test "Physics are fun." "Physics is fun."
+test "Physics are my major." "Physics is my major."
+test "I think physics are hard." "I think physics is hard."
+test "I think physics are fun." "I think physics is fun."
+test "I think physics are useful." "I think physics is useful."
+test "I think physics are vast." "I think physics is vast."
+test "I think physics are important." "I think physics is important."
+test "I think physics are old." "I think physics is old."
+test "I think physics are new." "I think physics is new."
+test "I think physics are key." "I think physics is key."
+test "I think physics are clear." "I think physics is clear."
+test "Physics are taught here." "Physics is taught here."
+
+allows "Physics is hard."
+allows "The physics students are tired."
+allows "Physics classes are full."
+allows "The rules are clear."
+allows "Sciences are fun."
+allows "Her notes are good."

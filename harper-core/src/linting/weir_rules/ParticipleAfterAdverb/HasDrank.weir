@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] drank), (drank)>
+
+let message "Use the past participle `drunk` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `drunk`."
+let kind "Grammar"
+let becomes "drunk"
+let strategy "MatchCase"
+
+test "She has already drank it." "She has already drunk it."
+test "She have just drank it." "She have just drunk it."
+test "She had never drank it." "She had never drunk it."
+test "She has just drank it." "She has just drunk it."
+test "She have already drank it." "She have already drunk it."
+test "She had already drank it." "She had already drunk it."
+test "She has never drank it." "She has never drunk it."
+test "She have never drank it." "She have never drunk it."
+test "She has still drank it." "She has still drunk it."
+test "She had just drank it." "She had just drunk it."
+test "She have ever drank it." "She have ever drunk it."
+test "She has ever drank it." "She has ever drunk it."
+test "They have already drank twice." "They have already drunk twice."
+
+allows "She has already drunk it."
+allows "They have just drunk it."
+allows "She drank it yesterday."
+allows "He already drank it."
+allows "We never drank it."
+allows "She has finished."

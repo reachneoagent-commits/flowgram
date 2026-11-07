@@ -1,0 +1,27 @@
+expr main <(a handful of * [is, was]), ([is, was])>
+
+let message "Use a plural verb here."
+let description "After `a handful of` plus a plural noun, the verb is plural."
+let kind "Agreement"
+let becomes "are"
+let strategy "MatchCase"
+
+test "A handful of people is waiting." "A handful of people are waiting."
+test "A handful of students is waiting." "A handful of students are waiting."
+test "A handful of cars is waiting." "A handful of cars are waiting."
+test "A handful of files is waiting." "A handful of files are waiting."
+test "A handful of guests is waiting." "A handful of guests are waiting."
+test "A handful of books is waiting." "A handful of books are waiting."
+test "a handful of men is here." "a handful of men are here."
+test "A handful of kids is late." "A handful of kids are late."
+test "A handful of ideas is ready." "A handful of ideas are ready."
+test "A handful of things is wrong." "A handful of things are wrong."
+test "A handful of fans is here." "A handful of fans are here."
+test "A handful of dogs is barking." "A handful of dogs are barking."
+
+allows "A handful of people are waiting."
+allows "The handful of people is large."
+allows "The handful of options is wide."
+allows "A lot of water is gone."
+allows "A group of students is waiting."
+allows "A pair of shoes is here."

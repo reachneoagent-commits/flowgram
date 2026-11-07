@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] began), (began)>
+
+let message "Use the past participle `begun` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `begun`."
+let kind "Grammar"
+let becomes "begun"
+let strategy "MatchCase"
+
+test "She has already began it." "She has already begun it."
+test "She have just began it." "She have just begun it."
+test "She had never began it." "She had never begun it."
+test "She has just began it." "She has just begun it."
+test "She have already began it." "She have already begun it."
+test "She had already began it." "She had already begun it."
+test "She has never began it." "She has never begun it."
+test "She have never began it." "She have never begun it."
+test "She has still began it." "She has still begun it."
+test "She had just began it." "She had just begun it."
+test "She have ever began it." "She have ever begun it."
+test "She has ever began it." "She has ever begun it."
+test "They have already began twice." "They have already begun twice."
+
+allows "She has already begun it."
+allows "They have just begun it."
+allows "She began it yesterday."
+allows "He already began it."
+allows "We never began it."
+allows "She has finished."

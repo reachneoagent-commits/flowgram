@@ -1,0 +1,28 @@
+expr main <([has, have, had] [already, just, never, ever, still] saw), (saw)>
+
+let message "Use the past participle `seen` here."
+let description "After `have`, `has` or `had`, the verb needs its past participle: `seen`."
+let kind "Grammar"
+let becomes "seen"
+let strategy "MatchCase"
+
+test "She has already saw it." "She has already seen it."
+test "She have just saw it." "She have just seen it."
+test "She had never saw it." "She had never seen it."
+test "She has just saw it." "She has just seen it."
+test "She have already saw it." "She have already seen it."
+test "She had already saw it." "She had already seen it."
+test "She has never saw it." "She has never seen it."
+test "She have never saw it." "She have never seen it."
+test "She has still saw it." "She has still seen it."
+test "She had just saw it." "She had just seen it."
+test "She have ever saw it." "She have ever seen it."
+test "She has ever saw it." "She has ever seen it."
+test "They have already saw twice." "They have already seen twice."
+
+allows "She has already seen it."
+allows "They have just seen it."
+allows "She saw it yesterday."
+allows "He already saw it."
+allows "We never saw it."
+allows "She has finished."

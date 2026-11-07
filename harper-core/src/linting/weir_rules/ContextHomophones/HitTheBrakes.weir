@@ -1,0 +1,27 @@
+expr main <([hit, hits, hitting, slam, slams, slammed, slamming, pump, pumped, pumping] the breaks), (breaks)>
+
+let message "Did you mean `brakes`?"
+let description "Vehicle brakes are `brakes`; `breaks` are pauses or fractures."
+let kind "Spelling"
+let becomes "brakes"
+let strategy "MatchCase"
+
+test "Hit the breaks." "Hit the brakes."
+test "Slam the breaks." "Slam the brakes."
+test "Pump the breaks." "Pump the brakes."
+test "He hit the breaks hard." "He hit the brakes hard."
+test "She slammed the breaks." "She slammed the brakes."
+test "They are slamming the breaks." "They are slamming the brakes."
+test "I hit the breaks in time." "I hit the brakes in time."
+test "We pumped the breaks." "We pumped the brakes."
+test "He hits the breaks often." "He hits the brakes often."
+test "Slam the breaks now." "Slam the brakes now."
+test "She hit the breaks suddenly." "She hit the brakes suddenly."
+test "Pumping the breaks helps." "Pumping the brakes helps."
+test "He is hitting the breaks." "He is hitting the brakes."
+
+allows "He hit the brakes hard."
+allows "We take the breaks seriously."
+allows "Coffee breaks are short."
+allows "She hit the ball."
+allows "Slam the door."

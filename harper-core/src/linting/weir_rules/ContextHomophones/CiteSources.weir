@@ -1,0 +1,27 @@
+expr main <([please, to, must, should, always, never, and, will, can, cannot, you, we, they] site [your, (the sources), sources, evidence, references, studies, research, (a source), (any sources), (all sources), (them properly)]), (site)>
+
+let message "Did you mean `cite`?"
+let description "To quote or reference a source is to `cite` it; a `site` is a place."
+let kind "Spelling"
+let becomes "cite"
+let strategy "MatchCase"
+
+test "Please site your sources." "Please cite your sources."
+test "Please site evidence." "Please cite evidence."
+test "Please site references." "Please cite references."
+test "Please site studies." "Please cite studies."
+test "Please site research." "Please cite research."
+test "Please site a source." "Please cite a source."
+test "Please site all sources." "Please cite all sources."
+test "You must site your sources." "You must cite your sources."
+test "Always site evidence." "Always cite evidence."
+test "We should site research." "We should cite research."
+test "They will site studies." "They will cite studies."
+test "Never site sources badly." "Never cite sources badly."
+
+allows "Please cite your sources."
+allows "The site has evidence."
+allows "Visit the site for references."
+allows "A site for research."
+allows "The new site is live."
+allows "Please cite the study."

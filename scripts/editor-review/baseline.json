@@ -1,18 +1,98 @@
 {
+  "eggcorn": {
+    "sentences": 14,
+    "expected": 14,
+    "found": 13,
+    "first_ok": 6,
+    "top3_ok": 6,
+    "false_alarms": 1
+  },
+  "compound": {
+    "sentences": 9,
+    "expected": 9,
+    "found": 8,
+    "first_ok": 6,
+    "top3_ok": 6,
+    "false_alarms": 1
+  },
+  "confused": {
+    "sentences": 44,
+    "expected": 42,
+    "found": 32,
+    "first_ok": 30,
+    "top3_ok": 30,
+    "false_alarms": 0
+  },
+  "punct": {
+    "sentences": 1,
+    "expected": 1,
+    "found": 1,
+    "first_ok": 0,
+    "top3_ok": 0,
+    "false_alarms": 0
+  },
+  "agree": {
+    "sentences": 15,
+    "expected": 15,
+    "found": 14,
+    "first_ok": 13,
+    "top3_ok": 13,
+    "false_alarms": 0
+  },
+  "verb": {
+    "sentences": 16,
+    "expected": 16,
+    "found": 16,
+    "first_ok": 12,
+    "top3_ok": 12,
+    "false_alarms": 0
+  },
+  "wordy": {
+    "sentences": 14,
+    "expected": 14,
+    "found": 11,
+    "first_ok": 9,
+    "top3_ok": 10,
+    "false_alarms": 0
+  },
+  "natural": {
+    "sentences": 8,
+    "expected": 8,
+    "found": 8,
+    "first_ok": 6,
+    "top3_ok": 6,
+    "false_alarms": 0
+  },
+  "dialect": {
+    "sentences": 6,
+    "expected": 10,
+    "found": 9,
+    "first_ok": 8,
+    "top3_ok": 8,
+    "false_alarms": 5
+  },
+  "cap": {
+    "sentences": 2,
+    "expected": 3,
+    "found": 2,
+    "first_ok": 2,
+    "top3_ok": 2,
+    "false_alarms": 1
+  },
+  "clean": {
+    "sentences": 51,
+    "expected": 0,
+    "found": 0,
+    "first_ok": 0,
+    "top3_ok": 0,
+    "false_alarms": 0
+  },
   "spelling": {
     "sentences": 28,
     "expected": 28,
     "found": 28,
     "first_ok": 28,
     "top3_ok": 28,
-    "false_alarms": 0
-  },
-  "confused": {
-    "sentences": 21,
-    "expected": 19,
-    "found": 19,
-    "first_ok": 19,
-    "top3_ok": 19,
     "false_alarms": 0
   },
   "agreement": {
@@ -71,20 +151,12 @@
     "top3_ok": 6,
     "false_alarms": 0
   },
-  "clean": {
-    "sentences": 31,
-    "expected": 0,
-    "found": 0,
-    "first_ok": 0,
-    "top3_ok": 0,
-    "false_alarms": 0
-  },
   "ALL": {
-    "sentences": 140,
-    "expected": 103,
-    "found": 103,
-    "first_ok": 102,
-    "top3_ok": 102,
-    "false_alarms": 0
+    "sentences": 268,
+    "expected": 216,
+    "found": 198,
+    "first_ok": 175,
+    "top3_ok": 176,
+    "false_alarms": 8
   }
 }

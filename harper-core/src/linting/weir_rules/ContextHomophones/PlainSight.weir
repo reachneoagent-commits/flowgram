@@ -1,0 +1,27 @@
+expr main <(plane [sight, text, English, language, vanilla, truth, view, speaking]), (plane)>
+
+let message "Did you mean `plain`?"
+let description "The adjective meaning simple or clear is `plain`; a `plane` flies or is flat."
+let kind "Spelling"
+let becomes "plain"
+let strategy "MatchCase"
+
+test "It was in plane sight." "It was in plain sight."
+test "It was in plane view." "It was in plain view."
+test "Use plane text." "Use plain text."
+test "Write in plane English." "Write in plain English."
+test "Plain vanilla ice cream." "Plain vanilla ice cream."
+test "The plane truth hurts." "The plain truth hurts."
+test "Hidden in plane sight." "Hidden in plain sight."
+test "A plane language policy." "A plain language policy."
+test "Save as plane text." "Save as plain text."
+test "He is plane speaking." "He is plain speaking."
+test "Plane English works best." "Plain English works best."
+test "The plane view is clear." "The plain view is clear."
+test "It was plane sight." "It was plain sight."
+
+allows "The plane landed."
+allows "Hidden in plain sight."
+allows "Write in plain English."
+allows "A plane flew over."
+allows "We boarded the plane."
