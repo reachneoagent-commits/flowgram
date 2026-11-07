@@ -1,0 +1,25 @@
+expr main <([is, are, am, was, were] go [to, home, there, out, shopping, back, away]), (go)>
+
+let message "Use `going` after a form of `be`."
+let description "After a form of `be`, a moving action takes the form `going`."
+let kind "Grammar"
+let becomes "going"
+let strategy "MatchCase"
+
+test "He is go to the market." "He is going to the market."
+test "She is go home." "She is going home."
+test "They are go there tomorrow." "They are going there tomorrow."
+test "I am go out tonight." "I am going out tonight."
+test "We were go shopping." "We were going shopping."
+test "He was go away." "He was going away."
+test "She is go back to school." "She is going back to school."
+test "They are go to the park." "They are going to the park."
+test "He is go to bed." "He is going to bed."
+test "I am go to call you." "I am going to call you."
+
+allows "He is going to the market."
+allows "Let it go to waste."
+allows "She wants to go home."
+allows "We will go there tomorrow."
+allows "Go to the market."
+allows "They go out every Friday."

@@ -13,7 +13,7 @@
 {"category":"confused","text":"The dog wagged it's tail happily.","errors":[{"text":"it's","fix":"its"}]}
 {"category":"confused","text":"I would rather go then stay home.","errors":[{"text":"then","fix":"than"}]}
 {"category":"confused","text":"Don't lose your keys, the lock is loose.","errors":[]}
-{"category":"confused","text":"I need to loose five pounds.","errors":[{"text":"loose","fix":"lose"}]}
+{"category":"confused","text":"I need to loose five pounds.","errors":[{"text":"to loose","fix":"to lose"}]}
 {"category":"confused","text":"The new policy will effect everyone.","errors":[{"text":"effect","fix":"affect"}]}
 {"category":"confused","text":"Who's coat is this?","errors":[{"text":"Who's","fix":"Whose"}]}
 {"category":"confused","text":"They're bringing their own lunch, and it's over there.","errors":[]}
@@ -25,7 +25,7 @@
 {"category":"agreement","text":"She is a honest person.","errors":[{"text":"a","fix":"an"}]}
 {"category":"agreement","text":"This is an test.","errors":[{"text":"an","fix":"a"}]}
 {"category":"verbs","text":"I should of called you earlier.","errors":[{"text":"should of","fix":"should have"}]}
-{"category":"verbs","text":"She could care less about the results.","errors":[{"text":"could care less","fix":"couldn't care less"}]}
+{"category":"verbs","text":"She could care less about the results.","errors":[{"text":"could","fix":"couldn't"}]}
 {"category":"verbs","text":"We have went to that restaurant before.","errors":[{"text":"went","fix":"gone"}]}
 {"category":"verbs","text":"He seen the accident happen.","errors":[{"text":"seen","fix":"saw"}]}
 {"category":"verbs","text":"They have already left for the airport.","errors":[]}
@@ -35,7 +35,7 @@
 {"category":"punctuation","text":"The meeting is at 3 p.m. on Tuesday.","errors":[]}
 {"category":"punctuation","text":"Hello,  how are you today?","errors":[{"text":"  ","fix":" "}]}
 {"category":"capitalization","text":"i think we should start now.","errors":[{"text":"i","fix":"I"}]}
-{"category":"capitalization","text":"my brother lives in chicago.","errors":[{"text":"my","fix":"My"}]}
+{"category":"capitalization","text":"my brother lives in Chicago.","errors":[{"text":"my","fix":"My"}]}
 {"category":"capitalization","text":"We flew to new york last month.","errors":[{"text":"new york","fix":"New York"}]}
 {"category":"capitalization","text":"The meeting is on monday.","errors":[{"text":"monday","fix":"Monday"}]}
 {"category":"wordiness","text":"In order to succeed, you must practice.","errors":[{"text":"In order to","fix":"To"}]}

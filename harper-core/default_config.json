@@ -2416,6 +2416,97 @@
 						},
 						{
 							"Bool": {
+								"name": "YourWelcomeTo",
+								"state": true,
+								"label": "Your Welcome To"
+							}
+						},
+						{
+							"Bool": {
+								"name": "RatherThen",
+								"state": true,
+								"label": "Rather Then"
+							}
+						},
+						{
+							"Bool": {
+								"name": "ThereIsPluralNumber",
+								"state": true,
+								"label": "There Is Plural Number"
+							}
+						},
+						{
+							"Bool": {
+								"name": "SubjectSeen",
+								"state": true,
+								"label": "Subject Seen"
+							}
+						},
+						{
+							"Bool": {
+								"name": "ThereWasPluralNumber",
+								"state": true,
+								"label": "There Was Plural Number"
+							}
+						},
+						{
+							"Bool": {
+								"name": "WontContraction",
+								"state": true,
+								"label": "Wont Contraction"
+							}
+						},
+						{
+							"Bool": {
+								"name": "ToBuy",
+								"state": true,
+								"label": "To Buy"
+							}
+						},
+						{
+							"Bool": {
+								"name": "AcceptFor",
+								"state": true,
+								"label": "Accept For"
+							}
+						},
+						{
+							"Bool": {
+								"name": "EveryoneHave",
+								"state": true,
+								"label": "Everyone Have"
+							}
+						},
+						{
+							"Bool": {
+								"name": "LookForwardToGerund",
+								"state": true,
+								"label": "Look Forward To Gerund"
+							}
+						},
+						{
+							"Bool": {
+								"name": "PluralNounSingularBe",
+								"state": true,
+								"label": "Plural Noun Singular Be"
+							}
+						},
+						{
+							"Bool": {
+								"name": "EachOfHave",
+								"state": true,
+								"label": "Each Of Have"
+							}
+						},
+						{
+							"Bool": {
+								"name": "BeGoing",
+								"state": true,
+								"label": "Be Going"
+							}
+						},
+						{
+							"Bool": {
 								"name": "YourPredicateAdjective",
 								"state": true,
 								"label": "Your Predicate Adjective"
@@ -3851,6 +3942,13 @@
 								"name": "InAWhile",
 								"state": true,
 								"label": "In A While"
+							}
+						},
+						{
+							"Bool": {
+								"name": "ModalVerbInflection",
+								"state": true,
+								"label": "Modal Verb Inflection"
 							}
 						},
 						{

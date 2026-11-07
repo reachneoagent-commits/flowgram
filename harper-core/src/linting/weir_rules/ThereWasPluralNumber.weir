@@ -1,0 +1,27 @@
+expr main <(there was [two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, several, many, numerous, multiple, (a few), (a couple of), (a number of)]), (was)>
+
+let message "Use a plural verb with a plural noun."
+let description "After `there`, a plural subject such as `three reasons` needs `were`."
+let kind "Agreement"
+let becomes "were"
+let strategy "MatchCase"
+
+test "There was three reasons for this." "There were three reasons for this."
+test "there was two options." "there were two options."
+test "There was several ways to do it." "There were several ways to do it."
+test "There was many problems here." "There were many problems here."
+test "There was four people waiting." "There were four people waiting."
+test "There was a few mistakes." "There were a few mistakes."
+test "There was a couple of issues." "There were a couple of issues."
+test "There was a number of reasons." "There were a number of reasons."
+test "There was multiple bugs." "There were multiple bugs."
+test "There was numerous examples." "There were numerous examples."
+test "There was five apples on the table." "There were five apples on the table."
+test "There was ten items left." "There were ten items left."
+
+allows "There were three reasons for this."
+allows "There was one reason for this."
+allows "There was a reason for this."
+allows "There was no reason to worry."
+allows "There was water on the floor."
+allows "There was a problem with the plan."

@@ -1,0 +1,25 @@
+expr main <([each, one] of [the, these, those, my, our, his, her, their, your] * have), (have)>
+
+let message "`Each` and `one` are singular, so use `has`."
+let description "In `each of the students` or `one of my friends`, the verb agrees with `each` or `one`, which is singular."
+let kind "Agreement"
+let becomes "has"
+let strategy "MatchCase"
+
+test "Each of the students have a laptop." "Each of the students has a laptop."
+test "Each of my friends have a car." "Each of my friends has a car."
+test "One of the books have a torn cover." "One of the books has a torn cover."
+test "One of our players have an injury." "One of our players has an injury."
+test "each of the kids have a coat." "each of the kids has a coat."
+test "Each of these options have a cost." "Each of these options has a cost."
+test "One of those cats have a bell." "One of those cats has a bell."
+test "Each of their ideas have merit." "Each of their ideas has merit."
+test "One of her sisters have moved away." "One of her sisters has moved away."
+test "Each of your answers have an error." "Each of your answers has an error."
+
+allows "Each of the students has a laptop."
+allows "Each of them have a car."
+allows "They each have a laptop."
+allows "The students each have a laptop."
+allows "One of the books has a torn cover."
+allows "Both of the students have a laptop."

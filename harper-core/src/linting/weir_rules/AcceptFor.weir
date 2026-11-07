@@ -1,0 +1,22 @@
+expr main <(accept for), (accept)>
+
+let message "Did you mean `except`?"
+let description "`Accept` means to receive. To say `other than`, use `except`."
+let kind "Spelling"
+let becomes "except"
+let strategy "MatchCase"
+
+test "Everyone was there accept for Tom." "Everyone was there except for Tom."
+test "Please accept my apology, accept for the last part." "Please accept my apology, except for the last part."
+test "All were invited accept for the guests." "All were invited except for the guests."
+test "I like everything accept for onions." "I like everything except for onions."
+test "Accept for one thing, it was perfect." "Except for one thing, it was perfect."
+test "She ate it all accept for the crust." "She ate it all except for the crust."
+test "We agree accept for the price." "We agree except for the price."
+test "The shop is open daily accept for Sunday." "The shop is open daily except for Sunday."
+
+allows "I accept your offer."
+allows "They accept payment by card."
+allows "Please accept this gift."
+allows "We accept responsibility for the error."
+allows "Everyone, except for Tom, was there."

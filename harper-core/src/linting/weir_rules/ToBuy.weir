@@ -1,0 +1,24 @@
+expr main <(to by [a, an, my, your, his, her, our, their, some, new, another, these, those]), (by)>
+
+let message "Did you mean the verb `buy`?"
+let description "`By` is a preposition. To purchase something, use `buy`."
+let kind "Spelling"
+let becomes "buy"
+let strategy "MatchCase"
+
+test "I want to by a new phone." "I want to buy a new phone."
+test "She went to by some milk." "She went to buy some milk."
+test "We need to by an umbrella." "We need to buy an umbrella."
+test "He plans to by his first car." "He plans to buy his first car."
+test "They hope to by our house." "They hope to buy our house."
+test "I want to by another ticket." "I want to buy another ticket."
+test "Time to by new shoes." "Time to buy new shoes."
+test "She wants to by these books." "She wants to buy these books."
+test "We chose to by those chairs." "We chose to buy those chairs."
+test "I need to by your old laptop." "I need to buy your old laptop."
+
+allows "I want to buy a new phone."
+allows "Walk to the store by the park."
+allows "The deadline is close, stop by a little later."
+allows "She came to stand by her friend."
+allows "He went to sit by the window."

@@ -1,0 +1,22 @@
+expr main <([look, looks, looked, looking] forward <(to start), (start)>), (start)>
+
+let message "After `look forward to`, use `starting`."
+let description "In `look forward to`, the word `to` is a preposition, so a verb after it ends in `ing`."
+let kind "Grammar"
+let becomes "starting"
+
+test "I look forward to start you." "I look forward to starting you."
+test "We are looking forward to start the results." "We are looking forward to starting the results."
+test "She looks forward to start them." "She looks forward to starting them."
+test "He looked forward to start it." "He looked forward to starting it."
+test "They look forward to start us soon." "They look forward to starting us soon."
+test "I really look forward to start the team." "I really look forward to starting the team."
+test "I look forward to start the end of it." "I look forward to starting the end of it."
+test "We look forward to start more." "We look forward to starting more."
+
+allows "I look forward to starting you."
+allows "I want to start you tomorrow."
+allows "Look forward and start it."
+allows "We look forward to the start."
+allows "I look forward to your reply."
+allows "I look forward to it."

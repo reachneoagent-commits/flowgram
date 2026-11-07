@@ -1,0 +1,22 @@
+expr main <([look, looks, looked, looking] forward <(to try), (try)>), (try)>
+
+let message "After `look forward to`, use `trying`."
+let description "In `look forward to`, the word `to` is a preposition, so a verb after it ends in `ing`."
+let kind "Grammar"
+let becomes "trying"
+
+test "I look forward to try you." "I look forward to trying you."
+test "We are looking forward to try the results." "We are looking forward to trying the results."
+test "She looks forward to try them." "She looks forward to trying them."
+test "He looked forward to try it." "He looked forward to trying it."
+test "They look forward to try us soon." "They look forward to trying us soon."
+test "I really look forward to try the team." "I really look forward to trying the team."
+test "I look forward to try the end of it." "I look forward to trying the end of it."
+test "We look forward to try more." "We look forward to trying more."
+
+allows "I look forward to trying you."
+allows "I want to try you tomorrow."
+allows "Look forward and try it."
+allows "We look forward to the try."
+allows "I look forward to your reply."
+allows "I look forward to it."

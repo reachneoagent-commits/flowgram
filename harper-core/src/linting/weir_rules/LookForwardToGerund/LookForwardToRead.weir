@@ -1,0 +1,22 @@
+expr main <([look, looks, looked, looking] forward <(to read), (read)>), (read)>
+
+let message "After `look forward to`, use `reading`."
+let description "In `look forward to`, the word `to` is a preposition, so a verb after it ends in `ing`."
+let kind "Grammar"
+let becomes "reading"
+
+test "I look forward to read you." "I look forward to reading you."
+test "We are looking forward to read the results." "We are looking forward to reading the results."
+test "She looks forward to read them." "She looks forward to reading them."
+test "He looked forward to read it." "He looked forward to reading it."
+test "They look forward to read us soon." "They look forward to reading us soon."
+test "I really look forward to read the team." "I really look forward to reading the team."
+test "I look forward to read the end of it." "I look forward to reading the end of it."
+test "We look forward to read more." "We look forward to reading more."
+
+allows "I look forward to reading you."
+allows "I want to read you tomorrow."
+allows "Look forward and read it."
+allows "We look forward to the read."
+allows "I look forward to your reply."
+allows "I look forward to it."

@@ -14,8 +14,8 @@ Message: |
        3 | BY F. SCOTT FITZGERALD
          |       ^~~~~ Did you mean to spell `SCOTT` this way?
 Suggest:
-  - Replace with: “Scout”
   - Replace with: “Scott”
+  - Replace with: “Scout”
   - Replace with: “Scoot”
 
 
@@ -309,16 +309,6 @@ Suggest:
   - Replace with: “Vile”
   - Replace with: “Villa”
   - Replace with: “Villi”
-
-
-
-Lint:    WordChoice (63 priority)
-Message: |
-     120 | was a factual imitation of some Hôtel de Ville in Normandy, with a tower on one
-         |                                          ^~~~~~~~ It seems these words would go better together.
-     121 | side, spanking new under a thin beard of raw ivy, and a marble swimming pool,
-Suggest:
-  - Replace with: “Villein”
 
 
 
@@ -5894,6 +5884,15 @@ Message: |
          |                                                   ^~~~~~ `stopus` should probably be written as `stop us`.
 Suggest:
   - Replace with: “stop us”
+
+
+
+Lint:    Agreement (31 priority)
+Message: |
+    4505 | “There was two cars,” said Michaelis, “one comin’, one goin’, see?”
+         |        ^~~ Use a plural verb with a plural noun.
+Suggest:
+  - Replace with: “were”
 
 
 

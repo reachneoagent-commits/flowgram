@@ -39,8 +39,11 @@ def clean_suggestion(raw: str) -> str:
 
 
 def find_span(text: str, needle: str, start: int = 0) -> tuple[int, int] | None:
-    index = text.lower().find(needle.lower(), start)
-    return None if index < 0 else (index, index + len(needle))
+    import re
+    before = r"(?<![A-Za-z])" if needle[:1].isalpha() else ""
+    after = r"(?![A-Za-z])" if needle[-1:].isalpha() else ""
+    match = re.search(before + re.escape(needle) + after, text[start:], re.IGNORECASE)
+    return None if match is None else (start + match.start(), start + match.end())
 
 
 def overlaps(a: tuple[int, int], b: tuple[int, int]) -> bool:

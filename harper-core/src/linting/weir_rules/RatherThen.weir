@@ -1,0 +1,23 @@
+expr main <(rather * then), (then)>
+
+let message "Use `than` to compare two choices."
+let description "After `would rather` plus a verb, the second choice is introduced with `than`, not `then`."
+let kind "Usage"
+let becomes "than"
+let strategy "MatchCase"
+
+test "I would rather go then stay home." "I would rather go than stay home."
+test "I'd rather walk then drive." "I'd rather walk than drive."
+test "She would rather read then watch TV." "She would rather read than watch TV."
+test "We would rather leave then wait." "We would rather leave than wait."
+test "They would rather eat then talk." "They would rather eat than talk."
+test "I would rather sleep then work." "I would rather sleep than work."
+test "He would rather pay then argue." "He would rather pay than argue."
+test "I would rather swim then run." "I would rather swim than run."
+
+allows "I would rather go than stay home."
+allows "I would rather go home, then rest."
+allows "First go home, then rest."
+allows "He ran, then he walked."
+allows "I would rather you stayed then."
+allows "We had some food and then left."

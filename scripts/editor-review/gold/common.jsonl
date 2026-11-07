@@ -1,0 +1,91 @@
+{"category": "spelling", "text": "I recieved your email yesterday.", "errors": [{"text": "recieved", "fix": "received"}]}
+{"category": "spelling", "text": "The seperate rooms were clean.", "errors": [{"text": "seperate", "fix": "separate"}]}
+{"category": "spelling", "text": "This is definately the best option.", "errors": [{"text": "definately", "fix": "definitely"}]}
+{"category": "spelling", "text": "She has an occassional headache.", "errors": [{"text": "occassional", "fix": "occasional"}]}
+{"category": "spelling", "text": "We need to accomodate everyone.", "errors": [{"text": "accomodate", "fix": "accommodate"}]}
+{"category": "spelling", "text": "It was an embarassing moment.", "errors": [{"text": "embarassing", "fix": "embarrassing"}]}
+{"category": "spelling", "text": "The goverment announced new rules.", "errors": [{"text": "goverment", "fix": "government"}]}
+{"category": "spelling", "text": "Tommorow is a busy day.", "errors": [{"text": "Tommorow", "fix": "Tomorrow"}]}
+{"category": "spelling", "text": "He is a very succesful lawyer.", "errors": [{"text": "succesful", "fix": "successful"}]}
+{"category": "spelling", "text": "The enviroment matters to us.", "errors": [{"text": "enviroment", "fix": "environment"}]}
+{"category": "spelling", "text": "Thier house is on the corner.", "errors": [{"text": "Thier", "fix": "Their"}]}
+{"category": "spelling", "text": "I beleive you are right.", "errors": [{"text": "beleive", "fix": "believe"}]}
+{"category": "spelling", "text": "That was a wierd experience.", "errors": [{"text": "wierd", "fix": "weird"}]}
+{"category": "spelling", "text": "Please check the calender first.", "errors": [{"text": "calender", "fix": "calendar"}]}
+{"category": "spelling", "text": "What a beutiful morning.", "errors": [{"text": "beutiful", "fix": "beautiful"}]}
+{"category": "spelling", "text": "The restaraunt closes at ten.", "errors": [{"text": "restaraunt", "fix": "restaurant"}]}
+{"category": "spelling", "text": "I will contact you untill then.", "errors": [{"text": "untill", "fix": "until"}]}
+{"category": "spelling", "text": "Their is no easy answer.", "errors": [{"text": "Their", "fix": "There"}]}
+{"category": "confused", "text": "The affect of the drug was strong.", "errors": [{"text": "affect", "fix": "effect"}]}
+{"category": "confused", "text": "Its a nice day outside.", "errors": [{"text": "Its", "fix": "It's"}]}
+{"category": "confused", "text": "The dog wagged it's tail.", "errors": [{"text": "it's", "fix": "its"}]}
+{"category": "confused", "text": "Who's book is this?", "errors": [{"text": "Who's", "fix": "Whose"}]}
+{"category": "confused", "text": "You're car is parked outside.", "errors": [{"text": "You're", "fix": "Your"}]}
+{"category": "confused", "text": "They're going to there house.", "errors": [{"text": "there", "fix": "their"}]}
+{"category": "confused", "text": "I want to by a new phone.", "errors": [{"text": "by", "fix": "buy"}]}
+{"category": "confused", "text": "She is taller then her sister.", "errors": [{"text": "then", "fix": "than"}]}
+{"category": "confused", "text": "Everyone came accept for Tom.", "errors": [{"text": "accept", "fix": "except"}]}
+{"category": "confused", "text": "He gave me good advise.", "errors": [{"text": "advise", "fix": "advice"}]}
+{"category": "confused", "text": "I would of gone with you.", "errors": [{"text": "would of", "fix": "would have"}]}
+{"category": "confused", "text": "We should of left earlier.", "errors": [{"text": "should of", "fix": "should have"}]}
+{"category": "agreement", "text": "He don't know the answer.", "errors": [{"text": "don't", "fix": "doesn't"}]}
+{"category": "agreement", "text": "She have two cats.", "errors": [{"text": "have", "fix": "has"}]}
+{"category": "agreement", "text": "They was at the park.", "errors": [{"text": "was", "fix": "were"}]}
+{"category": "agreement", "text": "The books is on the table.", "errors": [{"text": "is", "fix": "are"}]}
+{"category": "agreement", "text": "Each of the students have a laptop.", "errors": [{"text": "have", "fix": "has"}]}
+{"category": "agreement", "text": "I is ready to start.", "errors": [{"text": "is", "fix": "am"}]}
+{"category": "agreement", "text": "We was late again.", "errors": [{"text": "was", "fix": "were"}]}
+{"category": "agreement", "text": "There was many people in line.", "errors": [{"text": "was", "fix": "were"}]}
+{"category": "agreement", "text": "My friends and I goes to the gym.", "errors": [{"text": "goes", "fix": "go"}]}
+{"category": "articles", "text": "I need a advice about this.", "errors": [{"text": "a advice", "fix": null}]}
+{"category": "articles", "text": "She is an teacher at my school.", "errors": [{"text": "an", "fix": "a"}]}
+{"category": "articles", "text": "He ate a apple for lunch.", "errors": [{"text": "a", "fix": "an"}]}
+{"category": "articles", "text": "It was a honest mistake.", "errors": [{"text": "a", "fix": "an"}]}
+{"category": "articles", "text": "This is an university project.", "errors": [{"text": "an", "fix": "a"}]}
+{"category": "punctuation", "text": "I went to the the store.", "errors": [{"text": "the the", "fix": "the"}]}
+{"category": "punctuation", "text": "This is is a test.", "errors": [{"text": "is is", "fix": "is"}]}
+{"category": "punctuation", "text": "Where are you going ?", "errors": [{"text": "going ?", "fix": null}]}
+{"category": "verbs", "text": "She has went home already.", "errors": [{"text": "went", "fix": "gone"}]}
+{"category": "verbs", "text": "He has ate all the cookies.", "errors": [{"text": "ate", "fix": "eaten"}]}
+{"category": "verbs", "text": "They have wrote a long letter.", "errors": [{"text": "wrote", "fix": "written"}]}
+{"category": "verbs", "text": "I didn't saw anything.", "errors": [{"text": "saw", "fix": "see"}]}
+{"category": "verbs", "text": "She can sings very well.", "errors": [{"text": "sings", "fix": "sing"}]}
+{"category": "verbs", "text": "He is go to the market.", "errors": [{"text": "go", "fix": "going"}]}
+{"category": "verbs", "text": "We discussed about the plan.", "errors": [{"text": "discussed about", "fix": "discussed"}]}
+{"category": "verbs", "text": "I look forward to see you.", "errors": [{"text": "see", "fix": "seeing"}]}
+{"category": "capitalization", "text": "i think we should go.", "errors": [{"text": "i", "fix": "I"}]}
+{"category": "capitalization", "text": "We visited paris last summer.", "errors": [{"text": "paris", "fix": "Paris"}]}
+{"category": "capitalization", "text": "He speaks english and french.", "errors": [{"text": "english", "fix": "English"}]}
+{"category": "capitalization", "text": "The meeting is on monday.", "errors": [{"text": "monday", "fix": "Monday"}]}
+{"category": "wordiness", "text": "In order to succeed, you must try.", "errors": [{"text": "In order to", "fix": "To"}]}
+{"category": "contractions", "text": "I dont know what to say.", "errors": [{"text": "dont", "fix": "don't"}]}
+{"category": "contractions", "text": "She wont come tonight.", "errors": [{"text": "wont", "fix": "won't"}]}
+{"category": "contractions", "text": "We havent finished yet.", "errors": [{"text": "havent", "fix": "haven't"}]}
+{"category": "contractions", "text": "Thats not what I meant.", "errors": [{"text": "Thats", "fix": "That's"}]}
+{"category": "contractions", "text": "Im going home now.", "errors": [{"text": "Im", "fix": "I'm"}]}
+{"category": "contractions", "text": "Cant you see it?", "errors": [{"text": "Cant", "fix": "Can't"}]}
+{"category": "clean", "text": "The quick brown fox jumps over the lazy dog.", "errors": []}
+{"category": "clean", "text": "She said she would call me tomorrow, but she never did.", "errors": []}
+{"category": "clean", "text": "Our team is working on the final report.", "errors": []}
+{"category": "clean", "text": "I can't believe how fast the year has gone.", "errors": []}
+{"category": "clean", "text": "He gave me some good advice about the interview.", "errors": []}
+{"category": "clean", "text": "The effect of the new policy was immediate.", "errors": []}
+{"category": "clean", "text": "Whose turn is it to wash the dishes?", "errors": []}
+{"category": "clean", "text": "They're planning to visit their grandparents over there.", "errors": []}
+{"category": "clean", "text": "It's a shame that the dog lost its toy.", "errors": []}
+{"category": "clean", "text": "We should have left earlier to avoid traffic.", "errors": []}
+{"category": "clean", "text": "The committee has reached its decision.", "errors": []}
+{"category": "clean", "text": "Neither of the options was perfect.", "errors": []}
+{"category": "clean", "text": "I'd rather stay home than go out tonight.", "errors": []}
+{"category": "clean", "text": "If I were you, I would apply for the job.", "errors": []}
+{"category": "clean", "text": "The data show a clear trend upward.", "errors": []}
+{"category": "clean", "text": "Please send me the report by Friday afternoon.", "errors": []}
+{"category": "clean", "text": "Thanks for your help, and you're welcome to join us.", "errors": []}
+{"category": "clean", "text": "He has gone to the store, and she has eaten lunch.", "errors": []}
+{"category": "clean", "text": "Everyone brought their own lunch to the picnic.", "errors": []}
+{"category": "clean", "text": "The manager and the staff are meeting at noon.", "errors": []}
+{"category": "clean", "text": "Is there anything else you need from us?", "errors": []}
+{"category": "clean", "text": "There are three reasons for this.", "errors": []}
+{"category": "clean", "text": "Although it rained, we still enjoyed the trip.", "errors": []}
+{"category": "clean", "text": "She runs five miles every morning before work.", "errors": []}
+{"category": "clean", "text": "Let me know if you have any questions.", "errors": []}

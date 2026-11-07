@@ -24,6 +24,15 @@ impl Default for MergeWords {
     }
 }
 
+fn is_function_word(chars: &[char]) -> bool {
+    const WORDS: [&str; 16] = [
+        "to", "of", "in", "on", "at", "is", "it", "as", "by", "an", "or", "if", "be", "we", "he",
+        "me",
+    ];
+    let lower: String = chars.iter().flat_map(|c| c.to_lowercase()).collect();
+    WORDS.contains(&lower.as_str())
+}
+
 impl Linter for MergeWords {
     fn lint(&mut self, document: &Document) -> Vec<Lint> {
         let mut lints = Vec::new();
@@ -46,6 +55,12 @@ impl Linter for MergeWords {
 
             // Not super helpful in this case, so we skip it
             if matches!(a_chars, ['a']) || matches!(b_chars, ['a']) {
+                continue;
+            }
+
+            // A misspelling followed by a small function word ("righ to") is a typo,
+            // not a split word, so let the spell checker handle it.
+            if is_function_word(b_chars) && !self.dict.contains_word(a_chars) {
                 continue;
             }
 
@@ -104,6 +119,16 @@ mod tests {
             MergeWords::default(),
             0,
         );
+    }
+
+    #[test]
+    fn typo_before_function_word_is_not_merged() {
+        assert_lint_count("It is not righ to ignore them.", MergeWords::default(), 0);
+    }
+
+    #[test]
+    fn typo_before_of_is_not_merged() {
+        assert_lint_count("A lot righ of them left.", MergeWords::default(), 0);
     }
 
     #[test]

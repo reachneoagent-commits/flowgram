@@ -41,6 +41,17 @@ impl<D: Dictionary + 'static> ExprLinter for WrongNegative<D> {
         let span = toks[0].span;
         let word = toks[0].get_ch(src);
 
+        // "untill" is a doubled-letter typo of "until", not a wrongly prefixed word.
+        if word.windows(2).enumerate().any(|(i, pair)| {
+            pair[0] == pair[1] && {
+                let mut shorter = word.to_vec();
+                shorter.remove(i);
+                self.dict.contains_word(&shorter)
+            }
+        }) {
+            return None;
+        }
+
         let new_negs: Vec<Vec<char>> = NEGATIVE_PREFIXES
             .iter()
             .filter(|&prefix| word.starts_with_ignore_ascii_case_str(prefix))
@@ -108,6 +119,14 @@ mod tests {
     };
 
     use super::WrongNegative;
+
+    #[test]
+    fn untill_is_a_typo_not_a_wrong_negative() {
+        assert_no_lints(
+            "I will wait untill then.",
+            WrongNegative::new(FstDictionary::curated()),
+        );
+    }
 
     #[test]
     fn fix_insecured() {

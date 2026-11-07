@@ -1,0 +1,26 @@
+expr main <([everyone, everybody, someone, somebody, anyone, anybody, nobody] have [been, finished, arrived, left, gone, done, seen, taken, had, received, completed, tried, read, to]), (have)>
+
+let message "Use `has` with this singular pronoun."
+let description "Pronouns like `everyone` and `nobody` take a singular verb."
+let kind "Agreement"
+let becomes "has"
+let strategy "MatchCase"
+
+test "Everyone have arrived." "Everyone has arrived."
+test "Everybody have finished." "Everybody has finished."
+test "Someone have to go." "Someone has to go."
+test "Somebody have left a bag." "Somebody has left a bag."
+test "Anyone have been here?" "Anyone has been here?"
+test "Nobody have seen it." "Nobody has seen it."
+test "everyone have gone home." "everyone has gone home."
+test "I think everyone have finished." "I think everyone has finished."
+test "Today everyone have received a gift." "Today everyone has received a gift."
+test "Nobody have done it." "Nobody has done it."
+test "Anybody have taken my pen?" "Anybody has taken my pen?"
+
+allows "Everyone has a pencil."
+allows "Do you think everyone will have enough?"
+allows "Let everyone have a say."
+allows "I want everyone to have fun."
+allows "They all have time."
+allows "Let everybody have some cake."

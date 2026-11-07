@@ -1,0 +1,27 @@
+expr main <(there is [two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, several, many, numerous, multiple, (a few), (a couple of), (a number of)]), (is)>
+
+let message "Use a plural verb with a plural noun."
+let description "After `there`, a plural subject such as `three reasons` needs `are`."
+let kind "Agreement"
+let becomes "are"
+let strategy "MatchCase"
+
+test "There is three reasons for this." "There are three reasons for this."
+test "there is two options." "there are two options."
+test "There is several ways to do it." "There are several ways to do it."
+test "There is many problems here." "There are many problems here."
+test "There is four people waiting." "There are four people waiting."
+test "There is a few mistakes." "There are a few mistakes."
+test "There is a couple of issues." "There are a couple of issues."
+test "There is a number of reasons." "There are a number of reasons."
+test "There is multiple bugs." "There are multiple bugs."
+test "There is numerous examples." "There are numerous examples."
+test "There is five apples on the table." "There are five apples on the table."
+test "There is ten items left." "There are ten items left."
+
+allows "There are three reasons for this."
+allows "There is one reason for this."
+allows "There is a reason for this."
+allows "There is no reason to worry."
+allows "There is water on the floor."
+allows "There is a problem with the plan."

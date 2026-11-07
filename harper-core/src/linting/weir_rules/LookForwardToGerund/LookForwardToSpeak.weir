@@ -1,0 +1,22 @@
+expr main <([look, looks, looked, looking] forward <(to speak), (speak)>), (speak)>
+
+let message "After `look forward to`, use `speaking`."
+let description "In `look forward to`, the word `to` is a preposition, so a verb after it ends in `ing`."
+let kind "Grammar"
+let becomes "speaking"
+
+test "I look forward to speak you." "I look forward to speaking you."
+test "We are looking forward to speak the results." "We are looking forward to speaking the results."
+test "She looks forward to speak them." "She looks forward to speaking them."
+test "He looked forward to speak it." "He looked forward to speaking it."
+test "They look forward to speak us soon." "They look forward to speaking us soon."
+test "I really look forward to speak the team." "I really look forward to speaking the team."
+test "I look forward to speak the end of it." "I look forward to speaking the end of it."
+test "We look forward to speak more." "We look forward to speaking more."
+
+allows "I look forward to speaking you."
+allows "I want to speak you tomorrow."
+allows "Look forward and speak it."
+allows "We look forward to the speak."
+allows "I look forward to your reply."
+allows "I look forward to it."

@@ -2,7 +2,7 @@ use super::Suggestion;
 use super::{Lint, LintKind, Linter};
 use crate::document::Document;
 use crate::spell::Dictionary;
-use crate::{Token, TokenKind, TokenStringExt};
+use crate::{Punctuation, Token, TokenKind, TokenStringExt};
 
 pub struct SentenceCapitalization<T>
 where
@@ -28,10 +28,25 @@ impl<T: Dictionary> Linter for SentenceCapitalization<T> {
             if paragraph.iter_sentences().count() == 1 {
                 let only_sentence = paragraph.iter_sentences().next().unwrap();
 
-                if !only_sentence
-                    .iter_chunks()
-                    .map(|c| c.iter_words().count())
-                    .any(|c| c > 5)
+                // A lone line is a label unless it is long or ends like a real sentence.
+                let ends_like_sentence = only_sentence
+                    .iter()
+                    .rev()
+                    .find(|t| !t.kind.is_whitespace())
+                    .is_some_and(|t| {
+                        matches!(
+                            t.kind,
+                            TokenKind::Punctuation(
+                                Punctuation::Period | Punctuation::Bang | Punctuation::Question
+                            )
+                        )
+                    });
+
+                if !ends_like_sentence
+                    && !only_sentence
+                        .iter_chunks()
+                        .map(|c| c.iter_words().count())
+                        .any(|c| c > 5)
                 {
                     continue;
                 }
@@ -199,6 +214,33 @@ mod tests {
     fn issue_228_allows_labels() {
         assert_lint_count(
             "python lsp (fork of pyright)",
+            SentenceCapitalization::new(FstDictionary::curated()),
+            0,
+        )
+    }
+
+    #[test]
+    fn short_lone_sentence_with_period_is_flagged() {
+        assert_lint_count(
+            "my brother lives in chicago.",
+            SentenceCapitalization::new(FstDictionary::curated()),
+            1,
+        )
+    }
+
+    #[test]
+    fn short_bullet_items_ending_in_semicolons_are_allowed() {
+        assert_lint_count(
+            "- move left one location;\n- print zero here;",
+            SentenceCapitalization::new(FstDictionary::curated()),
+            0,
+        )
+    }
+
+    #[test]
+    fn short_lone_label_with_colon_is_allowed() {
+        assert_lint_count(
+            "todo: fix the build",
             SentenceCapitalization::new(FstDictionary::curated()),
             0,
         )

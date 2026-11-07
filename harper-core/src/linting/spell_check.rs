@@ -40,6 +40,32 @@ impl<T: Dictionary> SpellCheck<T> {
             suggestions
         }
     }
+    /// A lowercase word whose only problem is its capitalization ("paris") should
+    /// offer the properly capitalized entry ("Paris") first.
+    fn with_canonical_case_first(
+        &self,
+        word: &[char],
+        mut suggestions: Vec<CharString>,
+    ) -> Vec<CharString> {
+        // Short words ("si") are more often typos of common words than names.
+        if word.len() >= 4
+            && !self.dictionary.contains_exact_word(word)
+            && let Some(canonical) = self.dictionary.get_correct_capitalization_of(word)
+            && canonical != word
+            && self
+                .dictionary
+                .get_word_metadata(canonical)
+                .is_some_and(|m| m.dialects.is_dialect_enabled(self.dialect))
+        {
+            let canonical: CharString = canonical.into();
+            suggestions.retain(|s| s.to_lower() != canonical.to_lower());
+            suggestions.insert(0, canonical);
+            suggestions.truncate(Self::MAX_SUGGESTIONS);
+        }
+
+        suggestions
+    }
+
     fn uncached_suggest_correct_spelling(&self, word: &[char]) -> Vec<CharString> {
         // Back off until we find a match.
         for dist in 2..5 {
@@ -60,7 +86,7 @@ impl<T: Dictionary> SpellCheck<T> {
                     .collect();
 
             if !suggestions.is_empty() {
-                return suggestions;
+                return self.with_canonical_case_first(word, suggestions);
             }
         }
 
@@ -192,6 +218,15 @@ mod tests {
     );
 
     // Capitalization tests
+
+    #[test]
+    fn lowercase_paris_suggests_capitalized_first() {
+        assert_suggestion_result(
+            "We visited paris last summer.",
+            SpellCheck::new(FstDictionary::curated(), Dialect::American),
+            "We visited Paris last summer.",
+        );
+    }
 
     #[test]
     fn america_capitalized() {

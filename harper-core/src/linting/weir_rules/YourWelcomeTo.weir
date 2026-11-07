@@ -1,0 +1,26 @@
+expr main <([your, yr, ur] welcome [back, here, anytime, (any time), (to VERB)]), ([your, yr, ur])>
+
+let message "Use the contraction `you're` (you are) here."
+let description "Catches `your welcome to` and similar, where the sentence means `you are welcome`."
+let kind "Grammar"
+let becomes "you're"
+let strategy "MatchCase"
+
+test "Your welcome to join us anytime." "You're welcome to join us anytime."
+test "your welcome to come along." "you're welcome to come along."
+test "Your welcome back." "You're welcome back."
+test "Your welcome here." "You're welcome here."
+test "Your welcome anytime." "You're welcome anytime."
+test "Your welcome any time." "You're welcome any time."
+test "ur welcome to stay." "you're welcome to stay."
+test "Feel free, your welcome to ask questions." "Feel free, you're welcome to ask questions."
+test "Your welcome to bring a friend." "You're welcome to bring a friend."
+test "Your welcome to leave early." "You're welcome to leave early."
+test "Please know your welcome to visit." "Please know you're welcome to visit."
+
+allows "You're welcome to join us anytime."
+allows "Your welcome message was warm."
+allows "Your welcome speech was short."
+allows "Thank you for your welcome."
+allows "I appreciated your welcome to the team."
+allows "Your welcome email arrived."
