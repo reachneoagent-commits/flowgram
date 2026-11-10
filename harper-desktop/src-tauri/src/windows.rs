@@ -75,6 +75,11 @@ fn show_window(window: WebviewWindow) -> tauri::Result<()> {
     window.set_focus()
 }
 
+/// Build windows hidden only on macOS, where the Dock policy must change before they appear.
+/// On Windows a WebView2 window created hidden can stay blank white after `show()`, so it is
+/// created visible there instead.
+const START_HIDDEN: bool = cfg!(target_os = "macos");
+
 /// Open the editor window, focusing it if it already exists.
 pub fn show_editor_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     if let Some(window) = app.get_webview_window("editor") {
@@ -84,7 +89,7 @@ pub fn show_editor_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     let window = WebviewWindowBuilder::new(app, "editor", WebviewUrl::App("index.html".into()))
         .title("Flowgram")
         .inner_size(800.0, 600.0)
-        .visible(false)
+        .visible(!START_HIDDEN)
         .build()?;
 
     show_window(window)
@@ -126,7 +131,7 @@ pub fn show_settings_window(app: &tauri::AppHandle) -> tauri::Result<()> {
         .inner_size(width, height)
         .min_inner_size(780.0, 520.0)
         .center()
-        .visible(false)
+        .visible(!START_HIDDEN)
         .build()?;
 
     show_window(window)
