@@ -1,6 +1,8 @@
 use std::num::NonZeroU32;
 use std::sync::Arc;
 
+#[cfg(target_os = "windows")]
+use egui_wgpu::wgpu::Dx12SwapchainKind;
 use egui_wgpu::wgpu::PresentMode;
 use egui_wgpu::winit::Painter;
 use egui_wgpu::{RendererOptions, WgpuConfiguration, WgpuSetup};
@@ -12,6 +14,27 @@ use winit::window::{Window as WinitWindow, WindowButtons, WindowId, WindowLevel}
 
 use super::Error;
 use super::render_state::RenderState;
+
+/// Builds the wgpu setup for an overlay window.
+///
+/// On Windows the default DirectX 12 swapchain is tied directly to the window and cannot be
+/// transparent, so the overlay would draw as an opaque white box over everything. A
+/// DirectComposition swapchain supports transparency.
+fn wgpu_setup(event_loop: &ActiveEventLoop) -> WgpuSetup {
+    #[allow(unused_mut)]
+    let mut setup = WgpuSetup::from_display_handle(event_loop.owned_display_handle());
+
+    #[cfg(target_os = "windows")]
+    if let WgpuSetup::CreateNew(create_new) = &mut setup {
+        create_new
+            .instance_descriptor
+            .backend_options
+            .dx12
+            .presentation_system = Dx12SwapchainKind::DxgiFromVisual;
+    }
+
+    setup
+}
 
 /// A transparent click-through overlay window for one monitor.
 ///
@@ -67,7 +90,7 @@ impl Window {
             context,
             WgpuConfiguration {
                 present_mode: PresentMode::Fifo,
-                wgpu_setup: WgpuSetup::from_display_handle(event_loop.owned_display_handle()),
+                wgpu_setup: wgpu_setup(event_loop),
                 ..Default::default()
             },
             true,
