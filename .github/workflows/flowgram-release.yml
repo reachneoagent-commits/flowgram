@@ -127,6 +127,31 @@ jobs:
       - name: Install desktop dependencies
         shell: bash
         run: cd harper-desktop && pnpm install
+      - name: Add the Humanizer engine
+        shell: bash
+        run: |
+          # Humanizer runs a llama.cpp server that ships inside the app. Apple silicon and Windows x64
+          # get the real engine; other platforms get a placeholder so the bundle folder exists
+          # (Settings tells those users Humanizer isn't available on their computer).
+          TAG=b11335
+          BASE="https://github.com/ggml-org/llama.cpp/releases/download/$TAG"
+          DEST=harper-desktop/src-tauri/engine-bundle
+          mkdir -p "$DEST" engine-tmp
+          case "${{ matrix.rust-target }}" in
+            aarch64-apple-darwin)
+              curl -fsSL "$BASE/llama-$TAG-bin-macos-arm64.tar.gz" -o engine.archive
+              tar -xzf engine.archive -C engine-tmp ;;
+            x86_64-pc-windows-msvc)
+              curl -fsSL "$BASE/llama-$TAG-bin-win-vulkan-x64.zip" -o engine.archive
+              7z x -y engine.archive -oengine-tmp > /dev/null ;;
+            *)
+              echo "Humanizer is not offered on this platform." > "$DEST/README.txt" ;;
+          esac
+          SERVER=$(find engine-tmp -type f \( -name llama-server -o -name llama-server.exe \) | head -1)
+          if [ -n "$SERVER" ]; then
+            cp -R "$(dirname "$SERVER")"/. "$DEST"/
+          fi
+          ls "$DEST"
       - name: Build and upload installers
         uses: tauri-apps/tauri-action@v0
         env:

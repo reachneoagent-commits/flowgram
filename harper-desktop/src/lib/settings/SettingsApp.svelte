@@ -10,6 +10,7 @@ import AboutPage from './pages/AboutPage.svelte';
 import DictionaryPage from './pages/DictionaryPage.svelte';
 import GeneralPage from './pages/GeneralPage.svelte';
 import GettingStartedPage from './pages/GettingStartedPage.svelte';
+import HumanizerPage from './pages/HumanizerPage.svelte';
 import IntegrationsPage from './pages/IntegrationsPage.svelte';
 import RulesPage from './pages/RulesPage.svelte';
 import ShortcutsPage from './pages/ShortcutsPage.svelte';
@@ -30,6 +31,7 @@ const titleMap: Record<SectionId, string> = {
 	rules: 'Rules',
 	weirpacks: 'Weirpacks',
 	integrations: 'Integrations',
+	humanizer: 'Humanizer',
 	about: 'About',
 };
 
@@ -85,6 +87,11 @@ const pageHeads: Partial<Record<SectionId, { lead: string; accent: string; sub: 
 		accent: 'shortcuts',
 		sub: 'Move faster without leaving the keys.',
 	},
+	humanizer: {
+		lead: 'Rewrite in',
+		accent: 'your voice',
+		sub: 'Rewrite AI-sounding text on this computer. Nothing you write leaves it.',
+	},
 	weirpacks: { lead: 'Style', accent: 'guides', sub: 'Rule bundles that enforce a house style.' },
 };
 
@@ -131,6 +138,8 @@ $: if (contentEl && active) {
         <WeirpacksPage />
       {:else if active === "integrations"}
         <IntegrationsPage />
+      {:else if active === "humanizer"}
+        <HumanizerPage />
       {:else if active === "about"}
         <AboutPage />
       {/if}

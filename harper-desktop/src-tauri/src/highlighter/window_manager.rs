@@ -237,6 +237,7 @@ impl ApplicationHandler for WindowManagerApp {
             match pollster::block_on(Window::new(event_loop, monitor)) {
                 Ok(window) => self.windows.push(window),
                 Err(error) => {
+                    super::diagnostics::log(format!("overlay failed to start: {error}"));
                     self.error = Some(error);
                     event_loop.exit();
                     return;

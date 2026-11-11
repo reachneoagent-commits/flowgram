@@ -1,0 +1,52 @@
+{
+  "hf_revision": "2e57b6528a4070c33f3e09ca24e3325a84272f68",
+  "github_commit": "7dd4be90cb3acb2e5d18aeea5837f888d2bb2d52",
+  "files": {
+    "LICENSE": {
+      "size": 11358,
+      "sha256": ""
+    },
+    "NOTICE": {
+      "size": 486,
+      "sha256": ""
+    },
+    "config.json": {
+      "size": 4298,
+      "sha256": ""
+    },
+    "generation_config.json": {
+      "size": 228,
+      "sha256": ""
+    },
+    "humanizer-12b-IQ2_XS-QAT.gguf": {
+      "size": 3893632896,
+      "sha256": "383e5ca8f1f48ab5f65013adbc1965fa70d1d1afa6c45d932c34b854e38edbb5"
+    },
+    "humanizer-12b-Q3-QAT.gguf": {
+      "size": 5587794816,
+      "sha256": "307bbfdf66fb22bf98aaa93fe7d54a713bf167e646073dc0cf10870b1525eb94"
+    },
+    "humanizer-12b-Q4_K_M.gguf": {
+      "size": 7625160864,
+      "sha256": "2229574dec5178629575ee4a153dfee7d9e924ab997d0ad9d2ac622b67e44834"
+    },
+    "humanizer-12b-Q6_K.gguf": {
+      "size": 10029799584,
+      "sha256": "c98f03bb9e71456181f99b0e1d3391e07ce1afc357f9db4c33d6d379b8dd9f0d"
+    },
+    "humanizer-12b-Q8_0.gguf": {
+      "size": 12669630368,
+      "sha256": "8d7a457b56de6530eaaf0151ccfa7550a4b20dab979737e259da9c63e960e0b0"
+    },
+    "prompt_format.json": {
+      "size": 553,
+      "sha256": ""
+    },
+    "tokenizer_config.json": {
+      "size": 1535,
+      "sha256": ""
+    }
+  },
+  "prompt_format": "{\n \"style\": \"legacy\",\n \"sep\": \"\\n\\n### Rewritten:\\n\\n\",\n \"fingerprint\": \"cc51d66b4c593fbe\",\n \"instr\": \"Rewrite the text below so it reads like a person wrote it, not a language model.\\n\\nReorganize it as you see fit. Vary sentence length on purpose. Cut hedging,\\nthroat-clearing, and any sentence that only announces what comes next.\\nPrefer the concrete word over the abstract one. It is fine to sound uneven.\\n\\nEvery fact, number, unit, date, name and quotation must survive unchanged.\",\n \"chat\": false,\n \"note\": \"\u63a8\u7406\u65f6\u9700 instr + draft + sep\"\n}",
+  "reviewed": "2026-11-11"
+}

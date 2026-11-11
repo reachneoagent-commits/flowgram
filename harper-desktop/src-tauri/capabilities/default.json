@@ -6,6 +6,7 @@
 	"permissions": [
 		"core:default",
 		"core:window:allow-set-theme",
+		"global-shortcut:default",
 		"opener:default",
 		"autostart:allow-enable",
 		"autostart:allow-disable",

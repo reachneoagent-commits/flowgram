@@ -25,14 +25,14 @@ Flowgram checks your writing as you type, in Notes, Mail, Messages, TextEdit and
 
 ## Download and install
 
-Download the installer for your system (latest version, 3.0.10).
+Download the installer for your system (latest version, 3.0.12).
 
 | Platform                          | Installer                                                                                                              |
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| macOS Apple Silicon (M1 or newer) | [DMG](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.10/Flowgram_3.0.10_Mac_Apple-Silicon.dmg) |
-| macOS Intel                       | [DMG](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.10/Flowgram_3.0.10_Mac_Intel.dmg)         |
-| Windows x64                       | [Installer](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.10/Flowgram_3.0.10_x64-setup.exe)   |
-| Windows ARM64                     | [Installer](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.10/Flowgram_3.0.10_arm64-setup.exe) |
+| macOS Apple Silicon (M1 or newer) | [DMG](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.12/Flowgram_3.0.12_Mac_Apple-Silicon.dmg) |
+| macOS Intel                       | [DMG](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.12/Flowgram_3.0.12_Mac_Intel.dmg)         |
+| Windows x64                       | [Installer](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.12/Flowgram_3.0.12_x64-setup.exe)   |
+| Windows ARM64                     | [Installer](https://github.com/reachneoagent-commits/flowgram/releases/download/v3.0.12/Flowgram_3.0.12_arm64-setup.exe) |
 
 Flowgram isn't signed with a paid Apple or Microsoft certificate (that costs money every year, and Flowgram is free). Your computer will warn you the first time you open it. The warning is expected, and the steps below get past it once.
 

@@ -15,7 +15,7 @@ use harper_core::{
 use std::sync::{Arc, RwLock};
 use tauri::ipc::Invoke;
 use tauri::path::BaseDirectory;
-use tauri::{AppHandle, Manager, Runtime, State};
+use tauri::{AppHandle, Emitter, Manager, Runtime, State};
 use tokio::sync::Mutex;
 
 pub fn application_message_handler<R: Runtime>() -> impl Fn(Invoke<R>) -> bool {
@@ -56,6 +56,23 @@ pub fn application_message_handler<R: Runtime>() -> impl Fn(Invoke<R>) -> bool {
         search_apps,
         get_theme,
         set_theme,
+        crate::humanizer::commands::humanizer_status,
+        crate::humanizer::commands::humanizer_save_settings,
+        crate::humanizer::commands::humanizer_download,
+        crate::humanizer::commands::humanizer_cancel_download,
+        crate::humanizer::commands::humanizer_delete_model,
+        crate::humanizer::commands::humanizer_set_active_model,
+        crate::humanizer::commands::humanizer_rewrite,
+        crate::humanizer::commands::humanizer_cancel_rewrite,
+        crate::humanizer::commands::humanizer_stop_engine,
+        crate::humanizer::commands::humanizer_open_models_folder,
+        crate::humanizer::commands::humanizer_check_updates,
+        crate::humanizer::commands::humanizer_apply_update,
+        crate::humanizer::commands::humanizer_rollback,
+        crate::humanizer::commands::humanizer_take_pending,
+        crate::humanizer::commands::humanizer_open_settings,
+        crate::humanizer::commands::humanizer_open_window,
+        crate::humanizer::commands::humanizer_paste_back,
     ]
 }
 
@@ -139,8 +156,9 @@ async fn get_onboarding_completed(config: State<'_, Arc<Mutex<Config>>>) -> Resu
 }
 
 #[tauri::command]
-async fn set_onboarding_completed(
+async fn set_onboarding_completed<R: Runtime>(
     onboarding_completed: bool,
+    app: AppHandle<R>,
     config: State<'_, Arc<Mutex<Config>>>,
 ) -> Result<(), String> {
     let mut config = config.lock().await;
@@ -151,6 +169,9 @@ async fn set_onboarding_completed(
         config.onboarding_completed = previous_value;
         return Err(error.to_string());
     }
+
+    // Setup is over: the settings window grows to its roomy size (handled in the main process).
+    let _ = app.emit("onboarding-completed", ());
 
     Ok(())
 }
@@ -176,13 +197,20 @@ async fn get_theme(config: State<'_, Arc<Mutex<Config>>>) -> Result<String, Stri
 }
 
 #[tauri::command]
-async fn set_theme(theme: String, config: State<'_, Arc<Mutex<Config>>>) -> Result<(), String> {
+async fn set_theme<R: Runtime>(
+    theme: String,
+    app: AppHandle<R>,
+    config: State<'_, Arc<Mutex<Config>>>,
+) -> Result<(), String> {
     let mut config = config.lock().await;
     config.theme = theme;
     config
         .save_to_system()
         .await
         .map_err(|error| error.to_string())?;
+
+    // Windows pick up the new frame theme in the main process, which owns them.
+    let _ = app.emit("app-theme-changed", config.theme.clone());
 
     Ok(())
 }

@@ -20,6 +20,7 @@ const SECTION_ICONS: Record<SectionId, typeof GearIcon> = {
 	rules: ChecklistIcon,
 	weirpacks: PackageIcon,
 	integrations: GridIcon,
+	humanizer: QuillIcon,
 	about: InfoIcon,
 };
 
