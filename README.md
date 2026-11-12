@@ -3,7 +3,7 @@
   <p><strong>A free, open source, private grammar and spell checker for the Mac and Windows apps you already write in.</strong></p>
 </div>
 
-> Flowgram is a fork of [Harper](https://github.com/automattic/harper) by Automattic, an open source project under the Apache 2.0 license. Thank you to the Harper authors and contributors for the grammar engine and the foundation this app is built on. See [NOTICE](NOTICE) for details.
+> Flowgram is a fork of [Harper](https://github.com/automattic/harper) by Automattic, an open source project under the Apache 2.0 license. Thank you to the Harper authors and contributors for the grammar engine and the foundation this app is built on. The Humanizer feature is built on the open source [Humanizer](https://github.com/sgaofen/humanizer-local-model) by Sgaofen, with its [model](https://huggingface.co/jialinyyzz/humanizer) by jialinyyzz. See [NOTICE](NOTICE) for details.
 
 Flowgram checks your writing as you type, in Notes, Mail, Messages, TextEdit and any other app you switch on. Underlines appear right in the text, and a click applies the fix. Everything runs on your computer: your text never goes to a server.
 
@@ -21,6 +21,7 @@ Flowgram checks your writing as you type, in Notes, Mail, Messages, TextEdit and
 - Email tone, wordiness and common-mistake rules
 - Per-app switches, so Flowgram only watches the apps you choose
 - A built-in editor, a personal dictionary and per-rule settings
+- Humanizer: rewrites your draft so it reads more naturally, entirely on your computer with a model you download once (optional, and skippable during setup)
 - A browser extension for Chrome, Edge, Brave, Opera and Firefox, with per-profile status for Chrome, Edge and Brave in Settings → Integrations
 
 ## Download and install
@@ -52,7 +53,13 @@ If step 4 doesn't show Open Anyway, run this once and open Flowgram again:
 xattr -cr /Applications/Flowgram.app
 ```
 
-If Flowgram keeps asking for Accessibility after an update, run `tccutil reset Accessibility com.flowgram.app` in Terminal, reopen Flowgram and click **Allow**.
+If Flowgram keeps asking for Accessibility after an update, or stops underlining in Notes or Mail, run this once in Terminal:
+
+```bash
+tccutil reset Accessibility com.flowgram.app
+```
+
+Then reopen Flowgram and click **Allow**.
 
 ### Windows
 
@@ -97,6 +104,12 @@ For development, run `just dev-desktop`.
 ## About this fork
 
 Flowgram's grammar engine, rules and browser extension come from Harper. The original Harper README is kept in [README.harper.md](README.harper.md), and the upstream project is at <https://github.com/automattic/harper>.
+
+### Credits
+
+- **[Harper](https://github.com/automattic/harper)** by Automattic: the grammar engine, rules and browser extension (Apache 2.0).
+- **[Humanizer](https://github.com/sgaofen/humanizer-local-model)** by Sgaofen and the **[humanizer model](https://huggingface.co/jialinyyzz/humanizer)** by jialinyyzz: the local rewriting feature (Apache 2.0). The model is downloaded by the user on their own computer and is not included in the installers.
+- **[llama.cpp](https://github.com/ggml-org/llama.cpp)**: the engine that runs the Humanizer model locally (MIT).
 
 ## License
 
