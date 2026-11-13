@@ -26,14 +26,16 @@ Gramflow checks your writing as you type, in Notes, Mail, Messages, TextEdit and
 
 ## Download and install
 
-Download the installer for your system (latest version, 3.0.13).
+**Easiest:** install and update it with the [FlowApps launcher](https://github.com/reachneoagent-commits/FlowApps-Launcher/releases/latest), one app that also manages Gramflow, Voxflow and Mailflow on Mac and Windows. Or download an installer yourself below.
+
+Download the installer for your system (latest version, 3.0.14).
 
 | Platform                          | Installer                                                                                                              |
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| macOS Apple Silicon (M1 or newer) | [DMG](https://github.com/reachneoagent-commits/gramflow/releases/download/v3.0.13/Gramflow_3.0.13_Mac_Apple-Silicon.dmg) |
-| macOS Intel                       | [DMG](https://github.com/reachneoagent-commits/gramflow/releases/download/v3.0.13/Gramflow_3.0.13_Mac_Intel.dmg)         |
-| Windows x64                       | [Installer](https://github.com/reachneoagent-commits/gramflow/releases/download/v3.0.13/Gramflow_3.0.13_x64-setup.exe)   |
-| Windows ARM64                     | [Installer](https://github.com/reachneoagent-commits/gramflow/releases/download/v3.0.13/Gramflow_3.0.13_arm64-setup.exe) |
+| macOS Apple Silicon (M1 or newer) | [DMG](https://github.com/reachneoagent-commits/gramflow/releases/download/v3.0.14/Gramflow_3.0.14_Mac_Apple-Silicon.dmg) |
+| macOS Intel                       | [DMG](https://github.com/reachneoagent-commits/gramflow/releases/download/v3.0.14/Gramflow_3.0.14_Mac_Intel.dmg)         |
+| Windows x64                       | [Installer](https://github.com/reachneoagent-commits/gramflow/releases/download/v3.0.14/Gramflow_3.0.14_x64-setup.exe)   |
+| Windows ARM64                     | [Installer](https://github.com/reachneoagent-commits/gramflow/releases/download/v3.0.14/Gramflow_3.0.14_arm64-setup.exe) |
 
 Gramflow isn't signed with a paid Apple or Microsoft certificate (that costs money every year, and Gramflow is free). Your computer will warn you the first time you open it. The warning is expected, and the steps below get past it once.
 
