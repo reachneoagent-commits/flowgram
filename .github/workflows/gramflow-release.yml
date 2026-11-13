@@ -19,7 +19,7 @@ jobs:
       release-id: ${{ steps.create-release.outputs.result }}
       version: ${{ steps.get-version.outputs.version }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Read version from tauri.conf.json
         id: get-version
         run: |
@@ -27,7 +27,7 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Create draft release
         id: create-release
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const { data } = await github.rest.repos.createRelease({
@@ -56,13 +56,13 @@ jobs:
   extensions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: extractions/setup-just@v3
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: extractions/setup-just@v4
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: ".node-version"
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
           target: wasm32-unknown-unknown
           cache: false
@@ -70,7 +70,7 @@ jobs:
         run: cargo install wasm-pack --locked
       - name: Build the Chrome and Firefox extensions
         run: just build-chrome-plugin build-firefox-unpacked
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: browser-extensions
           path: |
@@ -100,14 +100,14 @@ jobs:
             tauri-args: "--target aarch64-pc-windows-msvc --bundles nsis,msi"
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: extractions/setup-just@v3
+      - uses: actions/checkout@v7
+      - uses: extractions/setup-just@v4
         if: matrix.platform != 'windows-11-arm'
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: ".node-version"
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
           target: ${{ matrix.rust-target }}
           cache: false
@@ -120,7 +120,7 @@ jobs:
         shell: bash
         run: just build-harperjs build-lint-framework build-components build-harper-editor
       - name: Download the browser extensions
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: browser-extensions
           path: packages/chrome-plugin
@@ -153,7 +153,7 @@ jobs:
           fi
           ls "$DEST"
       - name: Build and upload installers
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
