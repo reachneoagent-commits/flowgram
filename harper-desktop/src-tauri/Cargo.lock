@@ -3089,7 +3089,7 @@ dependencies = [
 
 [[package]]
 name = "flowgram-desktop"
-version = "3.0.13"
+version = "3.0.14"
 dependencies = [
  "accessibility",
  "accessibility-sys",

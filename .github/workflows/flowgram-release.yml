@@ -94,10 +94,10 @@ jobs:
             tauri-args: "--target x86_64-apple-darwin --bundles app,dmg"
           - platform: windows-latest
             rust-target: x86_64-pc-windows-msvc
-            tauri-args: "--target x86_64-pc-windows-msvc --bundles nsis"
+            tauri-args: "--target x86_64-pc-windows-msvc --bundles nsis,msi"
           - platform: windows-11-arm
             rust-target: aarch64-pc-windows-msvc
-            tauri-args: "--target aarch64-pc-windows-msvc --bundles nsis"
+            tauri-args: "--target aarch64-pc-windows-msvc --bundles nsis,msi"
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v5

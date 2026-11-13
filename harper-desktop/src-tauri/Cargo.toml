@@ -1,6 +1,6 @@
 [package]
 name = "flowgram-desktop"
-version = "3.0.13"
+version = "3.0.14"
 description = "The language checker for developers."
 edition = "2024"
 publish = false

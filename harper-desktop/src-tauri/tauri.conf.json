@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schema.tauri.app/config/2",
 	"productName": "Flowgram",
-	"version": "3.0.13",
+	"version": "3.0.14",
 	"identifier": "com.flowgram.app",
 	"build": {
 		"beforeDevCommand": "pnpm dev",
@@ -31,6 +31,7 @@
 			"../../packages/chrome-plugin/build-firefox": "browser-extension/firefox",
 			"engine-bundle": "engine"
 		},
+		"publisher": "Flowgram",
 		"createUpdaterArtifacts": true,
 		"macOS": {
 			"signingIdentity": "-"
