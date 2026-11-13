@@ -136,7 +136,7 @@ impl Weirpack {
                 continue;
             }
 
-            let name = file.name().to_string();
+            let name = file.name()?.to_string();
             if name == "manifest.json" {
                 if manifest.is_some() {
                     return Err(Error::DuplicateManifest("manifest.json"));
