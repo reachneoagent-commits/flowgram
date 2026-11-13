@@ -11,7 +11,7 @@ expect() { # file, pattern, message
 
 expect "$conf" '"productName": "Flowgram"' 'productName is not Flowgram'
 expect "$conf" '"identifier": "com.flowgram.app"' 'app identifier changed'
-expect "$conf" 'reachneoagent-commits/flowgram/releases/latest/download/latest.json' 'updater endpoint no longer points at our releases'
+expect "$conf" 'reachneoagent-commits/gramflow/releases/latest/download/latest.json' 'updater endpoint no longer points at our releases'
 expect "$conf" "$(cat scripts/upstream/updater_pubkey.txt)" 'updater public key changed'
 expect harper-desktop/src-tauri/Cargo.toml 'name = "flowgram-desktop"' 'crate name changed'
 

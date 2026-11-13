@@ -95,6 +95,23 @@ pub fn show_editor_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     show_window(window)
 }
 
+/// Open the Humanize window, focusing it if it already exists.
+pub fn show_humanize_window(app: &tauri::AppHandle) -> tauri::Result<()> {
+    if let Some(window) = app.get_webview_window("humanize") {
+        return show_window(window);
+    }
+
+    let window = WebviewWindowBuilder::new(app, "humanize", WebviewUrl::App("index.html".into()))
+        .title("Flowgram Humanize")
+        .inner_size(980.0, 640.0)
+        .min_inner_size(640.0, 420.0)
+        .center()
+        .visible(!START_HIDDEN)
+        .build()?;
+
+    show_window(window)
+}
+
 /// Picks a settings window size that suits the screen: most of the display on small screens,
 /// capped on large ones, and never smaller than the layout needs.
 fn settings_window_size(app: &tauri::AppHandle) -> (f64, f64) {
@@ -142,7 +159,7 @@ pub fn open_issue_report(app: &AppHandle) {
     let _ = app
         .opener()
         .open_url(
-            "https://github.com/reachneoagent-commits/flowgram/issues/new/choose",
+            "https://github.com/reachneoagent-commits/gramflow/issues/new/choose",
             None::<&str>,
         )
         .inspect_err(|err| error!("failed to open issue report URL: {err}"));

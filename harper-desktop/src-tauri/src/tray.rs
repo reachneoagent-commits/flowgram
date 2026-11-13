@@ -10,13 +10,16 @@ use tauri::{AppHandle, Manager, Runtime, State};
 use tokio::runtime::Runtime as AsyncRuntime;
 
 use crate::highlighter_service::HighlighterService;
-use crate::windows::{open_issue_report, show_editor_window, show_settings_window};
+use crate::windows::{
+    open_issue_report, show_editor_window, show_humanize_window, show_settings_window,
+};
 
 /// Defines the layout of the tray menu.
 fn tray_menu<R: Runtime, M: Manager<R>>(manager: &M) -> tauri::Result<Menu<R>> {
     MenuBuilder::new(manager)
         .text("toggle-service", "Toggle Service")
         .text("open-editor", "Open Editor")
+        .text("humanize", "Humanize Text...")
         .text("settings", "Settings")
         .text("report-issue", "Report Issue")
         .text("quit", "Quit")
@@ -47,6 +50,10 @@ pub fn set_up_tray_menu(app: &AppHandle) -> tauri::Result<()> {
                 "open-editor" => {
                     let _ = show_editor_window(app)
                         .inspect_err(|err| error!("Could not open the editor window: {err}"));
+                }
+                "humanize" => {
+                    let _ = show_humanize_window(app)
+                        .inspect_err(|err| error!("Could not open the humanize window: {err}"));
                 }
                 "settings" => {
                     let _ = show_settings_window(app)

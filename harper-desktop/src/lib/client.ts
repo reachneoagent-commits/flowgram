@@ -19,6 +19,58 @@ const DialectValue = {
 	Indian: 4,
 } as const;
 
+export type HumanizerLevel = 'Ready' | 'Limited' | 'Unavailable';
+
+export interface HumanizerOption {
+	id: string;
+	label: string;
+	blurb: string;
+	size_bytes: number;
+	min_ram_gb: number;
+	fits_memory: boolean;
+	fits_disk: boolean;
+	recommended: boolean;
+	installed: boolean;
+}
+
+export interface HumanizerSettings {
+	skipped: boolean;
+	active: string | null;
+	idle_minutes: number;
+	warn_numbers: boolean;
+}
+
+export interface HumanizerStatus {
+	verdict: {
+		level: HumanizerLevel;
+		headline: string;
+		detail: string;
+		facts: { os: string; arch: string; total_ram_gb: number; free_disk_gb: number };
+		options: HumanizerOption[];
+	};
+	settings: HumanizerSettings;
+	engine_installed: boolean;
+	downloading: string | null;
+	engine_running: boolean;
+	active: string | null;
+}
+
+export interface HumanizerRewrite {
+	text: string;
+	numbers: { missing: string[]; added: string[] } | null;
+}
+
+export interface HumanizerDownloadProgress {
+	tier: string;
+	downloaded: number;
+	total: number;
+}
+
+export interface HumanizerDownloadDone {
+	tier: string;
+	error: string | null;
+}
+
 const ACCESSIBILITY_PERMISSION_TIMEOUT_MS = 6_000;
 
 /** Fired on `window` after the rule settings are saved. */
@@ -135,6 +187,65 @@ export class Client {
 	/** Set the preferred UI theme: "light", "dark", or "system". */
 	static async setTheme(theme: string): Promise<void> {
 		await invoke('set_theme', { theme });
+	}
+
+	static async humanizerStatus(): Promise<HumanizerStatus> {
+		return await invoke<HumanizerStatus>('humanizer_status');
+	}
+
+	static async humanizerSaveSettings(settings: HumanizerSettings): Promise<void> {
+		await invoke('humanizer_save_settings', { settings });
+	}
+
+	/** Starts a background download; progress and completion arrive as events. */
+	static async humanizerDownload(tier: string): Promise<void> {
+		await invoke('humanizer_download', { tier });
+	}
+
+	static async humanizerCancelDownload(): Promise<void> {
+		await invoke('humanizer_cancel_download');
+	}
+
+	static async humanizerDeleteModel(tier: string): Promise<void> {
+		await invoke('humanizer_delete_model', { tier });
+	}
+
+	static async humanizerSetActiveModel(tier: string): Promise<void> {
+		await invoke('humanizer_set_active_model', { tier });
+	}
+
+	static async humanizerRewrite(text: string): Promise<HumanizerRewrite> {
+		return await invoke<HumanizerRewrite>('humanizer_rewrite', { text });
+	}
+
+	static async humanizerCancelRewrite(): Promise<void> {
+		await invoke('humanizer_cancel_rewrite');
+	}
+
+	static async humanizerStopEngine(): Promise<void> {
+		await invoke('humanizer_stop_engine');
+	}
+
+	static async humanizerOpenModelsFolder(): Promise<void> {
+		await invoke('humanizer_open_models_folder');
+	}
+
+	/** Text the shortcut captured before the Humanize window loaded, if any. */
+	static async humanizerTakePending(): Promise<string | null> {
+		return await invoke<string | null>('humanizer_take_pending');
+	}
+
+	static async humanizerOpenWindow(): Promise<void> {
+		await invoke('humanizer_open_window');
+	}
+
+	static async humanizerOpenSettings(): Promise<void> {
+		await invoke('humanizer_open_settings');
+	}
+
+	/** Hides the Humanize window and pastes `text` over the selection in the app underneath. */
+	static async humanizerPasteBack(text: string): Promise<void> {
+		await invoke('humanizer_paste_back', { text });
 	}
 
 	static async getCurrentVersion(): Promise<string> {

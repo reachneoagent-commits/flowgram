@@ -1792,3 +1792,13 @@ body[data-theme="dark"] .app-result:hover {
 	background: color-mix(in srgb, var(--settings-accent) 28%, transparent);
 	color: var(--settings-ink);
 }
+
+/* Humanizer: keep the model name and its badges on one line. */
+.app-row .grow strong + .pill {
+	margin-left: 8px;
+}
+
+.onboarding-app input[type="radio"] {
+	accent-color: #b8e62e;
+	margin-right: 8px;
+}

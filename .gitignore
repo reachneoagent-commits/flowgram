@@ -16,3 +16,4 @@ vendor/bundle/
 !.bundle/config
 fastlane/report.xml
 fastlane/README.md
+harper-desktop/src-tauri/engine-bundle/

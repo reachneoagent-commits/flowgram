@@ -4,8 +4,8 @@ import { Button, FlowgramMark } from 'components';
 import { onMount } from 'svelte';
 import { Client } from '$lib/client';
 
-const SOURCE_URL = 'https://github.com/reachneoagent-commits/flowgram';
-const ISSUE_URL = 'https://github.com/reachneoagent-commits/flowgram/issues/new/choose';
+const SOURCE_URL = 'https://github.com/reachneoagent-commits/gramflow';
+const ISSUE_URL = 'https://github.com/reachneoagent-commits/gramflow/issues/new/choose';
 
 let currentVersion = '';
 
@@ -35,7 +35,7 @@ async function loadCurrentVersion() {
             unstyled
             class="button"
             type="button"
-            on:click={() => void openUrl('https://github.com/reachneoagent-commits/flowgram/releases/latest')}
+            on:click={() => void openUrl('https://github.com/reachneoagent-commits/gramflow/releases/latest')}
           >Release notes</Button>
           <Button unstyled class="button" type="button" on:click={() => void openUrl(SOURCE_URL)}>Source on GitHub</Button>
           <Button unstyled class="button" type="button" on:click={() => void openUrl(ISSUE_URL)}>Report an issue</Button>

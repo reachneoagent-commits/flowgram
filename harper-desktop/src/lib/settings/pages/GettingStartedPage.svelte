@@ -4,12 +4,20 @@ import { platform } from '@tauri-apps/plugin-os';
 import { Button, SlideDeck, Toggle } from 'components';
 import { onMount } from 'svelte';
 import { type AccessibilityPermissionStatus, type BrowserId, Client, type Integration } from '$lib/client';
+import {
+	cancelHumanizerDownload,
+	formatGb,
+	humanizer,
+	refreshHumanizer,
+	startHumanizerDownload,
+	watchHumanizer,
+} from '$lib/humanizer';
 import AppIcon from '../components/AppIcon.svelte';
 import AppPickerModal from '../components/AppPickerModal.svelte';
 
 /** Slide identities determine setup gates; only the welcome and test drive need no action. */
 type OnboardingSlide = {
-	id: 'welcome' | 'accessibility' | 'apps' | 'browser' | 'test-drive' | 'ready';
+	id: 'welcome' | 'accessibility' | 'apps' | 'browser' | 'humanizer' | 'test-drive' | 'ready';
 	title: string;
 	lede: string;
 };
@@ -36,6 +44,11 @@ const allSlides: OnboardingSlide[] = [
 		lede: 'To check your writing on websites and in webmail, add the Flowgram extension to Chrome, Edge, Brave, Opera or Firefox.\n\nThis step is optional. Click Next to skip it and add the extension later from Settings → Integrations.',
 	},
 	{
+		id: 'humanizer',
+		title: 'Rewrite in your voice',
+		lede: 'Humanizer rewrites AI-sounding text so it reads like you wrote it. It runs on this computer, so nothing you write leaves it.\n\nThis step is optional. Click Next to skip it and set it up later in Settings → Humanizer.',
+	},
+	{
 		id: 'test-drive',
 		title: 'Try Flowgram',
 		lede: 'Open TextEdit and write something like, "This is an test."\n\nYou should see Flowgram jump in to fix that mistake.',
@@ -50,6 +63,7 @@ const allSlides: OnboardingSlide[] = [
 export let onComplete: () => void;
 
 let step = 0;
+let selectedTier = '';
 let isMacOS = false;
 let accessibilityStatus: AccessibilityPermissionStatus | null = null;
 let setupError = '';
@@ -85,6 +99,16 @@ let isCompletingOnboarding = false;
 let onboardingError = '';
 
 $: slides = allSlides.filter((slide) => slide.id !== 'accessibility' || isMacOS);
+$: humanizerStatus = $humanizer.status;
+$: humanizerVerdict = humanizerStatus?.verdict;
+$: humanizerOptions = humanizerVerdict?.options ?? [];
+$: if (!selectedTier) {
+	selectedTier = humanizerOptions.find((option) => option.recommended)?.id ?? '';
+}
+$: humanizerBusy = humanizerStatus?.downloading ?? null;
+$: humanizerInstalled = humanizerOptions.some((option) => option.installed);
+/** The Humanizer slide speaks to this computer: its words change with what the check finds. */
+$: current = humanizerSlide(slides[step], humanizerVerdict);
 $: textEditIntegration = integrations.find((item) => item.bundle_id === 'com.apple.TextEdit');
 $: accessibilityReady =
 	(!isMacOS || accessibilityStatus === 'Granted') && !isPreparingService && !setupError;
@@ -96,6 +120,9 @@ onMount(() => {
 	isMacOS = isTauri() ? platform() === 'macos' : navigator.userAgent.includes('Macintosh');
 	void prepareService();
 	void loadIntegrations();
+	void refreshHumanizer();
+	let stopWatchingHumanizer: (() => void) | undefined;
+	void watchHumanizer().then((stop) => (stopWatchingHumanizer = stop));
 
 	// Watch for the permission switch being turned on, so nobody has to press a recheck button.
 	const watcher = window.setInterval(() => void watchAccessibility(), 1000);
@@ -103,6 +130,7 @@ onMount(() => {
 	return () => {
 		window.clearInterval(watcher);
 		window.removeEventListener('focus', watchAccessibility);
+		stopWatchingHumanizer?.();
 	};
 });
 
@@ -137,6 +165,16 @@ async function watchAccessibility() {
 }
 
 /** Gate service startup on Welcome outside macOS, or on Accessibility on macOS; choosing apps and the trial are optional. */
+function humanizerSlide(slide: OnboardingSlide, verdict: typeof humanizerVerdict): OnboardingSlide {
+	if (slide.id !== 'humanizer' || !verdict || verdict.level !== 'Unavailable') return slide;
+
+	return {
+		...slide,
+		title: "Humanizer isn't available on this computer",
+		lede: `${verdict.detail}\n\nEverything else in Flowgram works as normal. Click Next to continue.`,
+	};
+}
+
 function canAdvance(
 	slide: OnboardingSlide['id'],
 	accessReady: boolean,
@@ -306,8 +344,8 @@ async function prepareService(request = false) {
 
 <div class="onboarding-shell">
   <SlideDeck
-    title={slides[step].title}
-    lede={slides[step].lede}
+    title={current.title}
+    lede={current.lede}
     slideProgress={step / (slides.length - 1)}
     {nextDisabled}
     onFinish={completeOnboarding}
@@ -456,6 +494,65 @@ async function prepareService(request = false) {
         </section>
         {#if extensionError}
           <p role="alert">{extensionError}</p>
+        {/if}
+      </div>
+    {:else if slides[step].id === 'humanizer'}
+      <div class="onboarding-actions onboarding-apps">
+        {#if $humanizer.loading}
+          <p role="status">Checking this computer...</p>
+        {:else if humanizerVerdict && humanizerVerdict.level !== 'Unavailable'}
+          <p role="status">
+            {humanizerVerdict.headline}.
+            {humanizerVerdict.detail}
+          </p>
+          <ul class="onboarding-app-list">
+            {#each humanizerOptions as option (option.id)}
+              {@const blocked = !option.fits_memory || (!option.fits_disk && !option.installed)}
+              <li class="onboarding-app">
+                <label class="grow">
+                  <input
+                    type="radio"
+                    name="humanizer-tier"
+                    value={option.id}
+                    bind:group={selectedTier}
+                    disabled={blocked || option.installed || humanizerBusy !== null}
+                  />
+                  <strong>{option.label}</strong>
+                  {#if option.recommended}<span class="pill amber">Recommended</span>{/if}
+                  {#if option.installed}<span class="pill">Installed</span>{/if}
+                  <p>
+                    {formatGb(option.size_bytes)} download
+                    {#if !option.fits_memory} · needs {option.min_ram_gb} GB of memory
+                    {:else if !option.fits_disk && !option.installed} · not enough free disk space
+                    {:else} · {option.blurb}{/if}
+                  </p>
+                </label>
+              </li>
+            {/each}
+          </ul>
+          {#if humanizerBusy && $humanizer.progress}
+            <p role="status">
+              Downloading… {formatGb($humanizer.progress.downloaded)} of {formatGb($humanizer.progress.total)}.
+              You can keep going; the download continues in the background.
+            </p>
+          {:else if humanizerBusy}
+            <p role="status">Starting the download…</p>
+          {:else if humanizerInstalled}
+            <p role="status">Humanizer is ready. Find it in Settings → Humanizer.</p>
+          {/if}
+          {#if $humanizer.error}
+            <p role="alert">{$humanizer.error}</p>
+          {/if}
+          <div class="onboarding-app-actions">
+            {#if humanizerBusy}
+              <Button color="white" on:click={cancelHumanizerDownload}>Cancel download</Button>
+            {:else if !humanizerInstalled}
+              <Button disabled={!selectedTier} on:click={() => startHumanizerDownload(selectedTier)}>Download</Button>
+            {/if}
+          </div>
+        {:else if $humanizer.error}
+          <p role="alert">{$humanizer.error}</p>
+          <Button color="white" on:click={refreshHumanizer}>Try again</Button>
         {/if}
       </div>
     {:else if slides[step].id === 'test-drive'}

@@ -1,6 +1,7 @@
 mod error;
 mod integration;
 
+use crate::humanizer::settings::HumanizerSettings;
 use crate::{PlatformBroker, os_broker::OsBroker};
 pub use error::Error;
 use harper_core::{
@@ -31,6 +32,7 @@ pub struct Config {
     pub highlighter_service_enabled: bool,
     /// Preferred UI theme: "light", "dark", or "system" (follows OS preference).
     pub theme: String,
+    pub humanizer: HumanizerSettings,
 }
 
 impl Config {
@@ -49,6 +51,7 @@ impl Config {
             last_update_check: None,
             highlighter_service_enabled: true,
             theme: "system".to_string(),
+            humanizer: HumanizerSettings::default(),
         }
     }
 
@@ -203,6 +206,7 @@ impl Config {
             "last_update_check": self.last_update_check,
             "highlighter_service_enabled": self.highlighter_service_enabled,
             "theme": &self.theme,
+            "humanizer": &self.humanizer,
         }))
     }
 
@@ -238,6 +242,7 @@ impl Config {
             .unwrap_or(true),
             theme: deserialize_optional_field(object, "theme")?
                 .unwrap_or_else(|| "system".to_string()),
+            humanizer: deserialize_optional_field(object, "humanizer")?.unwrap_or_default(),
         })
     }
 }

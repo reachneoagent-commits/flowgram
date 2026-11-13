@@ -56,6 +56,20 @@ pub fn application_message_handler<R: Runtime>() -> impl Fn(Invoke<R>) -> bool {
         search_apps,
         get_theme,
         set_theme,
+        crate::humanizer::commands::humanizer_status,
+        crate::humanizer::commands::humanizer_save_settings,
+        crate::humanizer::commands::humanizer_download,
+        crate::humanizer::commands::humanizer_cancel_download,
+        crate::humanizer::commands::humanizer_delete_model,
+        crate::humanizer::commands::humanizer_set_active_model,
+        crate::humanizer::commands::humanizer_rewrite,
+        crate::humanizer::commands::humanizer_cancel_rewrite,
+        crate::humanizer::commands::humanizer_stop_engine,
+        crate::humanizer::commands::humanizer_open_models_folder,
+        crate::humanizer::commands::humanizer_take_pending,
+        crate::humanizer::commands::humanizer_open_settings,
+        crate::humanizer::commands::humanizer_open_window,
+        crate::humanizer::commands::humanizer_paste_back,
     ]
 }
 

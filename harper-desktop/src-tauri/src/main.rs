@@ -27,7 +27,7 @@ use std::{
     rc::Rc,
     sync::{Arc, Mutex as StdMutex, RwLock},
 };
-use tauri::Manager as _;
+use tauri::{Listener as _, Manager as _};
 use tracing::{Level, error};
 use tracing_subscriber::FmtSubscriber;
 
@@ -48,6 +48,7 @@ mod debounce;
 mod desktop_updater;
 pub mod highlighter;
 pub mod highlighter_service;
+pub mod humanizer;
 pub mod lint_kind_color;
 mod os_broker;
 pub mod rect;
@@ -175,6 +176,7 @@ pub fn run_tauri() {
     tauri::Builder::default()
         .manage(config.clone())
         .manage(desktop_updater::DesktopUpdater::default())
+        .manage(humanizer::commands::HumanizerState::default())
         .manage(RwLock::new(broker))
         .manage(async_runtime)
         .plugin(tauri_plugin_autostart::init(
@@ -199,6 +201,18 @@ pub fn run_tauri() {
             set_up_tray_menu(app.handle())?;
             warm_app_search_cache(app.handle().clone());
             desktop_updater::start_auto_updates(app.handle().clone());
+            humanizer::commands::spawn_idle_watcher(app.handle().clone());
+            register_humanize_shortcut(app.handle());
+            let humanize_handle = app.handle().clone();
+            app.listen("humanizer-open-window", move |_| {
+                let _ = windows::show_humanize_window(&humanize_handle)
+                    .inspect_err(|err| error!("Could not open the humanize window: {err}"));
+            });
+            let settings_handle = app.handle().clone();
+            app.listen("humanizer-open-settings", move |_| {
+                let _ = windows::show_settings_window(&settings_handle)
+                    .inspect_err(|err| error!("Could not open the settings window: {err}"));
+            });
 
             if show_onboarding || show_settings_for_permission {
                 windows::show_settings_window(app.handle())?;
@@ -412,6 +426,7 @@ pub fn run_highlighter(has_parent: bool) {
             last_update_check: None,
             highlighter_service_enabled: true,
             theme: "system".to_string(),
+            humanizer: Default::default(),
         };
         *dictionary_linter.borrow_mut() = config.create_linter();
 
@@ -557,6 +572,7 @@ fn fetch_highlighter_config(
             last_update_check: None,
             highlighter_service_enabled: true,
             theme: "system".to_string(),
+            humanizer: Default::default(),
         })
     })
 }
@@ -589,4 +605,30 @@ fn apply_highlighter_config(
         Err(error) => eprintln!("failed to update integrations: {error}"),
     }
     *debounce_ms.borrow_mut() = config.debounce_ms;
+}
+
+/// Registers the global Humanize shortcut. A taken shortcut only costs this feature, not startup.
+fn register_humanize_shortcut(app: &tauri::AppHandle) {
+    use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
+
+    let result = app
+        .plugin(
+            tauri_plugin_global_shortcut::Builder::new()
+                .with_handler(|app, _shortcut, event| {
+                    if event.state() == ShortcutState::Pressed {
+                        humanizer::commands::handle_shortcut(app.clone());
+                    }
+                })
+                .build(),
+        )
+        .map_err(|err| err.to_string())
+        .and_then(|()| {
+            app.global_shortcut()
+                .register(humanizer::selection::SHORTCUT)
+                .map_err(|err| err.to_string())
+        });
+
+    if let Err(err) = result {
+        error!("Couldn't register the Humanize shortcut: {err}");
+    }
 }

@@ -11,7 +11,9 @@ use tauri::{AppHandle, Manager, Runtime};
 use tauri_plugin_updater::UpdaterExt;
 use tokio::sync::Mutex;
 
-const LATEST_VERSION_URL: &str = "https://writewithharper.com/latestversion";
+/// Flowgram's own releases, so the "latest version" shown in Settings matches what we ship.
+const LATEST_VERSION_URL: &str =
+    "https://api.github.com/repos/reachneoagent-commits/gramflow/releases/latest";
 const DAY_MS: u64 = 24 * 60 * 60 * 1000;
 const POLL_INTERVAL: Duration = Duration::from_secs(60);
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
@@ -81,16 +83,20 @@ impl DesktopUpdater {
             .build()
             .map_err(|error| error.to_string())?
             .get(LATEST_VERSION_URL)
-            .header(reqwest::header::ACCEPT, "text/plain")
+            .header(reqwest::header::USER_AGENT, "Flowgram")
+            .header(reqwest::header::ACCEPT, "application/vnd.github+json")
             .send()
             .await
             .and_then(reqwest::Response::error_for_status)
             .map_err(|error| format!("Unable to get latest version: {error}"))?;
-        let text = response
-            .text()
+        let release: serde_json::Value = response
+            .json()
             .await
             .map_err(|error| format!("Unable to get latest version: {error}"))?;
-        Ok(normalize_version(&text))
+        let tag = release["tag_name"]
+            .as_str()
+            .ok_or("Unable to get latest version: the release has no version tag.")?;
+        Ok(normalize_version(tag))
     }
 
     /// Check and install an update. Only automatic requests can be skipped (returning `None`).

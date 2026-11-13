@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schema.tauri.app/config/2",
 	"productName": "Flowgram",
-	"version": "3.0.8",
+	"version": "3.0.9",
 	"identifier": "com.flowgram.app",
 	"build": {
 		"beforeDevCommand": "pnpm dev",
@@ -12,7 +12,8 @@
 	"app": {
 		"windows": [],
 		"security": {
-			"csp": null
+			"csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost data: blob:; worker-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'",
+			"devCsp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost data: blob: ws://localhost:1420 http://localhost:1420; worker-src 'self' data: blob:; object-src 'none'; base-uri 'self'"
 		}
 	},
 	"bundle": {
@@ -28,15 +29,21 @@
 		"resources": {
 			"../static/fonts/atkinson/OFL.txt": "licenses/AtkinsonHyperlegible-OFL.txt",
 			"../../packages/chrome-plugin/build": "browser-extension/chrome",
-			"../../packages/chrome-plugin/build-firefox": "browser-extension/firefox"
+			"../../packages/chrome-plugin/build-firefox": "browser-extension/firefox",
+			"engine-bundle": "engine"
 		},
-		"createUpdaterArtifacts": true
+		"createUpdaterArtifacts": true,
+		"windows": {
+			"nsis": {
+				"installerHooks": "./windows/installer-hooks.nsh"
+			}
+		}
 	},
 	"plugins": {
 		"updater": {
 			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhCM0Q4ODZGOUEzRDNCN0QKUldSOU96MmFiNGc5aTdiNkZvK1ZtYkJEaENIMVFpRjFkT0VyVDBiUTltSkNWajMvUXVkL043UDQK",
 			"endpoints": [
-				"https://github.com/reachneoagent-commits/flowgram/releases/latest/download/latest.json"
+				"https://github.com/reachneoagent-commits/gramflow/releases/latest/download/latest.json"
 			]
 		}
 	}
