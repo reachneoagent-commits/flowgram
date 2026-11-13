@@ -29,7 +29,7 @@ const test = base.extend({
 				await context.route(`${welcomeUrl}**`, (route) =>
 					route.fulfill({ contentType: 'text/html', body: '<title>Installed</title>' }),
 				);
-				// Flowgram does not open a welcome tab on install, so there is nothing to wait for.
+				// Gramflow does not open a welcome tab on install, so there is nothing to wait for.
 				// If a future build does, give it a moment to appear so it can be closed below.
 				await new Promise((resolve) => setTimeout(resolve, 1000));
 				for (const page of context.pages()) {

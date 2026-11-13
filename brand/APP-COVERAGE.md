@@ -1,4 +1,4 @@
-# Where Flowgram works, and how we will prove it
+# Where Gramflow works, and how we will prove it
 
 Status key: **Built** = code exists and compiles. **Tested** = a human or script confirmed it works. Nothing below is marked Tested yet except the items under "Tested so far".
 

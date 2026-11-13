@@ -11,9 +11,9 @@ use tauri::{AppHandle, Manager, Runtime};
 use tauri_plugin_updater::UpdaterExt;
 use tokio::sync::Mutex;
 
-/// Flowgram's own releases, so the "latest version" shown in Settings matches what we ship.
+/// Gramflow's own releases, so the "latest version" shown in Settings matches what we ship.
 const LATEST_VERSION_URL: &str =
-    "https://api.github.com/repos/reachneoagent-commits/flowgram/releases/latest";
+    "https://api.github.com/repos/reachneoagent-commits/gramflow/releases/latest";
 const DAY_MS: u64 = 24 * 60 * 60 * 1000;
 const POLL_INTERVAL: Duration = Duration::from_secs(60);
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
@@ -44,7 +44,7 @@ impl UpdateResult {
         if let Some(latest_version) = latest_version {
             if self.latest_version.as_ref() != Some(&latest_version) {
                 self.message = format!(
-                    "Update installed. Restart Flowgram to finish before installing version {latest_version}."
+                    "Update installed. Restart Gramflow to finish before installing version {latest_version}."
                 );
             }
             self.latest_version = Some(latest_version);
@@ -83,7 +83,7 @@ impl DesktopUpdater {
             .build()
             .map_err(|error| error.to_string())?
             .get(LATEST_VERSION_URL)
-            .header(reqwest::header::USER_AGENT, "Flowgram")
+            .header(reqwest::header::USER_AGENT, "Gramflow")
             .header(reqwest::header::ACCEPT, "application/vnd.github+json")
             .send()
             .await
@@ -169,7 +169,7 @@ pub fn start_auto_updates(app: AppHandle) {
                 .await
                 && let Some(error) = result.error
             {
-                tracing::warn!("Unable to automatically update Flowgram Desktop: {error}");
+                tracing::warn!("Unable to automatically update Gramflow Desktop: {error}");
             }
         }
     });
@@ -202,7 +202,7 @@ async fn check_and_install<R: Runtime>(
             status: UpdateStatus::UpToDate,
             current_version: Some(current_version),
             latest_version: None,
-            message: "Flowgram is up to date.".into(),
+            message: "Gramflow is up to date.".into(),
             error: None,
         });
     };
@@ -216,7 +216,7 @@ async fn check_and_install<R: Runtime>(
         status: UpdateStatus::Updated,
         current_version: Some(current_version),
         latest_version: Some(normalize_version(&update.version)),
-        message: "Update installed. Restart Flowgram to finish.".into(),
+        message: "Update installed. Restart Gramflow to finish.".into(),
         error: None,
     })
 }
@@ -243,7 +243,7 @@ mod tests {
             status: UpdateStatus::Updated,
             current_version: Some("2.11.0".into()),
             latest_version: Some("2.12.0".into()),
-            message: "Update installed. Restart Flowgram to finish.".into(),
+            message: "Update installed. Restart Gramflow to finish.".into(),
             error: None,
         }
     }
@@ -393,7 +393,7 @@ mod tests {
                     status: UpdateStatus::UpToDate,
                     current_version: Some("2.11.0".into()),
                     latest_version: None,
-                    message: "Flowgram is up to date.".into(),
+                    message: "Gramflow is up to date.".into(),
                     error: None,
                 }))
             })

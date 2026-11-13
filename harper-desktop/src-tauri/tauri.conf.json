@@ -1,8 +1,8 @@
 {
 	"$schema": "https://schema.tauri.app/config/2",
-	"productName": "Flowgram",
+	"productName": "Gramflow",
 	"version": "3.0.14",
-	"identifier": "com.flowgram.app",
+	"identifier": "com.gramflow.app",
 	"build": {
 		"beforeDevCommand": "pnpm dev",
 		"devUrl": "http://localhost:1420",
@@ -31,7 +31,7 @@
 			"../../packages/chrome-plugin/build-firefox": "browser-extension/firefox",
 			"engine-bundle": "engine"
 		},
-		"publisher": "Flowgram",
+		"publisher": "Gramflow",
 		"createUpdaterArtifacts": true,
 		"macOS": {
 			"signingIdentity": "-"
@@ -46,7 +46,7 @@
 		"updater": {
 			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhCM0Q4ODZGOUEzRDNCN0QKUldSOU96MmFiNGc5aTdiNkZvK1ZtYkJEaENIMVFpRjFkT0VyVDBiUTltSkNWajMvUXVkL043UDQK",
 			"endpoints": [
-				"https://github.com/reachneoagent-commits/flowgram/releases/latest/download/latest.json"
+				"https://github.com/reachneoagent-commits/gramflow/releases/latest/download/latest.json"
 			]
 		}
 	}

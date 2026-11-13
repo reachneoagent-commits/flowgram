@@ -34,7 +34,7 @@ pub struct HumanizerState {
 pub struct Status {
     pub verdict: Verdict,
     pub settings: HumanizerSettings,
-    /// The rewriting engine is bundled with this copy of Flowgram.
+    /// The rewriting engine is bundled with this copy of Gramflow.
     pub engine_installed: bool,
     /// Id of the model size being downloaded right now.
     pub downloading: Option<&'static str>,
@@ -565,7 +565,7 @@ pub async fn humanizer_apply_update<R: Runtime>(
             .ok_or("There's no update for this model. Check for updates first.")?;
         if offered.needs_newer_app {
             return Err(
-                "Update Flowgram first. This model needs a newer version of the app.".into(),
+                "Update Gramflow first. This model needs a newer version of the app.".into(),
             );
         }
         manifest

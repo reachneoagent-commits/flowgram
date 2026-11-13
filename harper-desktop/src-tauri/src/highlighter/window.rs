@@ -105,7 +105,7 @@ impl Window {
         let position = monitor.position();
         let size = monitor.size();
         let attributes = WinitWindow::default_attributes()
-            .with_title("Flowgram")
+            .with_title("Gramflow")
             .with_inner_size(size)
             .with_position(position)
             .with_resizable(false)

@@ -1,4 +1,4 @@
-//! Detects whether the Flowgram browser extension is installed in each browser profile.
+//! Detects whether the Gramflow browser extension is installed in each browser profile.
 //!
 //! Chromium browsers keep one extension list per profile. Unpacked extensions are recorded
 //! with the folder they were loaded from, so we recognise ours by that folder name.
@@ -8,10 +8,10 @@ use serde_json::Value;
 use std::path::{Path, PathBuf};
 
 /// Folder name `prepare_browser_extension` copies the extension into.
-pub const EXTENSION_FOLDER_NAME: &str = "Flowgram Browser Extension";
+pub const EXTENSION_FOLDER_NAME: &str = "Gramflow Browser Extension";
 
 /// Folder the Firefox build of the extension is copied into.
-pub const FIREFOX_EXTENSION_FOLDER_NAME: &str = "Flowgram Firefox Extension";
+pub const FIREFOX_EXTENSION_FOLDER_NAME: &str = "Gramflow Firefox Extension";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct BrowserProfileStatus {
@@ -27,11 +27,11 @@ pub struct BrowserProfileStatus {
     pub extension_id: Option<String>,
     /// Version of the extension files in the folder the profile loads from.
     pub folder_version: Option<String>,
-    /// Version that ships with this copy of Flowgram.
+    /// Version that ships with this copy of Gramflow.
     pub bundled_version: String,
 }
 
-/// What a profile's preferences say about the Flowgram extension.
+/// What a profile's preferences say about the Gramflow extension.
 #[derive(Debug, PartialEq, Eq)]
 struct ExtensionRecord {
     id: String,
@@ -111,7 +111,7 @@ fn profiles_in(browser: &str, root: &Path) -> Vec<BrowserProfileStatus> {
     profiles
 }
 
-/// Finds the Flowgram extension in one profile directory.
+/// Finds the Gramflow extension in one profile directory.
 fn extension_record(profile: &Path) -> Option<ExtensionRecord> {
     // Chrome writes extension records to `Secure Preferences`; older builds used `Preferences`.
     ["Secure Preferences", "Preferences"]
@@ -175,7 +175,7 @@ mod tests {
     #[test]
     fn detects_enabled_unpacked_extension() {
         let p = prefs(
-            "/Users/a/Documents/Flowgram Browser Extension",
+            "/Users/a/Documents/Gramflow Browser Extension",
             json!({"disable_reasons": []}),
         );
         let record = extension_record_from_prefs(&p).unwrap();
@@ -183,16 +183,16 @@ mod tests {
         assert_eq!(record.id, "abc");
         assert_eq!(
             record.path,
-            PathBuf::from("/Users/a/Documents/Flowgram Browser Extension")
+            PathBuf::from("/Users/a/Documents/Gramflow Browser Extension")
         );
     }
 
     #[test]
     fn detects_disabled_extension() {
-        let p = prefs("/x/Flowgram Browser Extension", json!({"state": 0}));
+        let p = prefs("/x/Gramflow Browser Extension", json!({"state": 0}));
         assert!(!extension_record_from_prefs(&p).unwrap().enabled);
         let p = prefs(
-            "/x/Flowgram Browser Extension",
+            "/x/Gramflow Browser Extension",
             json!({"disable_reasons": [1]}),
         );
         assert!(!extension_record_from_prefs(&p).unwrap().enabled);
@@ -207,7 +207,7 @@ mod tests {
 
     #[test]
     fn reads_folder_version_from_manifest() {
-        let dir = std::env::temp_dir().join("flowgram-ext-version-test");
+        let dir = std::env::temp_dir().join("gramflow-ext-version-test");
         std::fs::create_dir_all(&dir).unwrap();
         std::fs::write(dir.join("manifest.json"), r#"{"version": "3.0.3"}"#).unwrap();
 

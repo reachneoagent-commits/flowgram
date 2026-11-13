@@ -20,7 +20,7 @@ const STARTUP_TIMEOUT: Duration = Duration::from_secs(180);
 
 #[derive(Debug, thiserror::Error)]
 pub enum EngineError {
-    #[error("The rewriting engine isn't installed with this copy of Flowgram.")]
+    #[error("The rewriting engine isn't installed with this copy of Gramflow.")]
     NoBinary,
     #[error("That model isn't downloaded yet.")]
     NoModel,
@@ -44,7 +44,7 @@ pub struct Engine {
     last_used: Instant,
 }
 
-/// Finds `llama-server` in the app's bundled resources, or at `FLOWGRAM_LLAMA_SERVER` when
+/// Finds `llama-server` in the app's bundled resources, or at `GRAMFLOW_LLAMA_SERVER` when
 /// developing.
 pub fn find_binary(resource_dir: Option<&Path>) -> Option<PathBuf> {
     let name = if cfg!(windows) {
@@ -52,7 +52,7 @@ pub fn find_binary(resource_dir: Option<&Path>) -> Option<PathBuf> {
     } else {
         "llama-server"
     };
-    if let Some(path) = std::env::var_os("FLOWGRAM_LLAMA_SERVER").map(PathBuf::from)
+    if let Some(path) = std::env::var_os("GRAMFLOW_LLAMA_SERVER").map(PathBuf::from)
         && path.is_file()
     {
         return Some(path);
@@ -269,11 +269,11 @@ mod tests {
     }
 
     /// End-to-end check against a real engine and model. Run it by hand:
-    /// `FLOWGRAM_LLAMA_SERVER=/path/to/llama-server cargo test live_rewrite -- --ignored`
+    /// `GRAMFLOW_LLAMA_SERVER=/path/to/llama-server cargo test live_rewrite -- --ignored`
     #[tokio::test]
     #[ignore = "needs llama-server and a downloaded model"]
     async fn live_rewrite_streams_and_keeps_numbers() {
-        let binary = find_binary(None).expect("set FLOWGRAM_LLAMA_SERVER");
+        let binary = find_binary(None).expect("set GRAMFLOW_LLAMA_SERVER");
         let tier = crate::humanizer::models::TIERS
             .iter()
             .map(|info| info.tier)

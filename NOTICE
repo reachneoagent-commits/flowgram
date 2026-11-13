@@ -1,12 +1,12 @@
-Flowgram
-Copyright (c) Flowgram contributors
+Gramflow
+Copyright (c) Gramflow contributors
 
-Flowgram is a derivative work of Harper (https://github.com/automattic/harper),
+Gramflow is a derivative work of Harper (https://github.com/automattic/harper),
 Copyright (c) Automattic, licensed under the Apache License, Version 2.0 (see LICENSE).
 Files changed from the original carry the changes made in this repository's git history.
-"Harper" and "Automattic" names and logos are not licensed for use as Flowgram branding.
+"Harper" and "Automattic" names and logos are not licensed for use as Gramflow branding.
 
-Third-party material included or adapted in Flowgram:
+Third-party material included or adapted in Gramflow:
 
 - Inter typeface, Copyright The Inter Project Authors, SIL Open Font License 1.1
   (harper-desktop/src/brand/OFL.txt).

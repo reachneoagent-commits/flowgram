@@ -1,4 +1,4 @@
-//! Humanizer preferences saved in Flowgram's main config file.
+//! Humanizer preferences saved in Gramflow's main config file.
 
 use serde::{Deserialize, Serialize};
 

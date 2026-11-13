@@ -2,7 +2,7 @@ name: Humanizer upstream check
 
 # Once a week, looks at the upstream Humanizer project (model files on Hugging Face and the GitHub
 # repository) and, if anything changed since we last reviewed it, opens or updates an issue with a
-# report. Nothing reaches Flowgram users from this: a human reads the report, tries the model, and
+# report. Nothing reaches Gramflow users from this: a human reads the report, tries the model, and
 # only then runs scripts/humanizer-publish.py to approve it.
 
 on:

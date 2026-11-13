@@ -1,6 +1,6 @@
 # Language-intelligence roadmap (from the audit)
 
-Findings from testing Flowgram against Grammarly-style categories. Items marked DONE shipped in 3.0.7.
+Findings from testing Gramflow against Grammarly-style categories. Items marked DONE shipped in 3.0.7.
 
 ## Done
 - Spelling suggestion ranking (names, short typos, doubled-letter typos); modern vocabulary added.

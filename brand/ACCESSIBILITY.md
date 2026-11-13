@@ -1,6 +1,6 @@
-# Flowgram UI: accessibility and UX checklist (WCAG 2.2 AA target)
+# Gramflow UI: accessibility and UX checklist (WCAG 2.2 AA target)
 
-Verified in `flowgram-brand-mockup.html` (contrast measured, not estimated).
+Verified in `gramflow-brand-mockup.html` (contrast measured, not estimated).
 
 ## Color
 | Token | Value | Use | Ratio |

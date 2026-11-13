@@ -55,7 +55,7 @@ type WorkerJob = fn(&UIAutomation, Vec<JobArgument>) -> JobResult;
 /// Necessary because the API has very specific thread setting requirements to work.
 pub struct AutomationService {
     worker_data: Option<WorkerData>,
-    // Needed to redirect focus to the last focused window when the focus arrives on the Flowgram highlighter window
+    // Needed to redirect focus to the last focused window when the focus arrives on the Gramflow highlighter window
     last_focused_window: Option<isize>,
 }
 
@@ -180,7 +180,7 @@ impl AutomationService {
         }
     }
 
-    /// Returns the foreground source window, retaining the last external window while Flowgram's
+    /// Returns the foreground source window, retaining the last external window while Gramflow's
     /// overlay owns focus.
     pub fn resolve_focused_window(&mut self) -> Option<isize> {
         let (focused_window, focused_process_id) = focused_window()?;

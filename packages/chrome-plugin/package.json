@@ -24,8 +24,8 @@
 		"check:svelte": "svelte-check --tsconfig ./tsconfig.json",
 		"preview": "vite preview",
 		"build-for-firefox": "TARGET_BROWSER=firefox OUT_DIR=build-firefox npm run build",
-		"zip-for-chrome": "TARGET_BROWSER=chrome npm run build && node src/zip.js flowgram-chrome-extension.zip",
-		"zip-for-firefox": "TARGET_BROWSER=firefox npm run build && node src/zip.js flowgram-firefox-extension.zip",
+		"zip-for-chrome": "TARGET_BROWSER=chrome npm run build && node src/zip.js gramflow-chrome-extension.zip",
+		"zip-for-firefox": "TARGET_BROWSER=firefox npm run build && node src/zip.js gramflow-firefox-extension.zip",
 		"test": "playwright test --headed"
 	},
 	"devDependencies": {

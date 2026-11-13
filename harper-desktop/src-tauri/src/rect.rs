@@ -45,9 +45,9 @@ pub struct ColoredRect {
     pub color: Color,
 }
 
-/// A Flowgram lint paired with the screen-space rectangle where it should be rendered.
+/// A Gramflow lint paired with the screen-space rectangle where it should be rendered.
 ///
-/// Flowgram owns the lint details and accessibility owns the geometry; this type keeps both pieces
+/// Gramflow owns the lint details and accessibility owns the geometry; this type keeps both pieces
 /// together without duplicating lint fields into highlighter-specific strings.
 #[derive(Debug, Clone, PartialEq)]
 pub struct PositionedLint {
@@ -55,7 +55,7 @@ pub struct PositionedLint {
     pub lint: Lint,
 }
 
-/// A Flowgram lint paired with geometry, source context, and an OS-specific suggestion action. The highlighter owns rendering and interaction, but the OS broker is the only layer that knows how
+/// A Gramflow lint paired with geometry, source context, and an OS-specific suggestion action. The highlighter owns rendering and interaction, but the OS broker is the only layer that knows how
 /// to mutate the underlying text element. Storing a one-shot callback here keeps those responsibilities
 /// connected without teaching rendering code about Accessibility APIs.
 pub struct ActionableLint {

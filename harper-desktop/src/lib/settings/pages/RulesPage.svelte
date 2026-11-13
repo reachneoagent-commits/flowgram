@@ -16,7 +16,7 @@ const CORE_RULES: Record<string, string> = {
 };
 
 let lintConfig: LintConfig | null = null;
-/** Flowgram's recommended setting for every rule. */
+/** Gramflow's recommended setting for every rule. */
 let recommended: LintConfig | null = null;
 let descriptions: Record<string, string> = {};
 let structuredLintConfig: StructuredLintConfig | null = null;
@@ -255,7 +255,7 @@ async function setRules(ruleIds: string[], on: boolean, groupTitle?: string) {
 			pendingOff = {
 				title: `Turn off ${coreRules.map((ruleId) => CORE_RULES[ruleId]).join(' and ')}?`,
 				message:
-					'Flowgram will stop catching these mistakes in every app until you turn it back on.',
+					'Gramflow will stop catching these mistakes in every app until you turn it back on.',
 				ruleIds,
 			};
 			return;
@@ -264,7 +264,7 @@ async function setRules(ruleIds: string[], on: boolean, groupTitle?: string) {
 		if (groupTitle && turningOff.length > 1) {
 			pendingOff = {
 				title: `Turn off all ${turningOff.length} “${groupTitle}” rules?`,
-				message: 'Flowgram will stop checking for these. You can turn them back on any time.',
+				message: 'Gramflow will stop checking for these. You can turn them back on any time.',
 				ruleIds,
 			};
 			return;
@@ -291,7 +291,7 @@ async function confirmPendingOff() {
 	if (pending) await applyRules(pending.ruleIds, false);
 }
 
-/** Back to Flowgram's recommended settings for every rule, including ones not listed here. */
+/** Back to Gramflow's recommended settings for every rule, including ones not listed here. */
 async function resetToRecommended() {
 	if (!recommended) return;
 

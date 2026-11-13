@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds the Apple Silicon Flowgram installer without `just`. Run from the repo root.
+# Builds the Apple Silicon Gramflow installer without `just`. Run from the repo root.
 set -eo pipefail
 export PATH="$HOME/.cargo/bin:/opt/homebrew/bin:$PATH"
 ROOT="$(pwd)"
@@ -20,6 +20,6 @@ pnpm build-for-firefox
 
 cd "$ROOT/harper-desktop"
 pnpm install
-export TAURI_SIGNING_PRIVATE_KEY="$(cat ~/.tauri/flowgram.key)"
-export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="$(cat ~/.tauri/flowgram.key.password)"
+export TAURI_SIGNING_PRIVATE_KEY="$(cat ~/.tauri/gramflow.key)"
+export TAURI_SIGNING_PRIVATE_KEY_PASSWORD="$(cat ~/.tauri/gramflow.key.password)"
 pnpm tauri build -b app,dmg --target aarch64-apple-darwin

@@ -66,21 +66,21 @@ async function loadOnboardingState() {
 }
 
 const pageHeads: Partial<Record<SectionId, { lead: string; accent: string; sub: string }>> = {
-	general: { lead: 'Make it', accent: 'yours', sub: 'How Flowgram looks, behaves and starts.' },
+	general: { lead: 'Make it', accent: 'yours', sub: 'How Gramflow looks, behaves and starts.' },
 	dictionary: {
 		lead: 'Your',
 		accent: 'dictionary',
-		sub: 'Words Flowgram should never flag again.',
+		sub: 'Words Gramflow should never flag again.',
 	},
 	integrations: {
 		lead: 'Where it',
 		accent: 'works',
-		sub: 'Choose the apps where Flowgram checks your writing.',
+		sub: 'Choose the apps where Gramflow checks your writing.',
 	},
 	rules: {
-		lead: 'What Flowgram',
+		lead: 'What Gramflow',
 		accent: 'checks',
-		sub: 'Flowgram starts with our recommended settings, so you don\'t need to change anything. Turn a rule off if it gets in your way.',
+		sub: 'Gramflow starts with our recommended settings, so you don\'t need to change anything. Turn a rule off if it gets in your way.',
 	},
 	shortcuts: {
 		lead: 'Keyboard',

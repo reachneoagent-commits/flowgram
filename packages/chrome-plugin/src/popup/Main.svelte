@@ -91,8 +91,8 @@ function daysSince(date: Date): number {
                     color={enabled ? 'var(--color-primary)' : 'var(--color-cream-50)'}
                     on:click={toggleDomainEnabled}
                     aria-pressed={enabled}
-                    aria-label={enabled ? `Turn Flowgram off on ${site}` : `Turn Flowgram on for ${site}`}
-                    title={enabled ? 'Click to pause Flowgram here' : 'Click to enable Flowgram here'}
+                    aria-label={enabled ? `Turn Gramflow off on ${site}` : `Turn Gramflow on for ${site}`}
+                    title={enabled ? 'Click to pause Gramflow here' : 'Click to enable Gramflow here'}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +129,7 @@ function daysSince(date: Date): number {
                     ></span>
                     <span class="min-w-0">
                         <span class="font-medium text-gray-500 dark:text-white/80">
-                            {enabled ? 'Flowgram is enabled on' : 'Flowgram is paused on'}
+                            {enabled ? 'Gramflow is enabled on' : 'Gramflow is paused on'}
                         </span>
                         <span class="block font-semibold text-gray-900 [overflow-wrap:anywhere] dark:text-white">{site}</span>
                     </span>

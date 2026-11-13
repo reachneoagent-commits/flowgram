@@ -25,7 +25,7 @@ pub fn draw_highlight(ui: &mut egui::Ui, rect: &Rect, lint: &Lint) {
     );
 }
 
-/// Maps Flowgram lint kinds to egui colors at the drawing boundary so shared color data stays UI-toolkit
+/// Maps Gramflow lint kinds to egui colors at the drawing boundary so shared color data stays UI-toolkit
 /// agnostic.
 fn lint_color(lint: &Lint) -> egui::Color32 {
     lint_kind_color32(lint.lint_kind)

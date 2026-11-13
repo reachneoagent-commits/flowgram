@@ -1,4 +1,4 @@
-# Harper vs Grammarly: gap analysis for Flowgram
+# Harper vs Grammarly: gap analysis for Gramflow
 
 Sources: Harper from this repo (`harper-core`, `harper-desktop`, `harper-ls`, `packages/*`, `COMPARISON.md`); Grammarly from grammarly.com/features (official page). Third-party pricing pages contradict each other, so pricing is excluded. I did not read every one of Harper's ~378 rule files; counts come from directory listings and greps.
 
@@ -21,7 +21,7 @@ Sources: Harper from this repo (`harper-core`, `harper-desktop`, `harper-ls`, `p
 - **Free utilities:** word, character and sentence counters, tone detector, passive-voice checker.
 
 ## Gap table
-| Feature | Harper today | Verdict for Flowgram |
+| Feature | Harper today | Verdict for Gramflow |
 |---|---|---|
 | Spelling, grammar, punctuation | Strong, fast, offline | **Keep.** This is the moat |
 | Clarity (wordiness, filler, hedging, redundancy, long sentences) | Partial (filler, hedging, redundancy rules, `long_sentences`) | **Expand** with more Weir rules |
@@ -46,8 +46,8 @@ Sources: Harper from this repo (`harper-core`, `harper-desktop`, `harper-ls`, `p
 ## The one big decision: AI
 Harper has no machine-learning rewrites. Grammarly's headline features (tone, rewrite, paraphrase) need a language model. Options:
 1. **Rule-based only.** Fastest, fully private, matches Harper's identity. No rewrites.
-2. **Optional bring-your-own model (recommended).** Off by default. The user points Flowgram at a local model (Ollama or similar) or their own API key. Text only leaves the device when they choose it, and the UI says so. Rules stay the fast first pass.
-3. **Hosted Flowgram AI.** Needs accounts, servers, billing and a privacy policy. Not recommended for a family-and-friends release.
+2. **Optional bring-your-own model (recommended).** Off by default. The user points Gramflow at a local model (Ollama or similar) or their own API key. Text only leaves the device when they choose it, and the UI says so. Rules stay the fast first pass.
+3. **Hosted Gramflow AI.** Needs accounts, servers, billing and a privacy policy. Not recommended for a family-and-friends release.
 
 ## Strengths to keep and advertise
 Offline, instant, open source, no account, no subscription, text never leaves the device by default.

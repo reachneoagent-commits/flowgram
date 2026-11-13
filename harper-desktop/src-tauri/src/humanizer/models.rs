@@ -98,7 +98,7 @@ impl Tier {
         format!("{REPO_BASE}/{}", self.info().file)
     }
 
-    /// Folder holding downloaded models, inside Flowgram's config folder.
+    /// Folder holding downloaded models, inside Gramflow's config folder.
     pub fn models_dir() -> Option<PathBuf> {
         dirs::config_dir().map(|dir| dir.join("harper-desktop").join("humanizer").join("models"))
     }

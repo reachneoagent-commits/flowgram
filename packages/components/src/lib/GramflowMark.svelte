@@ -1,5 +1,5 @@
 <script lang="ts">
-/** The Flowgram logo mark. Fills with the current text colour so it works on any surface. */
+/** The Gramflow logo mark. Fills with the current text colour so it works on any surface. */
 export let className = 'h-6 w-auto';
 export let label = '';
 </script>

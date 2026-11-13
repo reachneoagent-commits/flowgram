@@ -72,7 +72,7 @@ pub async fn download_file(
     let final_path = final_path.to_path_buf();
 
     let client = reqwest::Client::builder()
-        .user_agent("Flowgram")
+        .user_agent("Gramflow")
         .connect_timeout(std::time::Duration::from_secs(20))
         .build()?;
 
@@ -180,7 +180,7 @@ mod tests {
 
     #[test]
     fn sha256_matches_a_known_digest() {
-        let dir = std::env::temp_dir().join("flowgram-humanizer-sha-test");
+        let dir = std::env::temp_dir().join("gramflow-humanizer-sha-test");
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join("abc.txt");
         std::fs::write(&path, b"abc").unwrap();

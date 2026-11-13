@@ -54,8 +54,8 @@ $effect(() => {
         class="flex shrink-0 flex-row items-center justify-between gap-2 border-b border-gray-100 px-4 py-3 dark:border-slate-800"
     >
         <div class="flex flex-row items-center gap-2.5">
-            <img src={logo} alt="Flowgram logo" class="h-6 w-6 rounded-md" />
-            <span class="text-sm font-semibold tracking-tight">Flowgram</span>
+            <img src={logo} alt="Gramflow logo" class="h-6 w-6 rounded-md" />
+            <span class="text-sm font-semibold tracking-tight">Gramflow</span>
         </div>
 
         {#if popupState.page != 'main'}

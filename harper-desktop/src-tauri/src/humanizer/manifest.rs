@@ -1,6 +1,6 @@
 //! The list of Humanizer model versions we have reviewed and approved.
 //!
-//! Flowgram never reads the upstream Humanizer repository. It reads this manifest, which we
+//! Gramflow never reads the upstream Humanizer repository. It reads this manifest, which we
 //! publish ourselves after looking at what changed upstream. A model only reaches users once it
 //! is listed here, pinned to an exact revision and checksum.
 
@@ -8,7 +8,7 @@ use super::models::{InstalledModels, Tier};
 use serde::{Deserialize, Serialize};
 
 pub const MANIFEST_URL: &str =
-    "https://raw.githubusercontent.com/reachneoagent-commits/flowgram/main/humanizer/manifest.json";
+    "https://raw.githubusercontent.com/reachneoagent-commits/gramflow/main/humanizer/manifest.json";
 
 const SCHEMA: u32 = 1;
 /// The only places an approved model may be downloaded from.
@@ -38,7 +38,7 @@ pub struct ManifestModel {
     pub url: String,
     pub size_bytes: u64,
     pub sha256: String,
-    /// Oldest Flowgram that can use this model.
+    /// Oldest Gramflow that can use this model.
     pub min_app_version: String,
 }
 
@@ -46,7 +46,7 @@ pub struct ManifestModel {
 pub enum ManifestError {
     #[error("The update list isn't valid JSON: {0}")]
     Parse(String),
-    #[error("The update list uses a newer format than this version of Flowgram understands.")]
+    #[error("The update list uses a newer format than this version of Gramflow understands.")]
     Schema,
     #[error("The update list has a problem: {0}")]
     Invalid(String),
@@ -114,7 +114,7 @@ pub struct Update {
     pub released: String,
     pub notes: String,
     pub size_bytes: u64,
-    /// This copy of Flowgram is too old to use the new model; it must update itself first.
+    /// This copy of Gramflow is too old to use the new model; it must update itself first.
     pub needs_newer_app: bool,
 }
 

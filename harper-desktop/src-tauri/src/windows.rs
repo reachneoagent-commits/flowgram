@@ -109,8 +109,8 @@ pub fn show_editor_tab(app: &tauri::AppHandle, tab: EditorTab) -> tauri::Result<
     // The tab goes in as a script rather than a `?tab=` query: app URLs are file paths, so a query
     // string would make the page fail to load (a 404).
     let window = WebviewWindowBuilder::new(app, "editor", WebviewUrl::App("index.html".into()))
-        .initialization_script(format!("window.__FLOWGRAM_TAB__ = '{}';", tab.name()))
-        .title("Flowgram")
+        .initialization_script(format!("window.__GRAMFLOW_TAB__ = '{}';", tab.name()))
+        .title("Gramflow")
         .theme(saved_theme(app))
         .inner_size(1100.0, 760.0)
         .min_inner_size(720.0, 480.0)
@@ -205,7 +205,7 @@ pub fn show_settings_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     };
     let window = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
         .theme(saved_theme(app))
-        .title("Flowgram Settings")
+        .title("Gramflow Settings")
         .inner_size(width, height)
         .min_inner_size(780.0, 520.0)
         .center()
@@ -220,7 +220,7 @@ pub fn open_issue_report(app: &AppHandle) {
     let _ = app
         .opener()
         .open_url(
-            "https://github.com/reachneoagent-commits/flowgram/issues/new/choose",
+            "https://github.com/reachneoagent-commits/gramflow/issues/new/choose",
             None::<&str>,
         )
         .inspect_err(|err| error!("failed to open issue report URL: {err}"));

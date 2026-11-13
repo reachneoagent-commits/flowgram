@@ -1,6 +1,6 @@
-# Flowgram: recommendations and license register
+# Gramflow: recommendations and license register
 
-**Rule: everything we ship must be open source** (OSI-approved licenses: MIT, Apache-2.0, BSD; fonts under SIL OFL). Flowgram inherits Harper's **Apache-2.0**, so MIT, Apache-2.0 and BSD can be bundled with attribution. Not legal advice.
+**Rule: everything we ship must be open source** (OSI-approved licenses: MIT, Apache-2.0, BSD; fonts under SIL OFL). Gramflow inherits Harper's **Apache-2.0**, so MIT, Apache-2.0 and BSD can be bundled with attribution. Not legal advice.
 
 ## Recommendations (in build order)
 | # | Feature | Source | License | Status |
@@ -32,7 +32,7 @@
 ## Housekeeping required by Harper's license (Apache-2.0)
 - Keep `LICENSE` and add a `NOTICE`/`THIRD_PARTY_LICENSES` file listing every project above that we bundle.
 - Keep copyright notices in files we modify and mark that we changed them.
-- Do not use the Harper or Automattic names or logos. Flowgram's own logo and name only.
+- Do not use the Harper or Automattic names or logos. Gramflow's own logo and name only.
 - Read `AGENT_POLICY.md` before any code change.
 
 ## Honest limits

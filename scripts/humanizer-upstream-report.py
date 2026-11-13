@@ -105,7 +105,7 @@ def main():
         "",
         "1. Download the changed model with the Humanizer app or llama.cpp and try real drafts (numbers, names, English and Chinese).",
         "2. Publish it: `python3 scripts/humanizer-publish.py --version <label> --notes \"<what changed>\" --approve`",
-        "3. Commit `humanizer/manifest.json` and `humanizer/upstream-state.json`. Flowgram users then see the update.",
+        "3. Commit `humanizer/manifest.json` and `humanizer/upstream-state.json`. Gramflow users then see the update.",
         "",
         "Rejecting a release: do nothing, or run this script with `--write-state` to stop it being reported again.",
     ]

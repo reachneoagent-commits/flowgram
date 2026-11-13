@@ -579,7 +579,7 @@ fn reveal_in_file_manager(path: &std::path::Path) -> Result<(), String> {
         .map_err(|error| format!("Could not open the folder: {error}"))
 }
 
-/// Lists each browser profile and whether the Flowgram extension is loaded in it.
+/// Lists each browser profile and whether the Gramflow extension is loaded in it.
 #[tauri::command]
 async fn get_browser_extension_profiles()
 -> Result<Vec<crate::browser_extension::BrowserProfileStatus>, String> {

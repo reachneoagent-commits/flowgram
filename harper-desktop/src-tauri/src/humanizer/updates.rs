@@ -22,7 +22,7 @@ pub const SMOKE_DRAFT: &str = "Thanks for reaching out. I wanted to circle back 
 
 pub async fn fetch_manifest() -> Result<Manifest, String> {
     let response = reqwest::Client::builder()
-        .user_agent("Flowgram")
+        .user_agent("Gramflow")
         .timeout(Duration::from_secs(20))
         .build()
         .map_err(|error| error.to_string())?
@@ -259,7 +259,7 @@ mod tests {
 
     fn temp(name: &str) -> std::path::PathBuf {
         let dir =
-            std::env::temp_dir().join(format!("flowgram-updates-{name}-{}", fastrand::u32(..)));
+            std::env::temp_dir().join(format!("gramflow-updates-{name}-{}", fastrand::u32(..)));
         std::fs::create_dir_all(&dir).unwrap();
         dir
     }

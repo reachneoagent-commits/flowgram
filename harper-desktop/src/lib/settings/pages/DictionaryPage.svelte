@@ -151,7 +151,7 @@ async function submitDictionaryWord() {
         <div class="stanza">
           <div class="eyebrow">User Dictionary</div>
           <p class="section-copy">
-            This is your place to keep words that are personal to you. People, places, and things that might not be in standard English go here. Any words in this list won't be corrected by Flowgram.
+            This is your place to keep words that are personal to you. People, places, and things that might not be in standard English go here. Any words in this list won't be corrected by Gramflow.
           </p>
 
           {#if isDictionaryLoading}

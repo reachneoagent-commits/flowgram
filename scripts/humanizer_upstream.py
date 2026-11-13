@@ -21,7 +21,7 @@ WATCHED_SMALL_FILES = ["prompt_format.json", "config.json", "generation_config.j
 
 
 def get(url, accept="application/json"):
-    request = urllib.request.Request(url, headers={"User-Agent": "Flowgram-humanizer-tools", "Accept": accept})
+    request = urllib.request.Request(url, headers={"User-Agent": "Gramflow-humanizer-tools", "Accept": accept})
     with urllib.request.urlopen(request, timeout=60) as response:
         return response.read()
 

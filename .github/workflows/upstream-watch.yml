@@ -1,6 +1,6 @@
 name: Watch Harper for updates
 
-# Once a week, look for new commits in Harper (the project Flowgram is forked from) and open
+# Once a week, look for new commits in Harper (the project Gramflow is forked from) and open
 # an issue that lists them. Nothing is merged. To bring them in, run "Prepare Harper merge".
 
 on:
@@ -32,7 +32,7 @@ jobs:
           echo "New Harper commits: $COUNT"
           EXISTING=$(gh issue list --label harper-update --state open --json number -q '.[0].number')
           if [ "$COUNT" -eq 0 ]; then
-            [ -n "$EXISTING" ] && gh issue close "$EXISTING" --comment "Flowgram is up to date with Harper."
+            [ -n "$EXISTING" ] && gh issue close "$EXISTING" --comment "Gramflow is up to date with Harper."
             exit 0
           fi
           {

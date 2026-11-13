@@ -46,7 +46,7 @@ impl Config {
             auto_enable_new_apps: false,
             onboarding_completed: false,
             debounce_ms: 0,
-            // Off until Flowgram has its own signed update feed; the inherited feed is Harper's.
+            // Off until Gramflow has its own signed update feed; the inherited feed is Harper's.
             auto_update: false,
             last_update_check: None,
             highlighter_service_enabled: true,
@@ -70,7 +70,7 @@ impl Config {
 
     /// Resolves an app's enabled state, registering unknown apps when automatic enablement is on.
     /// Existing disabled entries are never re-enabled; removed entries can be discovered again.
-    /// Flowgram itself is excluded from discovery, but explicitly configured entries are respected.
+    /// Gramflow itself is excluded from discovery, but explicitly configured entries are respected.
     /// The caller is responsible for persisting any newly registered integration.
     pub fn resolve_integration(&mut self, bundle_id: &str) -> bool {
         let bundle_id = bundle_id.trim();

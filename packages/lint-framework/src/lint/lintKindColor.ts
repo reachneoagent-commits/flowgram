@@ -3,7 +3,7 @@ import { getContrastingTextColor } from './utils';
 
 export type { LintKind } from 'harper.js';
 
-// Flowgram's four issue categories. Tuned to stay visible on both light and dark pages.
+// Gramflow's four issue categories. Tuned to stay visible on both light and dark pages.
 const SPELLING = '#E5532D'; // Coral
 const GRAMMAR = '#3D8BFF'; // Sky
 const CLARITY = '#E69A0B'; // Amber

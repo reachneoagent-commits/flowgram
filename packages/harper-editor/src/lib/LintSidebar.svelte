@@ -316,7 +316,7 @@ function createSnippetFor(lintBox: LintBox) {
 						</svg>
 					</div>
 					<strong class="mb-1 block font-serif text-2xl leading-none font-normal text-stone-950 italic dark:text-stone-100">All clear</strong>
-					<p class="m-0">Flowgram has no suggestions for this document.</p>
+					<p class="m-0">Gramflow has no suggestions for this document.</p>
 				</div>
 			{:else}
 				{#each lintBoxes as lintBox}

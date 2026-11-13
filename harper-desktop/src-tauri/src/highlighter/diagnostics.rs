@@ -42,7 +42,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn the_log_lives_in_the_flowgram_config_folder() {
+    fn the_log_lives_in_the_gramflow_config_folder() {
         let path = log_path().unwrap();
         assert_eq!(path.file_name().unwrap(), "highlighter.log");
         assert_eq!(

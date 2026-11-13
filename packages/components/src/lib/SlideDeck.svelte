@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMount, tick } from 'svelte';
 import Button from './Button.svelte';
-import FlowgramMark from './FlowgramMark.svelte';
+import GramflowMark from './GramflowMark.svelte';
 import ChevronLeftIcon from './icons/ChevronLeftIcon.svelte';
 import ChevronRightIcon from './icons/ChevronRightIcon.svelte';
 
@@ -124,8 +124,8 @@ function handleKeydown(event: KeyboardEvent) {
 
 			<div class={fullBleed ? 'relative min-h-0 flex-1 overflow-y-auto px-8 pt-6 pb-6 sm:px-14' : 'relative overflow-hidden px-8 pt-7 pb-8 sm:px-14'}>
 				<div class="flex items-center gap-2.5 text-foreground">
-					<FlowgramMark className="h-6 w-auto" />
-					<span class="text-2xl leading-none font-semibold tracking-[-0.05em]">flowgram</span>
+					<GramflowMark className="h-6 w-auto" />
+					<span class="text-2xl leading-none font-semibold tracking-[-0.05em]">gramflow</span>
 				</div>
 
 				<div class={fullBleed ? 'grid pt-6' : 'grid min-h-96 pt-10'}>

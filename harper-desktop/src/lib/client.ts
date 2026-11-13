@@ -90,7 +90,7 @@ export interface HumanizerDownloadDone {
 const ACCESSIBILITY_PERMISSION_TIMEOUT_MS = 6_000;
 
 /** Fired on `window` after the rule settings are saved. */
-export const LINT_CONFIG_CHANGED = 'flowgram:lint-config-changed';
+export const LINT_CONFIG_CHANGED = 'gramflow:lint-config-changed';
 
 let configLinterPromise: Promise<LocalLinterType> | null = null;
 

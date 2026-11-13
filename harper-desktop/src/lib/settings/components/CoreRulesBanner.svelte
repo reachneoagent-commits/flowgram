@@ -3,7 +3,7 @@ import { Button } from 'components';
 import { onMount } from 'svelte';
 import { Client, LINT_CONFIG_CHANGED } from '$lib/client';
 
-/** Rules most people rely on. If one is off, Flowgram looks broken, so say so. */
+/** Rules most people rely on. If one is off, Gramflow looks broken, so say so. */
 const CORE_RULES: Record<string, string> = {
 	SpellCheck: 'Spell checking',
 };
@@ -47,7 +47,7 @@ async function turnOn() {
   <div class="core-rules-banner" role="alert">
     <p>
       <strong>{disabled.map((rule) => CORE_RULES[rule]).join(', ')} {disabled.length > 1 ? 'are' : 'is'} turned off.</strong>
-      Flowgram won't catch these mistakes until you switch it back on.
+      Gramflow won't catch these mistakes until you switch it back on.
     </p>
     <Button disabled={isFixing} on:click={turnOn}>{isFixing ? 'Turning on...' : 'Turn on'}</Button>
   </div>

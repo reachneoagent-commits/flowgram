@@ -70,7 +70,7 @@ impl OsBroker for WindowsBroker {
     fn is_harper_desktop(app_id: &str) -> bool {
         let Ok(executable) = std::env::current_exe()
             .and_then(std::fs::canonicalize)
-            .inspect_err(|error| eprintln!("failed to identify Flowgram executable: {error}"))
+            .inspect_err(|error| eprintln!("failed to identify Gramflow executable: {error}"))
         else {
             return false;
         };

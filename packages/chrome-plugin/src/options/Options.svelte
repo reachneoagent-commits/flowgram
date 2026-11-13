@@ -430,10 +430,10 @@ async function removeWeirpack(id: string) {
     <!-- Header -->
     <Card class="flex shrink-0 items-center gap-3.5 p-3">
       <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 dark:bg-slate-800">
-        <img src={logo} alt="Flowgram logo" class="h-6 w-auto" />
+        <img src={logo} alt="Gramflow logo" class="h-6 w-auto" />
       </div>
       <div class="flex flex-col">
-        <h1 class="text-base font-semibold tracking-tight">Flowgram</h1>
+        <h1 class="text-base font-semibold tracking-tight">Gramflow</h1>
         <p class="text-xs text-gray-500 dark:text-[#d1d5db]!">Extension Settings</p>
       </div>
     </Card>
@@ -521,7 +521,7 @@ async function removeWeirpack(id: string) {
               <div class="flex items-center justify-between gap-4 py-3.5">
                 <div class="flex flex-col">
                   <h3 id="isolate-label" class="text-base font-semibold">Ignore Non-English Text (Beta)</h3>
-                  <p id="isolate-desc" class="text-xs text-gray-600 dark:text-[#d1d5db]!">Skip text that Flowgram detects as not English. This feature is in beta and is unlikely to work reliably.</p>
+                  <p id="isolate-desc" class="text-xs text-gray-600 dark:text-[#d1d5db]!">Skip text that Gramflow detects as not English. This feature is in beta and is unlikely to work reliably.</p>
                 </div>
 
                 <div class="h-9 w-48 shrink-0 rounded-lg border border-gray-200 p-1 dark:border-slate-700 dark:bg-slate-900">
@@ -566,7 +566,7 @@ async function removeWeirpack(id: string) {
               <div class="flex items-center justify-between gap-4 py-3.5">
                 <div class="flex flex-col">
                   <h3 id="default-enabled-label" class="text-base font-semibold">Enable on New Sites by Default</h3>
-                  <p id="default-enabled-desc" class="text-xs text-gray-600 dark:text-[#d1d5db]!">Automatically run Flowgram on newly visited websites.</p>
+                  <p id="default-enabled-desc" class="text-xs text-gray-600 dark:text-[#d1d5db]!">Automatically run Gramflow on newly visited websites.</p>
                 </div>
 
                 <div class="h-9 w-48 shrink-0 rounded-lg border border-gray-200 p-1 dark:border-slate-700 dark:bg-slate-900">

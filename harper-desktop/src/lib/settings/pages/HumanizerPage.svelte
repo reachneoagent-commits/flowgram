@@ -227,7 +227,7 @@ async function confirmDelete() {
         <div class="stanza">
           <div class="eyebrow">Updates</div>
           <p class="section-copy">
-            Flowgram checks a list of Humanizer versions we've reviewed and approved. Nothing is installed without your click, and the version you have is kept so you can go back.
+            Gramflow checks a list of Humanizer versions we've reviewed and approved. Nothing is installed without your click, and the version you have is kept so you can go back.
           </p>
           <div class="rows">
             <SettingRow top>
@@ -266,7 +266,7 @@ async function confirmDelete() {
                     </p>
                     <p>{update.notes}</p>
                     {#if update.needs_newer_app}
-                      <p>This version needs a newer Flowgram. Update the app first.</p>
+                      <p>This version needs a newer Gramflow. Update the app first.</p>
                     {:else if working}
                       <p role="status">{PHASES[$humanizer.updatePhase?.phase ?? 'downloading'] ?? 'Working'}...</p>
                       {#if $humanizer.progress && $humanizer.progress.tier === update.tier && $humanizer.updatePhase?.phase !== 'testing'}
@@ -301,7 +301,7 @@ async function confirmDelete() {
         <div class="stanza">
           <div class="eyebrow">Use it</div>
           <p class="section-copy">
-            Select text in any app and press <kbd>{shortcutLabel}</kbd>. Flowgram rewrites it and offers to replace your selection. You can also paste a draft in the Humanize tab of the editor.
+            Select text in any app and press <kbd>{shortcutLabel}</kbd>. Gramflow rewrites it and offers to replace your selection. You can also paste a draft in the Humanize tab of the editor.
           </p>
           <div class="inline-row">
             <Button size="sm" on:click={() => run(Client.humanizerOpenWindow)}>Open Humanize in the editor</Button>
@@ -359,7 +359,7 @@ async function confirmDelete() {
 {#if pendingRollback}
   <ConfirmDialog
     title={`Go back to the previous ${pendingRollback.label} version?`}
-    message="Flowgram switches to the version you had before the last update. You can switch back again afterwards."
+    message="Gramflow switches to the version you had before the last update. You can switch back again afterwards."
     confirmLabel="Go back"
     cancelLabel="Keep current"
     onCancel={() => (pendingRollback = null)}

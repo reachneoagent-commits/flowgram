@@ -3,7 +3,7 @@
 
 Run this only after reviewing `humanizer-upstream-report.py` and trying the new model. The manifest
 pins each model to the exact upstream revision and checksum, so what users download can never
-change after approval. Flowgram reads this file, never the upstream repository.
+change after approval. Gramflow reads this file, never the upstream repository.
 """
 import argparse
 import datetime
@@ -17,7 +17,7 @@ def main():
     parser.add_argument("--version", required=True, help="label for this release, e.g. 2026-11-20")
     parser.add_argument("--notes", required=True, help="what changed, in plain words; users read this before updating")
     parser.add_argument("--tiers", default=",".join(TIER_FILES), help="model sizes to publish (default: all)")
-    parser.add_argument("--min-app", default="3.0.12", help="oldest Flowgram version that can use this release")
+    parser.add_argument("--min-app", default="3.0.12", help="oldest Gramflow version that can use this release")
     parser.add_argument("--approve", action="store_true", help="required: confirms you reviewed the changes and tested the model")
     args = parser.parse_args()
 

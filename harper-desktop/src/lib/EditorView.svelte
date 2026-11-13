@@ -17,7 +17,7 @@ const tabs: Array<{ id: Tab; label: string }> = [
 
 /** The window opens on the tab it was asked for; later requests arrive as events. */
 let tab: Tab =
-	(window as { __FLOWGRAM_TAB__?: string }).__FLOWGRAM_TAB__ === 'humanize' ||
+	(window as { __GRAMFLOW_TAB__?: string }).__GRAMFLOW_TAB__ === 'humanize' ||
 	new URLSearchParams(window.location.search).get('tab') === 'humanize'
 		? 'humanize'
 		: 'check';

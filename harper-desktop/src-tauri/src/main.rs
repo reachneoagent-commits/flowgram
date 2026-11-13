@@ -168,7 +168,7 @@ pub fn run_tauri() {
     let accessibility_granted =
         broker.accessibility_permission_status() == AccessibilityPermissionStatus::Granted;
     let should_start_highlighter = config.highlighter_service_enabled && accessibility_granted;
-    // Without Accessibility access Flowgram cannot see other apps and would silently do nothing,
+    // Without Accessibility access Gramflow cannot see other apps and would silently do nothing,
     // so bring up Settings, which explains what to do.
     let show_settings_for_permission = config.highlighter_service_enabled && !accessibility_granted;
     let config = Arc::new(Mutex::new(config));
@@ -536,7 +536,7 @@ struct IntegrationState {
 
 /// Builds the broker's policy callback. Known apps are checked locally; only unknown apps with
 /// automatic enablement on reach `resolve`, which persists registration in the parent process.
-/// Flowgram itself is excluded from discovery, but explicitly configured entries are respected.
+/// Gramflow itself is excluded from discovery, but explicitly configured entries are respected.
 /// Standalone callers can approve registration locally without IPC.
 fn integration_callback(
     state: Arc<StdMutex<IntegrationState>>,

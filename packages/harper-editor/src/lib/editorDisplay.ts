@@ -1,5 +1,5 @@
 /**
- * Shared display configuration and helpers for the Flowgram editor UI.
+ * Shared display configuration and helpers for the Gramflow editor UI.
  *
  * This module keeps editor-only presentation choices, such as lint-kind styles,
  * lint-kind ordering, font options, and small formatting helpers, out of Svelte
@@ -71,7 +71,7 @@ export const LINT_KIND_ORDER: LintKind[] = [
 ];
 
 /**
- * Presentation metadata for each lint kind, mapped onto Flowgram's four categories
+ * Presentation metadata for each lint kind, mapped onto Gramflow's four categories
  * (spelling, grammar, clarity, style). Colours come from the shared `cat-*` tokens.
  *
  * Keeping these classes here lets the editor share one visual language across
