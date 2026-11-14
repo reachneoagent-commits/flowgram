@@ -177,6 +177,7 @@ use super::let_to_do::LetToDo;
 use super::lets_confusion::LetsConfusion;
 use super::likewise::Likewise;
 use super::little_known::LittleKnown;
+use super::little_to_no::LittleToNo;
 use super::long_sentences::LongSentences;
 use super::long_time_ago::LongTimeAgo;
 use super::look_down_ones_nose::LookDownOnesNose;
@@ -829,6 +830,7 @@ impl LintGroup {
         insert_struct_rule!(LetsConfusion);
         insert_expr_rule!(Likewise);
         insert_struct_rule!(LittleKnown);
+        insert_struct_rule!(LittleToNo);
         insert_struct_rule!(LongSentences);
         insert_expr_rule!(LongTimeAgo);
         insert_expr_rule!(LookDownOnesNose);

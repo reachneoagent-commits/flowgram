@@ -88,6 +88,7 @@ create_test!(misc_closed_compound_clean.md, 0, Dialect::American);
 create_test!(statist_localist.md, 0, Dialect::American);
 // The fixture is AI-written prose; `AiSoundingPhrases` correctly flags "a testament to".
 create_test!(yogurt_british_clean.md, 1, Dialect::British);
+create_test!(british_ise_spellings_clean.md, 0, Dialect::British);
 create_test!(issue_1581.md, 0, Dialect::British);
 create_test!(issue_2054.md, 6, Dialect::British);
 create_test!(issue_1988.md, 0, Dialect::American);

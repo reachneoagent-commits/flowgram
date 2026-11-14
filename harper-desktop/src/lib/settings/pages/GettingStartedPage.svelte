@@ -3,7 +3,13 @@ import { isTauri } from '@tauri-apps/api/core';
 import { platform } from '@tauri-apps/plugin-os';
 import { Button, SlideDeck, Toggle } from 'components';
 import { onMount } from 'svelte';
-import { type AccessibilityPermissionStatus, type BrowserId, Client, type Integration } from '$lib/client';
+import {
+	type AccessibilityPermissionStatus,
+	type BrowserId,
+	Client,
+	type Integration,
+	type OnboardingState,
+} from '$lib/client';
 import {
 	cancelHumanizerDownload,
 	formatGb,
@@ -17,7 +23,7 @@ import AppPickerModal from '../components/AppPickerModal.svelte';
 
 /** Slide identities determine setup gates; only the welcome and test drive need no action. */
 type OnboardingSlide = {
-	id: 'welcome' | 'accessibility' | 'apps' | 'browser' | 'humanizer' | 'test-drive' | 'ready';
+	id: Exclude<OnboardingState, 'complete' | 'integration'>;
 	title: string;
 	lede: string;
 };
@@ -60,6 +66,7 @@ const allSlides: OnboardingSlide[] = [
 	},
 ];
 
+export let initialState: Exclude<OnboardingState, 'complete'> = 'welcome';
 export let onComplete: () => void;
 
 let step = 0;
@@ -118,6 +125,11 @@ $: nextDisabled = !canAdvance(slides[step].id, accessibilityReady, isMacOS);
 onMount(() => {
 	// Use the native platform in Tauri; user-agent detection is only for browser previews.
 	isMacOS = isTauri() ? platform() === 'macos' : navigator.userAgent.includes('Macintosh');
+	// Resume where the user left off; the old TextEdit step became the app picker.
+	const availableSlides = allSlides.filter((slide) => slide.id !== 'accessibility' || isMacOS);
+	const restoredState = initialState === 'integration' ? 'apps' : initialState;
+	const restoredStep = availableSlides.findIndex((slide) => slide.id === restoredState);
+	step = restoredStep >= 0 ? restoredStep : 0;
 	void prepareService();
 	void loadIntegrations();
 	void refreshHumanizer();
@@ -155,7 +167,7 @@ async function watchAccessibility() {
 		if (accessibilityReady && slides[step]?.id === 'accessibility') {
 			// Let the "granted" message show for a moment before moving on.
 			await new Promise((resolve) => setTimeout(resolve, 900));
-			if (slides[step]?.id === 'accessibility') step++;
+			if (slides[step]?.id === 'accessibility') void changeStep(1);
 		}
 	} catch (error) {
 		console.error('Unable to check Accessibility permission.', error);
@@ -297,13 +309,25 @@ async function launchTextEditForTestDrive() {
 }
 
 /** Persist completion only after mandatory setup; leave the deck only when the save succeeds. */
+/** Move to another page and remember it, so a relaunch resumes there. */
+async function changeStep(direction: -1 | 1) {
+	const nextSlide = slides[step + direction];
+	if (!nextSlide) return;
+	step += direction;
+	try {
+		await Client.setOnboardingState(nextSlide.id);
+	} catch (error) {
+		console.error('Unable to save onboarding progress.', error);
+	}
+}
+
 async function completeOnboarding() {
 	if (!accessibilityReady || isCompletingOnboarding) return;
 	isCompletingOnboarding = true;
 	onboardingError = '';
 
 	try {
-		await Client.setOnboardingCompleted(true);
+		await Client.setOnboardingState('complete');
 		onComplete();
 	} catch (error) {
 		onboardingError = `Unable to complete onboarding: ${error}`;
@@ -352,9 +376,9 @@ async function prepareService(request = false) {
     finishDisabled={isCompletingOnboarding || !accessibilityReady}
     finishLabel={isCompletingOnboarding ? 'Finishing...' : 'Finish'}
     onBack={() => {
-      if (!isCompletingOnboarding) step--;
+      if (!isCompletingOnboarding) void changeStep(-1);
     }}
-    onNext={() => step++}
+    onNext={() => void changeStep(1)}
   >
     {#if slides[step].id === 'welcome' && !isMacOS}
       {#if isPreparingService}

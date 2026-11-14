@@ -32,6 +32,23 @@
 			"../../packages/chrome-plugin/build-firefox": "browser-extension/firefox",
 			"engine-bundle": "engine"
 		},
+		"macOS": {
+			"dmg": {
+				"background": "dmg/background.png",
+				"windowSize": {
+					"width": 440,
+					"height": 640
+				},
+				"appPosition": {
+					"x": 220,
+					"y": 120
+				},
+				"applicationFolderPosition": {
+					"x": 220,
+					"y": 470
+				}
+			}
+		},
 		"createUpdaterArtifacts": true,
 		"windows": {
 			"nsis": {

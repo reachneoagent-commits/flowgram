@@ -8,6 +8,14 @@
 		"core:window:allow-set-theme",
 		"global-shortcut:default",
 		"opener:default",
+		{
+			"identifier": "opener:allow-open-url",
+			"allow": [
+				{
+					"url": "x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_Accessibility"
+				}
+			]
+		},
 		"autostart:allow-enable",
 		"autostart:allow-disable",
 		"autostart:allow-is-enabled"

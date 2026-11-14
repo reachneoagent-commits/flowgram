@@ -1,6 +1,6 @@
 <script lang="ts">
 import { onMount } from 'svelte';
-import { Client } from '$lib/client';
+import { Client, type OnboardingState } from '$lib/client';
 import { applyTheme } from '$lib/theme';
 import SettingsSidebar from './SettingsSidebar.svelte';
 import AccessibilityBanner from './components/AccessibilityBanner.svelte';
@@ -21,7 +21,8 @@ import type { SectionId } from './settings-data';
 let active: SectionId = 'general';
 let contentEl: HTMLElement;
 let isLoadingOnboarding = true;
-let onboardingCompleted = false;
+let onboardingState: OnboardingState = 'welcome';
+let onboardingError = '';
 
 const titleMap: Record<SectionId, string> = {
 	general: 'General',
@@ -56,10 +57,12 @@ async function loadTheme() {
 }
 
 async function loadOnboardingState() {
+	isLoadingOnboarding = true;
+	onboardingError = '';
 	try {
-		onboardingCompleted = await Client.getOnboardingCompleted();
+		onboardingState = await Client.getOnboardingState();
 	} catch (error) {
-		console.error('Unable to load onboarding state.', error);
+		onboardingError = `Unable to load onboarding state: ${error}`;
 	} finally {
 		isLoadingOnboarding = false;
 	}
@@ -109,8 +112,15 @@ $: if (contentEl && active) {
       <p role="status">Loading settings...</p>
     </main>
   </div>
-{:else if !onboardingCompleted}
-  <GettingStartedPage onComplete={() => (onboardingCompleted = true)} />
+{:else if onboardingError}
+  <div class="settings-shell">
+    <main class="content" aria-label="Settings">
+      <p role="alert">{onboardingError}</p>
+      <button type="button" on:click={loadOnboardingState}>Retry</button>
+    </main>
+  </div>
+{:else if onboardingState !== 'complete'}
+  <GettingStartedPage initialState={onboardingState} onComplete={() => (onboardingState = 'complete')} />
 {:else}
   <div class="settings-shell">
     <SettingsSidebar bind:active />
