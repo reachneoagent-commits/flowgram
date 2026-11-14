@@ -320,6 +320,17 @@ function settingsValueToDialect(value: string): Dialect {
               <p class="result-summary">
                 Current version: {currentVersion || 'loading...'} · Latest version: {latestVersion || 'loading...'}
               </p>
+              <div class="inline-row">
+                <Button
+                  unstyled
+                  class="button"
+                  type="button"
+                  disabled={isCheckingForUpdates}
+                  on:click={checkForUpdates}
+                >
+                  {isCheckingForUpdates ? 'Checking...' : 'Check for updates'}
+                </Button>
+              </div>
               <Toggle slot="control" appearance="settings"
                 checked={autoUpdate}
                 aria-label="Automatically check for updates"
@@ -327,17 +338,6 @@ function settingsValueToDialect(value: string): Dialect {
                 on:click={() => setAutoUpdate(!autoUpdate)}
                />
             </SettingRow>
-            <div class="inline-row">
-              <Button
-                unstyled
-                class="button"
-                type="button"
-                disabled={isCheckingForUpdates}
-                on:click={checkForUpdates}
-              >
-                {isCheckingForUpdates ? 'Checking...' : 'Check for updates'}
-              </Button>
-            </div>
             {#if isAutoUpdateLoading}
               <p class="result-summary">Loading update setting...</p>
             {:else if autoUpdateError}

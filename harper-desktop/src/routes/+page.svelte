@@ -4,7 +4,12 @@ import { getCurrentWindow } from '@tauri-apps/api/window';
 import { onMount } from 'svelte';
 
 let isSettings = false;
+let isHumanize = false;
 let isViewResolved = false;
+
+function hasHumanizeRoute() {
+	return new URLSearchParams(window.location.search).get('view') === 'humanize';
+}
 
 function hasSettingsRoute() {
 	return (
@@ -22,10 +27,11 @@ onMount(() => {
 		currentWindowLabel = '';
 	}
 
-	isSettings = currentWindowLabel === 'settings' || hasSettingsRoute();
+	isHumanize = currentWindowLabel === 'humanize' || hasHumanizeRoute();
+	isSettings = !isHumanize && (currentWindowLabel === 'settings' || hasSettingsRoute());
 	isViewResolved = true;
 
-	if (isSettings) {
+	if (isSettings || isHumanize) {
 		document.body.classList.add('settings-view');
 	}
 
@@ -36,7 +42,11 @@ onMount(() => {
 </script>
 
 {#if isViewResolved}
-  {#if isSettings}
+  {#if isHumanize}
+    {#await import("$lib/settings/HumanizeApp.svelte") then module}
+      <svelte:component this={module.default} />
+    {/await}
+  {:else if isSettings}
     {#await import("$lib/settings/SettingsApp.svelte") then module}
       <svelte:component this={module.default} />
     {/await}

@@ -38,6 +38,7 @@ use tokio::{
     sync::Mutex,
 };
 
+mod app_restart;
 mod args;
 pub mod browser_extension;
 pub mod color;

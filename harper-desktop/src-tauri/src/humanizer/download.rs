@@ -48,7 +48,7 @@ pub async fn download(
         &tier.url(),
         &part_path,
         &final_path,
-        None,
+        Some(tier.info().sha256),
         cancel,
         on_progress,
     )

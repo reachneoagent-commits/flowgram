@@ -22,6 +22,8 @@ pub struct TierInfo {
     pub label: &'static str,
     pub blurb: &'static str,
     pub file: &'static str,
+    /// SHA-256 of the file at [`REVISION`], lowercase hex. The download is refused unless it matches.
+    pub sha256: &'static str,
     /// Approximate download size, in bytes.
     pub size_bytes: u64,
     /// Total system memory the model needs, in gigabytes.
@@ -36,6 +38,7 @@ pub const TIERS: [TierInfo; 5] = [
         label: "Best quality",
         blurb: "Highest fidelity. Needs a lot of memory.",
         file: "humanizer-12b-Q8_0.gguf",
+        sha256: "8d7a457b56de6530eaaf0151ccfa7550a4b20dab979737e259da9c63e960e0b0",
         size_bytes: 127 * GB / 10,
         min_ram_gb: 32,
     },
@@ -45,6 +48,7 @@ pub const TIERS: [TierInfo; 5] = [
         label: "Balanced",
         blurb: "Nearly identical to best quality, about 20% smaller.",
         file: "humanizer-12b-Q6_K.gguf",
+        sha256: "c98f03bb9e71456181f99b0e1d3391e07ce1afc357f9db4c33d6d379b8dd9f0d",
         size_bytes: 10 * GB,
         min_ram_gb: 16,
     },
@@ -54,6 +58,7 @@ pub const TIERS: [TierInfo; 5] = [
         label: "Compact",
         blurb: "Slight quality loss. Good for machines under 16 GB.",
         file: "humanizer-12b-Q4_K_M.gguf",
+        sha256: "2229574dec5178629575ee4a153dfee7d9e924ab997d0ad9d2ac622b67e44834",
         size_bytes: 76 * GB / 10,
         min_ram_gb: 12,
     },
@@ -63,6 +68,7 @@ pub const TIERS: [TierInfo; 5] = [
         label: "Small",
         blurb: "Small quality loss, with a few more fact slips.",
         file: "humanizer-12b-Q3-QAT.gguf",
+        sha256: "307bbfdf66fb22bf98aaa93fe7d54a713bf167e646073dc0cf10870b1525eb94",
         size_bytes: 56 * GB / 10,
         min_ram_gb: 10,
     },
@@ -72,12 +78,18 @@ pub const TIERS: [TierInfo; 5] = [
         label: "Smallest",
         blurb: "Runs on 8 GB. Check numbers and names in the result.",
         file: "humanizer-12b-IQ2_XS-QAT.gguf",
+        sha256: "383e5ca8f1f48ab5f65013adbc1965fa70d1d1afa6c45d932c34b854e38edbb5",
         size_bytes: 39 * GB / 10,
         min_ram_gb: 8,
     },
 ];
 
-const REPO_BASE: &str = "https://huggingface.co/jialinyyzz/humanizer/resolve/main";
+/// The exact commit of the model repository the checksums above were taken from. Never `main`:
+/// the owner of that account could replace the files, and every Gramflow user would download the
+/// replacement. To move to a newer model, change this and every `sha256` together.
+pub const REVISION: &str = "2e57b6528a4070c33f3e09ca24e3325a84272f68";
+
+const REPO_BASE: &str = "https://huggingface.co/jialinyyzz/humanizer/resolve";
 
 impl Tier {
     pub fn info(self) -> &'static TierInfo {
@@ -95,7 +107,7 @@ impl Tier {
     }
 
     pub fn url(self) -> String {
-        format!("{REPO_BASE}/{}", self.info().file)
+        format!("{REPO_BASE}/{REVISION}/{}", self.info().file)
     }
 
     /// Folder holding downloaded models, inside Gramflow's config folder.
@@ -183,11 +195,29 @@ mod tests {
     }
 
     #[test]
-    fn urls_point_at_the_model_repository() {
+    fn urls_point_at_the_pinned_revision_of_the_model_repository() {
         assert_eq!(
             Tier::Q8.url(),
-            "https://huggingface.co/jialinyyzz/humanizer/resolve/main/humanizer-12b-Q8_0.gguf"
+            "https://huggingface.co/jialinyyzz/humanizer/resolve/2e57b6528a4070c33f3e09ca24e3325a84272f68/humanizer-12b-Q8_0.gguf"
         );
+        assert_eq!(REVISION.len(), 40);
+        assert!(REVISION.bytes().all(|b| b.is_ascii_hexdigit()));
+    }
+
+    #[test]
+    fn every_tier_has_a_pinned_checksum() {
+        for info in &TIERS {
+            assert_eq!(info.sha256.len(), 64, "{}", info.id);
+            assert!(
+                info.sha256.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')),
+                "{}",
+                info.id
+            );
+        }
+        let mut sums: Vec<_> = TIERS.iter().map(|t| t.sha256).collect();
+        sums.sort_unstable();
+        sums.dedup();
+        assert_eq!(sums.len(), TIERS.len(), "two tiers share a checksum");
     }
 
     #[test]
