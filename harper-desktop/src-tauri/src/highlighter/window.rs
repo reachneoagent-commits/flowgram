@@ -106,7 +106,7 @@ impl Window {
     pub async fn new(
         event_loop: &ActiveEventLoop,
         monitor: MonitorHandle,
-        visible: bool,
+        _visible: bool,
     ) -> Result<Self, Error> {
         let context = super::fonts::context();
         let position = monitor.position();
