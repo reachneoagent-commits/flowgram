@@ -4,20 +4,20 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%sveltekit.assets%/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Flowgram Desktop</title>
+    <title>Gramflow Desktop</title>
     %sveltekit.head%
     <script>
       // Show start-up crashes on screen instead of leaving a blank white window.
       (function () {
         function show(message) {
-          var box = document.getElementById('flowgram-error');
+          var box = document.getElementById('gramflow-error');
           if (!box) {
             box = document.createElement('pre');
-            box.id = 'flowgram-error';
+            box.id = 'gramflow-error';
             box.style.cssText =
               'position:fixed;inset:0;margin:0;padding:16px;overflow:auto;z-index:99999;' +
               'background:#fff;color:#b00020;font:13px/1.4 Consolas,monospace;white-space:pre-wrap';
-            box.textContent = 'Flowgram could not draw this window. Please send a screenshot of this to support.\n\n';
+            box.textContent = 'Gramflow could not draw this window. Please send a screenshot of this to support.\n\n';
             (document.body || document.documentElement).appendChild(box);
           }
           box.textContent += message + '\n\n';

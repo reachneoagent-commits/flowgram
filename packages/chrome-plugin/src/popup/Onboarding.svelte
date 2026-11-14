@@ -7,7 +7,7 @@ let isConfirming = $state(false);
 
 const steps = [
 	'Start typing in any large text box — emails, docs, blog posts, you name it.',
-	'Keep writing — Flowgram quietly highlights potential hiccups as you go.',
+	'Keep writing — Gramflow quietly highlights potential hiccups as you go.',
 	'Click a highlight to open focused, context-aware suggestions.',
 ];
 
@@ -25,7 +25,7 @@ function handleStart() {
 	<div class="space-y-4">
 		<div>
 			<h2 class="text-base font-semibold dark:text-white">
-				Welcome! Let’s see Flowgram in action:
+				Welcome! Let’s see Gramflow in action:
 			</h2>
 			<p class="mt-0.5 text-xs text-gray-500 dark:text-slate-400">
 				Three quick tips to get the most out of your writing assistant.

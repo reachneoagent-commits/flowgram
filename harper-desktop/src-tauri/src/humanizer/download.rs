@@ -36,23 +36,48 @@ pub enum DownloadError {
 pub async fn download(
     tier: Tier,
     cancel: Arc<AtomicBool>,
-    mut on_progress: impl FnMut(Progress),
+    on_progress: impl FnMut(Progress),
 ) -> Result<(), DownloadError> {
-    let final_path = tier.path().ok_or(DownloadError::NoFolder)?;
-    let part_path = tier.partial_path().ok_or(DownloadError::NoFolder)?;
-    std::fs::create_dir_all(final_path.parent().ok_or(DownloadError::NoFolder)?)?;
-
     if tier.is_installed() {
         return Ok(());
     }
+    let final_path = tier.path().ok_or(DownloadError::NoFolder)?;
+    let part_path = tier.partial_path().ok_or(DownloadError::NoFolder)?;
+    download_file(
+        tier.info().id,
+        &tier.url(),
+        &part_path,
+        &final_path,
+        Some(tier.info().sha256),
+        cancel,
+        on_progress,
+    )
+    .await
+}
+
+/// Downloads `url` into `part_path`, resuming when a partial file exists, then moves it to
+/// `final_path`. With `expected_sha` the result must match it exactly; without one, the server's
+/// own checksum header is used when it sends one.
+pub async fn download_file(
+    label: &'static str,
+    url: &str,
+    part_path: &std::path::Path,
+    final_path: &std::path::Path,
+    expected_sha: Option<&str>,
+    cancel: Arc<AtomicBool>,
+    mut on_progress: impl FnMut(Progress),
+) -> Result<(), DownloadError> {
+    std::fs::create_dir_all(final_path.parent().ok_or(DownloadError::NoFolder)?)?;
+    let part_path = part_path.to_path_buf();
+    let final_path = final_path.to_path_buf();
 
     let client = reqwest::Client::builder()
-        .user_agent("Flowgram")
+        .user_agent("Gramflow")
         .connect_timeout(std::time::Duration::from_secs(20))
         .build()?;
 
     let resume_from = std::fs::metadata(&part_path).map(|m| m.len()).unwrap_or(0);
-    let mut request = client.get(tier.url());
+    let mut request = client.get(url);
     if resume_from > 0 {
         request = request.header(reqwest::header::RANGE, format!("bytes={resume_from}-"));
     }
@@ -68,9 +93,16 @@ pub async fn download(
     // The server ignored the range and sent the whole file: start over.
     let resumed = status.as_u16() == 206;
     let start = if resumed { resume_from } else { 0 };
-    // The checksum is compiled in, not read from the server's answer: a server that swaps the
-    // file would swap its own headers too.
-    let expected_sha = tier.info().sha256;
+    let header_sha = response
+        .headers()
+        .get("x-linked-etag")
+        .or_else(|| response.headers().get(reqwest::header::ETAG))
+        .and_then(|value| value.to_str().ok())
+        .map(|value| value.trim_matches('"').to_ascii_lowercase())
+        .filter(|value| value.len() == 64 && value.bytes().all(|b| b.is_ascii_hexdigit()));
+    let expected_sha = expected_sha
+        .map(|sha| sha.to_ascii_lowercase())
+        .or(header_sha);
     let total = start + response.content_length().unwrap_or(0);
 
     if !already_complete {
@@ -95,7 +127,7 @@ pub async fn download(
             if last_report.elapsed() >= std::time::Duration::from_millis(250) {
                 last_report = std::time::Instant::now();
                 on_progress(Progress {
-                    tier: tier.info().id,
+                    tier: label,
                     downloaded,
                     total,
                 });
@@ -103,19 +135,21 @@ pub async fn download(
         }
         file.flush()?;
         on_progress(Progress {
-            tier: tier.info().id,
+            tier: label,
             downloaded,
             total: downloaded,
         });
     }
 
-    let part = part_path.clone();
-    let actual = tokio::task::spawn_blocking(move || sha256_of(&part))
-        .await
-        .map_err(|error| std::io::Error::other(error.to_string()))??;
-    if actual != expected_sha {
-        let _ = std::fs::remove_file(&part_path);
-        return Err(DownloadError::ChecksumMismatch);
+    if let Some(expected) = expected_sha {
+        let part = part_path.clone();
+        let actual = tokio::task::spawn_blocking(move || sha256_of(&part))
+            .await
+            .map_err(|error| std::io::Error::other(error.to_string()))??;
+        if actual != expected {
+            let _ = std::fs::remove_file(&part_path);
+            return Err(DownloadError::ChecksumMismatch);
+        }
     }
 
     std::fs::rename(&part_path, &final_path)?;
@@ -146,7 +180,7 @@ mod tests {
 
     #[test]
     fn sha256_matches_a_known_digest() {
-        let dir = std::env::temp_dir().join("flowgram-humanizer-sha-test");
+        let dir = std::env::temp_dir().join("gramflow-humanizer-sha-test");
         std::fs::create_dir_all(&dir).unwrap();
         let path = dir.join("abc.txt");
         std::fs::write(&path, b"abc").unwrap();

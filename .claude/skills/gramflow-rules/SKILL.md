@@ -1,11 +1,11 @@
 ---
-name: flowgram-rules
-description: How to find gaps in Flowgram's grammar and spelling checks, write or fix a rule safely, and prove the change helped. Use when adding or changing grammar, spelling or style rules, reviewing what the checker misses, or after merging Harper updates.
+name: gramflow-rules
+description: How to find gaps in Gramflow's grammar and spelling checks, write or fix a rule safely, and prove the change helped. Use when adding or changing grammar, spelling or style rules, reviewing what the checker misses, or after merging Harper updates.
 ---
 
-# Improving Flowgram's rules
+# Improving Gramflow's rules
 
-Flowgram's checking engine is `harper-core` (Rust). Rules are either **Rust linters** or **Weir files**
+Gramflow's checking engine is `harper-core` (Rust). Rules are either **Rust linters** or **Weir files**
 (`.weir`, plain-text pattern rules). Prefer Weir for phrase and word-choice rules and Rust for anything
 that needs grammar structure. Read `AGENTS.md` ("On Writing New Rules") and
 `packages/web/src/routes/docs/weir/+page.md` before writing one.

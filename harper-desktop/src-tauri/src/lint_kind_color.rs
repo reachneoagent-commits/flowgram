@@ -31,7 +31,7 @@ pub enum TextColor {
     White,
 }
 
-/// Flowgram's four issue categories. Tuned to stay visible over both light and dark app
+/// Gramflow's four issue categories. Tuned to stay visible over both light and dark app
 /// backgrounds, since the overlay draws on top of other apps.
 const SPELLING: Color = Color {
     r: 0xE5,

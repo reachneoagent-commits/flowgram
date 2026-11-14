@@ -1,6 +1,6 @@
-# Flowgram design system (what the app actually implements)
+# Gramflow design system (what the app actually implements)
 
-One source of truth for tokens: `packages/components/src/lib/brand-tokens.css`. The editor imports the same file, so settings, onboarding and editor cannot drift apart. Visual reference: `brand/flowgram-brand-mockup.html`.
+One source of truth for tokens: `packages/components/src/lib/brand-tokens.css`. The editor imports the same file, so settings, onboarding and editor cannot drift apart. Visual reference: `brand/gramflow-brand-mockup.html`.
 
 ## Tokens (shadcn-style semantic roles, light and dark under `.dark`)
 `background`, `foreground`, `card`, `muted`, `muted-foreground`, `border`, `input`, `primary` (lime), `primary-foreground` (ink), `accent-surface` (meadow), `inverse`, `ring`, `destructive`, and issue categories `cat-spelling`, `cat-grammar`, `cat-style`, `cat-clarity`. Use roles in new code (`bg-background`, `text-muted-foreground`, `border-border`, `bg-cat-spelling/15`), never raw hex.

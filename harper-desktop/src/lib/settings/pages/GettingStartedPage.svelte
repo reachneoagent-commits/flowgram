@@ -3,13 +3,7 @@ import { isTauri } from '@tauri-apps/api/core';
 import { platform } from '@tauri-apps/plugin-os';
 import { Button, SlideDeck, Toggle } from 'components';
 import { onMount } from 'svelte';
-import {
-	type AccessibilityPermissionStatus,
-	type BrowserId,
-	Client,
-	type Integration,
-	type OnboardingState,
-} from '$lib/client';
+import { type AccessibilityPermissionStatus, type BrowserId, Client, type Integration } from '$lib/client';
 import {
 	cancelHumanizerDownload,
 	formatGb,
@@ -23,7 +17,7 @@ import AppPickerModal from '../components/AppPickerModal.svelte';
 
 /** Slide identities determine setup gates; only the welcome and test drive need no action. */
 type OnboardingSlide = {
-	id: Exclude<OnboardingState, 'complete' | 'integration'>;
+	id: 'welcome' | 'accessibility' | 'apps' | 'browser' | 'humanizer' | 'test-drive' | 'ready';
 	title: string;
 	lede: string;
 };
@@ -31,23 +25,23 @@ type OnboardingSlide = {
 const allSlides: OnboardingSlide[] = [
 	{
 		id: 'welcome',
-		title: 'Welcome to Flowgram',
-		lede: "Before you can start writing with Flowgram, we need to do a little housekeeping.\n\nDon't worry, this should only take a minute.",
+		title: 'Welcome to Gramflow',
+		lede: "Before you can start writing with Gramflow, we need to do a little housekeeping.\n\nDon't worry, this should only take a minute.",
 	},
 	{
 		id: 'accessibility',
 		title: 'Accessibility',
-		lede: 'To be able to read and write text to your favorite text editors, you need to grant Flowgram the permission to do so.\n\nNone of your text will leave your device.',
+		lede: 'To be able to read and write text to your favorite text editors, you need to grant Gramflow the permission to do so.\n\nNone of your text will leave your device.',
 	},
 	{
 		id: 'apps',
 		title: 'Choose your apps',
-		lede: 'Flowgram checks your writing in the apps you switch on. Notes, Mail, Messages and TextEdit are ready by default.\n\nTurn any off or add your own. Click Next to keep what you see; you can change it later in Settings → Integrations.',
+		lede: 'Gramflow checks your writing in the apps you switch on. Notes, Mail, Messages and TextEdit are ready by default.\n\nTurn any off or add your own. Click Next to keep what you see; you can change it later in Settings → Integrations.',
 	},
 	{
 		id: 'browser',
 		title: 'Add the browser extension',
-		lede: 'To check your writing on websites and in webmail, add the Flowgram extension to Chrome, Edge, Brave, Opera or Firefox.\n\nThis step is optional. Click Next to skip it and add the extension later from Settings → Integrations.',
+		lede: 'To check your writing on websites and in webmail, add the Gramflow extension to Chrome, Edge, Brave, Opera or Firefox.\n\nThis step is optional. Click Next to skip it and add the extension later from Settings → Integrations.',
 	},
 	{
 		id: 'humanizer',
@@ -56,17 +50,16 @@ const allSlides: OnboardingSlide[] = [
 	},
 	{
 		id: 'test-drive',
-		title: 'Try Flowgram',
-		lede: 'Open TextEdit and write something like, "This is an test."\n\nYou should see Flowgram jump in to fix that mistake.',
+		title: 'Try Gramflow',
+		lede: 'Open TextEdit and write something like, "This is an test."\n\nYou should see Gramflow jump in to fix that mistake.',
 	},
 	{
 		id: 'ready',
 		title: 'Ready',
-		lede: "Okay! Now we're ready to go.\n\nDon't let your dreams be dreams. Write anything, anywhere and Flowgram will be there to catch your mistakes.",
+		lede: "Okay! Now we're ready to go.\n\nDon't let your dreams be dreams. Write anything, anywhere and Gramflow will be there to catch your mistakes.",
 	},
 ];
 
-export let initialState: Exclude<OnboardingState, 'complete'> = 'welcome';
 export let onComplete: () => void;
 
 let step = 0;
@@ -77,7 +70,7 @@ let setupError = '';
 let copiedResetCommand = false;
 
 /** Clears a stale macOS Accessibility entry (for example after an update changed the app's signature). */
-const RESET_COMMAND = 'tccutil reset Accessibility com.flowgram.app';
+const RESET_COMMAND = 'tccutil reset Accessibility com.gramflow.app';
 
 async function copyResetCommand() {
 	try {
@@ -109,9 +102,15 @@ $: slides = allSlides.filter((slide) => slide.id !== 'accessibility' || isMacOS)
 $: humanizerStatus = $humanizer.status;
 $: humanizerVerdict = humanizerStatus?.verdict;
 $: humanizerOptions = humanizerVerdict?.options ?? [];
-$: if (!selectedTier) {
-	selectedTier = humanizerOptions.find((option) => option.recommended)?.id ?? '';
+$: if (!selectedTier && humanizerOptions.length) {
+	selectedTier =
+		humanizerOptions.find((option) => option.installed && option.id === humanizerStatus?.active)?.id ??
+		humanizerOptions.find((option) => option.installed)?.id ??
+		humanizerOptions.find((option) => option.recommended)?.id ??
+		'';
 }
+$: selectedOption = humanizerOptions.find((option) => option.id === selectedTier);
+$: selectedIsActive = Boolean(selectedOption?.installed && selectedOption.id === humanizerStatus?.active);
 $: humanizerBusy = humanizerStatus?.downloading ?? null;
 $: humanizerInstalled = humanizerOptions.some((option) => option.installed);
 /** The Humanizer slide speaks to this computer: its words change with what the check finds. */
@@ -125,11 +124,6 @@ $: nextDisabled = !canAdvance(slides[step].id, accessibilityReady, isMacOS);
 onMount(() => {
 	// Use the native platform in Tauri; user-agent detection is only for browser previews.
 	isMacOS = isTauri() ? platform() === 'macos' : navigator.userAgent.includes('Macintosh');
-	// Resume where the user left off; the old TextEdit step became the app picker.
-	const availableSlides = allSlides.filter((slide) => slide.id !== 'accessibility' || isMacOS);
-	const restoredState = initialState === 'integration' ? 'apps' : initialState;
-	const restoredStep = availableSlides.findIndex((slide) => slide.id === restoredState);
-	step = restoredStep >= 0 ? restoredStep : 0;
 	void prepareService();
 	void loadIntegrations();
 	void refreshHumanizer();
@@ -167,7 +161,7 @@ async function watchAccessibility() {
 		if (accessibilityReady && slides[step]?.id === 'accessibility') {
 			// Let the "granted" message show for a moment before moving on.
 			await new Promise((resolve) => setTimeout(resolve, 900));
-			if (slides[step]?.id === 'accessibility') void changeStep(1);
+			if (slides[step]?.id === 'accessibility') step++;
 		}
 	} catch (error) {
 		console.error('Unable to check Accessibility permission.', error);
@@ -183,7 +177,7 @@ function humanizerSlide(slide: OnboardingSlide, verdict: typeof humanizerVerdict
 	return {
 		...slide,
 		title: "Humanizer isn't available on this computer",
-		lede: `${verdict.detail}\n\nEverything else in Flowgram works as normal. Click Next to continue.`,
+		lede: `${verdict.detail}\n\nEverything else in Gramflow works as normal. Click Next to continue.`,
 	};
 }
 
@@ -309,16 +303,27 @@ async function launchTextEditForTestDrive() {
 }
 
 /** Persist completion only after mandatory setup; leave the deck only when the save succeeds. */
-/** Move to another page and remember it, so a relaunch resumes there. */
-async function changeStep(direction: -1 | 1) {
-	const nextSlide = slides[step + direction];
-	if (!nextSlide) return;
-	step += direction;
+/** Switches to the chosen model when it is already downloaded. */
+async function useSelectedModel() {
+	if (!selectedTier) return;
 	try {
-		await Client.setOnboardingState(nextSlide.id);
+		await Client.humanizerSetActiveModel(selectedTier);
+		await refreshHumanizer();
 	} catch (error) {
-		console.error('Unable to save onboarding progress.', error);
+		onboardingError = `${error}`;
 	}
+}
+
+/** Remembers the choice so Settings still offers setup, then moves on. Nothing is downloaded. */
+async function skipHumanizer() {
+	if (humanizerStatus && !humanizerInstalled) {
+		try {
+			await Client.humanizerSaveSettings({ ...humanizerStatus.settings, skipped: true });
+		} catch (error) {
+			console.error('Unable to save the Humanizer choice.', error);
+		}
+	}
+	step++;
 }
 
 async function completeOnboarding() {
@@ -327,7 +332,7 @@ async function completeOnboarding() {
 	onboardingError = '';
 
 	try {
-		await Client.setOnboardingState('complete');
+		await Client.setOnboardingCompleted(true);
 		onComplete();
 	} catch (error) {
 		onboardingError = `Unable to complete onboarding: ${error}`;
@@ -336,7 +341,7 @@ async function completeOnboarding() {
 	}
 }
 
-/** Start Flowgram on every platform, checking or requesting Accessibility permission only on macOS. */
+/** Start Gramflow on every platform, checking or requesting Accessibility permission only on macOS. */
 async function prepareService(request = false) {
 	isPreparingService = true;
 	setupError = '';
@@ -356,10 +361,10 @@ async function prepareService(request = false) {
 			(!isMacOS || accessibilityStatus === 'Granted') &&
 			!(await Client.startHighlighterService())
 		) {
-			throw new Error('The Flowgram service did not start. Please try again.');
+			throw new Error('The Gramflow service did not start. Please try again.');
 		}
 	} catch (error) {
-		setupError = `Unable to ${isMacOS ? 'set up Accessibility' : 'start Flowgram'}: ${error}`;
+		setupError = `Unable to ${isMacOS ? 'set up Accessibility' : 'start Gramflow'}: ${error}`;
 	} finally {
 		isPreparingService = false;
 	}
@@ -368,6 +373,7 @@ async function prepareService(request = false) {
 
 <div class="onboarding-shell">
   <SlideDeck
+    fullBleed
     title={current.title}
     lede={current.lede}
     slideProgress={step / (slides.length - 1)}
@@ -376,19 +382,19 @@ async function prepareService(request = false) {
     finishDisabled={isCompletingOnboarding || !accessibilityReady}
     finishLabel={isCompletingOnboarding ? 'Finishing...' : 'Finish'}
     onBack={() => {
-      if (!isCompletingOnboarding) void changeStep(-1);
+      if (!isCompletingOnboarding) step--;
     }}
-    onNext={() => void changeStep(1)}
+    onNext={() => step++}
   >
     {#if slides[step].id === 'welcome' && !isMacOS}
       {#if isPreparingService}
         <div class="onboarding-actions">
-          <p role="status">Starting Flowgram...</p>
+          <p role="status">Starting Gramflow...</p>
         </div>
       {:else if setupError}
         <div class="onboarding-actions">
           <p role="alert">{setupError}</p>
-          <Button on:click={() => prepareService()}>Retry Starting Flowgram</Button>
+          <Button on:click={() => prepareService()}>Retry Starting Gramflow</Button>
         </div>
       {/if}
     {:else if slides[step].id === 'accessibility'}
@@ -401,7 +407,7 @@ async function prepareService(request = false) {
           {:else if accessibilityStatus === 'Unsupported'}
             Accessibility setup is unavailable on this platform. Setup cannot continue here.
           {:else if hasRequestedAccessibility && accessibilityStatus === 'NotGranted'}
-            Switch Flowgram on in System Settings → Privacy &amp; Security → Accessibility. Flowgram will notice and continue by itself.
+            Switch Gramflow on in System Settings → Privacy &amp; Security → Accessibility. Gramflow will notice and continue by itself.
           {/if}
         </p>
         {#if setupError}
@@ -426,13 +432,13 @@ async function prepareService(request = false) {
 
         {#if isMacOS && !accessibilityReady && !isPreparingService}
           <details class="help-details" open={hasRequestedAccessibility && accessibilityStatus === 'NotGranted'}>
-            <summary>Already turned it on, but Flowgram can't tell?</summary>
+            <summary>Already turned it on, but Gramflow can't tell?</summary>
             <p>
-              macOS sometimes keeps an old Flowgram entry that no longer matches this version. Reset it,
+              macOS sometimes keeps an old Gramflow entry that no longer matches this version. Reset it,
               then grant access again:
             </p>
             <ol>
-              <li>Quit Flowgram from its menu-bar icon.</li>
+              <li>Quit Gramflow from its menu-bar icon.</li>
               <li>Open Terminal and run this command:</li>
             </ol>
             <div class="command-row">
@@ -442,8 +448,8 @@ async function prepareService(request = false) {
               </Button>
             </div>
             <ol start="3">
-              <li>Open Flowgram again and click Open System Settings.</li>
-              <li>Switch Flowgram on. Flowgram notices and continues by itself.</li>
+              <li>Open Gramflow again and click Open System Settings.</li>
+              <li>Switch Gramflow on. Gramflow notices and continues by itself.</li>
             </ol>
           </details>
         {/if}
@@ -486,6 +492,7 @@ async function prepareService(request = false) {
       </div>
     {:else if slides[step].id === 'browser'}
       <div class="onboarding-actions">
+        <div class="onboarding-browser-columns">
         <section class="onboarding-browser-group">
           <h3>Chrome, Edge, Brave and Opera</h3>
           <ol class="onboarding-steps">
@@ -503,7 +510,7 @@ async function prepareService(request = false) {
                 <Button color="white" size="sm" on:click={() => openExtensionsPage('opera')}>Opera</Button>
               </span>
             </li>
-            <li>Click <strong>Load unpacked</strong> and choose the <strong>Flowgram Browser Extension</strong> folder{extensionFolder ? ' in Documents' : ''}.</li>
+            <li>Click <strong>Load unpacked</strong> and choose the <strong>Gramflow Browser Extension</strong> folder{extensionFolder ? ' in Documents' : ''}.</li>
           </ol>
         </section>
         <section class="onboarding-browser-group">
@@ -512,10 +519,11 @@ async function prepareService(request = false) {
             <li>
               <Button color="white" size="sm" on:click={prepareFirefox}>Set up Firefox</Button>
             </li>
-            <li>On the page that opens, click <strong>Load Temporary Add-on…</strong> and choose <strong>manifest.json</strong> inside the <strong>Flowgram Firefox Extension</strong> folder{firefoxFolder ? ' in Documents' : ''}.</li>
+            <li>On the page that opens, click <strong>Load Temporary Add-on…</strong> and choose <strong>manifest.json</strong> inside the <strong>Gramflow Firefox Extension</strong> folder{firefoxFolder ? ' in Documents' : ''}.</li>
             <li>Firefox forgets the extension when it quits, so repeat step 2 after restarting it.</li>
           </ol>
         </section>
+        </div>
         {#if extensionError}
           <p role="alert">{extensionError}</p>
         {/if}
@@ -539,7 +547,7 @@ async function prepareService(request = false) {
                     name="humanizer-tier"
                     value={option.id}
                     bind:group={selectedTier}
-                    disabled={blocked || option.installed || humanizerBusy !== null}
+                    disabled={blocked || humanizerBusy !== null}
                   />
                   <strong>{option.label}</strong>
                   {#if option.recommended}<span class="pill amber">Recommended</span>{/if}
@@ -570,8 +578,15 @@ async function prepareService(request = false) {
           <div class="onboarding-app-actions">
             {#if humanizerBusy}
               <Button color="white" on:click={cancelHumanizerDownload}>Cancel download</Button>
-            {:else if !humanizerInstalled}
-              <Button disabled={!selectedTier} on:click={() => startHumanizerDownload(selectedTier)}>Download</Button>
+            {:else}
+              {#if selectedIsActive}
+                <Button disabled>Ready to use</Button>
+              {:else if selectedOption?.installed}
+                <Button on:click={useSelectedModel}>Use this model</Button>
+              {:else}
+                <Button disabled={!selectedTier} on:click={() => startHumanizerDownload(selectedTier)}>Download</Button>
+              {/if}
+              <Button color="white" on:click={skipHumanizer}>Skip for now</Button>
             {/if}
           </div>
         {:else if $humanizer.error}

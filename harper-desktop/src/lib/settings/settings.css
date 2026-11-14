@@ -1116,8 +1116,8 @@ body[data-theme="dark"] .about-mark {
 }
 
 /* ==========================================================================
-   Flowgram brand v2 "Meadow"
-   Source of truth: /brand/flowgram-brand-mockup.html and /brand/ACCESSIBILITY.md
+   Gramflow brand v2 "Meadow"
+   Source of truth: /brand/gramflow-brand-mockup.html and /brand/ACCESSIBILITY.md
    Light and dark tokens; all text pairs were contrast-checked to WCAG AA.
    ========================================================================== */
 .settings-shell,
@@ -1799,6 +1799,41 @@ body[data-theme="dark"] .app-result:hover {
 }
 
 .onboarding-app input[type="radio"] {
-	accent-color: #b8e62e;
-	margin-right: 8px;
+	appearance: none;
+	-webkit-appearance: none;
+	display: inline-block;
+	flex: none;
+	width: 18px;
+	height: 18px;
+	margin: 0 10px 0 0;
+	border: 1.5px solid var(--settings-line-strong, rgba(255, 255, 255, 0.35));
+	border-radius: 50%;
+	background: transparent;
+	vertical-align: -3px;
+	cursor: pointer;
+}
+
+/* The selected model uses the brand's primary color. */
+.onboarding-app input[type="radio"]:checked {
+	border-color: #b8e62e;
+	background: radial-gradient(circle, #b8e62e 0 45%, transparent 50%);
+}
+
+.onboarding-app input[type="radio"]:focus-visible {
+	outline: 2px solid #b8e62e;
+	outline-offset: 2px;
+}
+
+.onboarding-app input[type="radio"]:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+/* Browser setup: the two groups sit side by side when the window is wide, one under the other when not. */
+.onboarding-browser-columns {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+	gap: 8px 40px;
+	width: 100%;
+	align-items: start;
 }

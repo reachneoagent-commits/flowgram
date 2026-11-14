@@ -575,7 +575,7 @@ async function handleOpenReportError(
 	return createUnitResponse();
 }
 
-/** Flowgram never sends data anywhere; the request type is kept only for protocol compatibility. */
+/** Gramflow never sends data anywhere; the request type is kept only for protocol compatibility. */
 async function handlePostFormData(_req: PostFormDataRequest): Promise<PostFormDataResponse> {
 	return { kind: 'postFormData', success: false };
 }

@@ -36,7 +36,7 @@ export function makeExtensionCSP(isDev: boolean): string {
 }
 
 export default defineManifest({
-	name: `Flowgram: Private Grammar & Spell Checker${isDev ? ' ➡️ Dev' : ''}`,
+	name: `Gramflow: Private Grammar & Spell Checker${isDev ? ' ➡️ Dev' : ''}`,
 	description: packageData.description,
 	version: packageData.version,
 	manifest_version: 3,
@@ -46,7 +46,7 @@ export default defineManifest({
 	options_page: 'options.html',
 	browser_specific_settings: {
 		gecko: {
-			id: 'extension@flowgram.app',
+			id: 'extension@gramflow.app',
 			strict_min_version: '146.0',
 		},
 	},

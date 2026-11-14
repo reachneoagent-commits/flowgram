@@ -1,6 +1,6 @@
 //! Functions to manage the main windows involved in Harper Desktop
 
-use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
+use tauri::{AppHandle, Emitter, Manager, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 use tauri_plugin_opener::OpenerExt;
 use tracing::error;
 
@@ -80,31 +80,40 @@ fn show_window(window: WebviewWindow) -> tauri::Result<()> {
 /// created visible there instead.
 const START_HIDDEN: bool = cfg!(target_os = "macos");
 
-/// Open the editor window, focusing it if it already exists.
-pub fn show_editor_window(app: &tauri::AppHandle) -> tauri::Result<()> {
-    if let Some(window) = app.get_webview_window("editor") {
-        return show_window(window);
-    }
-
-    let window = WebviewWindowBuilder::new(app, "editor", WebviewUrl::App("index.html".into()))
-        .title("Flowgram")
-        .inner_size(800.0, 600.0)
-        .visible(!START_HIDDEN)
-        .build()?;
-
-    show_window(window)
+/// Which tab the editor window opens on.
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum EditorTab {
+    Check,
+    Humanize,
 }
 
-/// Open the Humanize window, focusing it if it already exists.
-pub fn show_humanize_window(app: &tauri::AppHandle) -> tauri::Result<()> {
-    if let Some(window) = app.get_webview_window("humanize") {
+impl EditorTab {
+    fn name(self) -> &'static str {
+        match self {
+            EditorTab::Check => "check",
+            EditorTab::Humanize => "humanize",
+        }
+    }
+}
+
+/// Open the editor window on `tab`, focusing it if it already exists.
+///
+/// The editor holds both the grammar checker and Humanizer as tabs. A new window learns its tab
+/// from its URL; an open one is told through an event.
+pub fn show_editor_tab(app: &tauri::AppHandle, tab: EditorTab) -> tauri::Result<()> {
+    if let Some(window) = app.get_webview_window("editor") {
+        let _ = app.emit("editor-tab", tab.name());
         return show_window(window);
     }
 
-    let window = WebviewWindowBuilder::new(app, "humanize", WebviewUrl::App("index.html".into()))
-        .title("Flowgram Humanize")
-        .inner_size(980.0, 640.0)
-        .min_inner_size(640.0, 420.0)
+    // The tab goes in as a script rather than a `?tab=` query: app URLs are file paths, so a query
+    // string would make the page fail to load (a 404).
+    let window = WebviewWindowBuilder::new(app, "editor", WebviewUrl::App("index.html".into()))
+        .initialization_script(format!("window.__GRAMFLOW_TAB__ = '{}';", tab.name()))
+        .title("Gramflow")
+        .theme(saved_theme(app))
+        .inner_size(1100.0, 760.0)
+        .min_inner_size(720.0, 480.0)
         .center()
         .visible(!START_HIDDEN)
         .build()?;
@@ -112,25 +121,71 @@ pub fn show_humanize_window(app: &tauri::AppHandle) -> tauri::Result<()> {
     show_window(window)
 }
 
+/// Open the editor window on the grammar checker.
+pub fn show_editor_window(app: &tauri::AppHandle) -> tauri::Result<()> {
+    show_editor_tab(app, EditorTab::Check)
+}
+
+/// Open the editor window on Humanizer.
+pub fn show_humanize_window(app: &tauri::AppHandle) -> tauri::Result<()> {
+    show_editor_tab(app, EditorTab::Humanize)
+}
+
+/// The window frame follows the app's saved theme so a dark app doesn't wear a light title bar.
+/// "system" (or an unreadable config) leaves the choice to the operating system.
+pub fn saved_theme(app: &tauri::AppHandle) -> Option<tauri::Theme> {
+    let config = app.try_state::<std::sync::Arc<tokio::sync::Mutex<crate::config::Config>>>()?;
+    let config = config.try_lock().ok()?;
+    match config.theme.as_str() {
+        "dark" => Some(tauri::Theme::Dark),
+        "light" => Some(tauri::Theme::Light),
+        _ => None,
+    }
+}
+
+fn onboarding_pending(app: &tauri::AppHandle) -> bool {
+    app.try_state::<std::sync::Arc<tokio::sync::Mutex<crate::config::Config>>>()
+        .and_then(|config| {
+            config
+                .try_lock()
+                .ok()
+                .map(|config| !config.onboarding_completed)
+        })
+        .unwrap_or(false)
+}
+
 /// Picks a settings window size that suits the screen: most of the display on small screens,
 /// capped on large ones, and never smaller than the layout needs.
-fn settings_window_size(app: &tauri::AppHandle) -> (f64, f64) {
-    const MIN: (f64, f64) = (920.0, 680.0);
-    const MAX: (f64, f64) = (1280.0, 960.0);
+pub fn settings_window_size(app: &tauri::AppHandle) -> (f64, f64) {
+    fit_to_screen(app, (0.85, 0.88), (920.0, 680.0), (1280.0, 960.0))
+}
 
+/// Setup gets a larger window than Settings: tall enough that nearly every step fits without
+/// scrolling, and still never bigger than the screen.
+pub fn onboarding_window_size(app: &tauri::AppHandle) -> (f64, f64) {
+    fit_to_screen(app, (0.92, 0.94), (1000.0, 740.0), (1500.0, 1100.0))
+}
+
+/// Takes `fractions` of the screen, kept between `min` and `max`, and always leaves room for the
+/// menu bar and Dock. Sizes are in logical points.
+fn fit_to_screen(
+    app: &tauri::AppHandle,
+    fractions: (f64, f64),
+    min: (f64, f64),
+    max: (f64, f64),
+) -> (f64, f64) {
     let Some(monitor) = app.primary_monitor().ok().flatten() else {
-        return MIN;
+        return min;
     };
     let scale = monitor.scale_factor();
     let screen_width = monitor.size().width as f64 / scale;
     let screen_height = monitor.size().height as f64 / scale;
 
-    // Leave room for the menu bar and Dock, then take most of what is left.
-    let width = (screen_width * 0.85)
-        .clamp(MIN.0, MAX.0)
+    let width = (screen_width * fractions.0)
+        .clamp(min.0, max.0)
         .min(screen_width - 40.0);
-    let height = (screen_height * 0.88)
-        .clamp(MIN.1, MAX.1)
+    let height = (screen_height * fractions.1)
+        .clamp(min.1, max.1)
         .min(screen_height - 100.0);
 
     (width, height)
@@ -142,9 +197,15 @@ pub fn show_settings_window(app: &tauri::AppHandle) -> tauri::Result<()> {
         return show_window(window);
     }
 
-    let (width, height) = settings_window_size(app);
+    // Setup gets its own screen-fitted size; Settings settles on its usual one when setup is done.
+    let (width, height) = if onboarding_pending(app) {
+        onboarding_window_size(app)
+    } else {
+        settings_window_size(app)
+    };
     let window = WebviewWindowBuilder::new(app, "settings", WebviewUrl::App("index.html".into()))
-        .title("Flowgram Settings")
+        .theme(saved_theme(app))
+        .title("Gramflow Settings")
         .inner_size(width, height)
         .min_inner_size(780.0, 520.0)
         .center()

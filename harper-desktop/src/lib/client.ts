@@ -38,6 +38,19 @@ export interface HumanizerSettings {
 	active: string | null;
 	idle_minutes: number;
 	warn_numbers: boolean;
+	auto_check_updates: boolean;
+	last_update_check: number | null;
+}
+
+/** An approved newer release of a model that is installed. */
+export interface HumanizerUpdate {
+	tier: string;
+	from_version: string;
+	to_version: string;
+	released: string;
+	notes: string;
+	size_bytes: number;
+	needs_newer_app: boolean;
 }
 
 export interface HumanizerStatus {
@@ -53,6 +66,9 @@ export interface HumanizerStatus {
 	downloading: string | null;
 	engine_running: boolean;
 	active: string | null;
+	updates: HumanizerUpdate[];
+	update_error: string | null;
+	rollback: string[];
 }
 
 export interface HumanizerRewrite {
@@ -74,7 +90,7 @@ export interface HumanizerDownloadDone {
 const ACCESSIBILITY_PERMISSION_TIMEOUT_MS = 6_000;
 
 /** Fired on `window` after the rule settings are saved. */
-export const LINT_CONFIG_CHANGED = 'flowgram:lint-config-changed';
+export const LINT_CONFIG_CHANGED = 'gramflow:lint-config-changed';
 
 let configLinterPromise: Promise<LocalLinterType> | null = null;
 
@@ -113,17 +129,6 @@ export interface AppSearchResult {
 	name: string;
 	bundle_id: string;
 }
-
-export type OnboardingState =
-	| 'welcome'
-	| 'accessibility'
-	| 'integration'
-	| 'apps'
-	| 'browser'
-	| 'humanizer'
-	| 'test-drive'
-	| 'ready'
-	| 'complete';
 
 export type AccessibilityPermissionStatus = 'Granted' | 'NotGranted' | 'Unsupported';
 
@@ -237,6 +242,19 @@ export class Client {
 		await invoke('humanizer_stop_engine');
 	}
 
+	static async humanizerCheckUpdates(): Promise<HumanizerUpdate[]> {
+		return await invoke<HumanizerUpdate[]>('humanizer_check_updates');
+	}
+
+	/** Downloads, tests and installs an approved update in the background; progress arrives as events. */
+	static async humanizerApplyUpdate(tier: string): Promise<void> {
+		await invoke('humanizer_apply_update', { tier });
+	}
+
+	static async humanizerRollback(tier: string): Promise<void> {
+		await invoke('humanizer_rollback', { tier });
+	}
+
 	static async humanizerOpenModelsFolder(): Promise<void> {
 		await invoke('humanizer_open_models_folder');
 	}
@@ -271,16 +289,12 @@ export class Client {
 		return await invoke<UpdateResult>('update_to_latest');
 	}
 
-	static async restartHarper(): Promise<void> {
-		await invoke('restart_harper');
+	static async getOnboardingCompleted(): Promise<boolean> {
+		return await invoke<boolean>('get_onboarding_completed');
 	}
 
-	static async getOnboardingState(): Promise<OnboardingState> {
-		return await invoke<OnboardingState>('get_onboarding_state');
-	}
-
-	static async setOnboardingState(onboardingState: OnboardingState): Promise<void> {
-		await invoke('set_onboarding_state', { onboardingState });
+	static async setOnboardingCompleted(onboardingCompleted: boolean): Promise<void> {
+		await invoke('set_onboarding_completed', { onboardingCompleted });
 	}
 
 	static async getLaunchAtStartup(): Promise<boolean> {

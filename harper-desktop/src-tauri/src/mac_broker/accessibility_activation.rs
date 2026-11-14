@@ -27,7 +27,7 @@ pub const ACCESSIBILITY_ACTIVATION_SLOW_VERIFICATION_RETRY_INTERVAL: Duration =
 pub const ACCESSIBILITY_ACTIVATION_FAST_VERIFICATION_ATTEMPTS: u8 = 20;
 pub const CHROMIUM_ACCESSIBILITY_SETTLE_DURATION: Duration = Duration::from_secs(3);
 
-/// Tracks an app accessibility activation attempt and any AX value Flowgram should restore later.
+/// Tracks an app accessibility activation attempt and any AX value Gramflow should restore later.
 #[derive(Debug, Clone)]
 pub struct AccessibilityActivationState {
     pub pid: pid_t,

@@ -1,6 +1,6 @@
 //! Reads the user's selected text in any app, and puts a rewrite back, by using the clipboard
 //! the way a person would: copy before, paste after. Needs the same Accessibility permission
-//! Flowgram already asks for on macOS.
+//! Gramflow already asks for on macOS.
 
 use enigo::{Direction, Enigo, Key, Keyboard, Settings};
 use std::time::Duration;
@@ -20,7 +20,7 @@ pub const SHORTCUT: &str = if cfg!(target_os = "macos") {
 fn keyboard() -> Result<Enigo, String> {
     Enigo::new(&Settings::default()).map_err(|error| {
         format!(
-            "Couldn't control the keyboard ({error}). Check Flowgram's Accessibility permission."
+            "Couldn't control the keyboard ({error}). Check Gramflow's Accessibility permission."
         )
     })
 }
@@ -51,7 +51,7 @@ pub fn capture_selection() -> Result<Option<String>, String> {
     let previous = clipboard.get_text().ok();
 
     // A marker tells "nothing was copied" apart from "the selection equals the old clipboard".
-    let marker = format!("flowgram-{}", fastrand::u64(..));
+    let marker = format!("gramflow-{}", fastrand::u64(..));
     clipboard
         .set_text(marker.clone())
         .map_err(|error| error.to_string())?;

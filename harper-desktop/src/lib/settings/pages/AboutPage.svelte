@@ -1,6 +1,6 @@
 <script lang="ts">
 import { openUrl } from '@tauri-apps/plugin-opener';
-import { Button, FlowgramMark } from 'components';
+import { Button, GramflowMark } from 'components';
 import { onMount } from 'svelte';
 import { Client } from '$lib/client';
 
@@ -17,13 +17,13 @@ async function loadCurrentVersion() {
 	try {
 		currentVersion = await Client.getCurrentVersion();
 	} catch (error) {
-		console.error('Unable to load Flowgram Desktop version.', error);
+		console.error('Unable to load Gramflow Desktop version.', error);
 	}
 }
 </script>
 
 <section class="about">
-        <div class="about-mark" aria-hidden="true"><FlowgramMark className="h-14 w-auto" /></div>
+        <div class="about-mark" aria-hidden="true"><GramflowMark className="h-14 w-auto" /></div>
         <h1>Flow<em class="accent">gram</em></h1>
         <p class="muted">Version {currentVersion || 'unknown'}</p>
         <p>
@@ -41,8 +41,8 @@ async function loadCurrentVersion() {
           <Button unstyled class="button" type="button" on:click={() => void openUrl(ISSUE_URL)}>Report an issue</Button>
         </div>
         <div class="about-footer">
-          Flowgram is free software released under the Apache 2.0 license.
+          Gramflow is free software released under the Apache 2.0 license.
           <br />
-          Copyright 2026 The Flowgram Contributors.
+          Copyright 2026 The Gramflow Contributors.
         </div>
       </section>

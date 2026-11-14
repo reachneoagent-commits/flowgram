@@ -270,7 +270,7 @@ impl WindowManagerApp {
         (self.refresh_config)();
     }
 
-    /// Toggles native click-through behavior based on the cursor's current interactive Flowgram target,
+    /// Toggles native click-through behavior based on the cursor's current interactive Gramflow target,
     /// keeping editor clicks from being swallowed when the pointer is outside highlights and popups.
     fn update_cursor_hittest(&mut self, event_loop: &ActiveEventLoop) {
         let Some(cursor_pos) = self.os_broker.cursor_position() else {
@@ -385,6 +385,7 @@ impl ApplicationHandler for WindowManagerApp {
             match pollster::block_on(Window::new(event_loop, monitor, !self.overlays_hidden)) {
                 Ok(window) => self.windows.push(window),
                 Err(error) => {
+                    super::diagnostics::log(format!("overlay failed to start: {error}"));
                     self.error = Some(error);
                     event_loop.exit();
                     return;

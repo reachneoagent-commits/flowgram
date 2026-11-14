@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs Flowgram's grammar engine over a text file, one sentence per line, and prints each lint
+# Runs Gramflow's grammar engine over a text file, one sentence per line, and prints each lint
 # with its rule, the flagged text and the suggestions in the order a user would see them.
 # Usage: bash scripts/editor-review/run.sh scripts/editor-review/corpus/spelling.txt
 set -uo pipefail

@@ -1,6 +1,7 @@
 //! The Humanizer model catalog: which sizes exist, what each needs, and where each lives.
 
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 const GB: u64 = 1_000_000_000;
@@ -83,8 +84,8 @@ pub const TIERS: [TierInfo; 5] = [
     },
 ];
 
-/// The exact commit of the model repository the checksums below were taken from. Never `main`:
-/// the owner of that account could replace the files, and every Flowgram user would download the
+/// The exact commit of the model repository the checksums above were taken from. Never `main`:
+/// the owner of that account could replace the files, and every Gramflow user would download the
 /// replacement. To move to a newer model, change this and every `sha256` together.
 pub const REVISION: &str = "2e57b6528a4070c33f3e09ca24e3325a84272f68";
 
@@ -109,7 +110,7 @@ impl Tier {
         format!("{REPO_BASE}/{REVISION}/{}", self.info().file)
     }
 
-    /// Folder holding downloaded models, inside Flowgram's config folder.
+    /// Folder holding downloaded models, inside Gramflow's config folder.
     pub fn models_dir() -> Option<PathBuf> {
         dirs::config_dir().map(|dir| dir.join("harper-desktop").join("humanizer").join("models"))
     }
@@ -123,12 +124,59 @@ impl Tier {
         self.path().map(|path| path.with_extension("gguf.part"))
     }
 
+    /// A download that is being tried out, or set aside, next to the model in use.
+    pub fn update_path(self) -> Option<PathBuf> {
+        self.path().map(|path| path.with_extension("gguf.update"))
+    }
+
+    /// The model this one replaced in the last update, kept so the update can be undone.
+    pub fn previous_path(self) -> Option<PathBuf> {
+        self.path().map(|path| path.with_extension("gguf.previous"))
+    }
+
     /// A finished download has at least 99% of the expected size; the catalog sizes are rounded.
     pub fn is_installed(self) -> bool {
         self.path()
             .and_then(|path| std::fs::metadata(path).ok())
             .is_some_and(|meta| meta.len() >= self.info().size_bytes / 100 * 99)
     }
+}
+
+/// What we know about a downloaded model beyond its file name.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct InstalledModel {
+    /// The manifest version this file came from; empty for models downloaded before updates existed.
+    pub version: String,
+    /// Size in bytes of the file when it was recorded, used to tell if a plain download is current.
+    pub size_bytes: u64,
+    /// Version to restore when an update is undone.
+    pub previous_version: Option<String>,
+    pub previous_size_bytes: Option<u64>,
+}
+
+pub type InstalledModels = BTreeMap<String, InstalledModel>;
+
+fn installed_records_path() -> Option<PathBuf> {
+    Tier::models_dir().map(|dir| dir.join("installed.json"))
+}
+
+/// Reads the version records. A missing or damaged file just means "no records".
+pub fn read_installed() -> InstalledModels {
+    installed_records_path()
+        .and_then(|path| std::fs::read_to_string(path).ok())
+        .and_then(|text| serde_json::from_str(&text).ok())
+        .unwrap_or_default()
+}
+
+pub fn write_installed(records: &InstalledModels) -> std::io::Result<()> {
+    let path = installed_records_path()
+        .ok_or_else(|| std::io::Error::other("no place to save model records"))?;
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
+    let temporary = path.with_extension("json.tmp");
+    std::fs::write(&temporary, serde_json::to_string_pretty(records)?)?;
+    std::fs::rename(temporary, path)
 }
 
 #[cfg(test)]
@@ -178,5 +226,33 @@ mod tests {
         let partial = Tier::Q6.partial_path().unwrap();
         assert_eq!(path.parent(), partial.parent());
         assert_ne!(path, partial);
+    }
+
+    #[test]
+    fn update_and_previous_paths_sit_beside_the_model() {
+        let path = Tier::Q4.path().unwrap();
+        assert_eq!(Tier::Q4.update_path().unwrap().parent(), path.parent());
+        assert_eq!(Tier::Q4.previous_path().unwrap().parent(), path.parent());
+        assert_ne!(Tier::Q4.update_path(), Tier::Q4.previous_path());
+        assert_ne!(Tier::Q4.update_path().unwrap(), path);
+    }
+
+    #[test]
+    fn records_round_trip_as_json() {
+        let mut records = InstalledModels::new();
+        records.insert(
+            "q8".into(),
+            InstalledModel {
+                version: "2026-10-15".into(),
+                size_bytes: 12_669_630_368,
+                previous_version: Some("2026-10-02".into()),
+                previous_size_bytes: Some(12_000_000_000),
+            },
+        );
+        let json = serde_json::to_string(&records).unwrap();
+        assert_eq!(
+            serde_json::from_str::<InstalledModels>(&json).unwrap(),
+            records
+        );
     }
 }

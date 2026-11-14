@@ -1,8 +1,8 @@
 {
 	"$schema": "https://schema.tauri.app/config/2",
-	"productName": "Flowgram",
-	"version": "3.0.9",
-	"identifier": "com.flowgram.app",
+	"productName": "Gramflow",
+	"version": "3.0.14",
+	"identifier": "com.gramflow.app",
 	"build": {
 		"beforeDevCommand": "pnpm dev",
 		"devUrl": "http://localhost:1420",
@@ -32,24 +32,17 @@
 			"../../packages/chrome-plugin/build-firefox": "browser-extension/firefox",
 			"engine-bundle": "engine"
 		},
+		"publisher": "Gramflow",
+		"createUpdaterArtifacts": true,
 		"macOS": {
+			"signingIdentity": "-",
 			"dmg": {
 				"background": "dmg/background.png",
-				"windowSize": {
-					"width": 440,
-					"height": 640
-				},
-				"appPosition": {
-					"x": 220,
-					"y": 120
-				},
-				"applicationFolderPosition": {
-					"x": 220,
-					"y": 470
-				}
+				"windowSize": { "width": 440, "height": 640 },
+				"appPosition": { "x": 220, "y": 120 },
+				"applicationFolderPosition": { "x": 220, "y": 470 }
 			}
 		},
-		"createUpdaterArtifacts": true,
 		"windows": {
 			"nsis": {
 				"installerHooks": "./windows/installer-hooks.nsh"

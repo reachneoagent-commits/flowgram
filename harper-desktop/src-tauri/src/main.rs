@@ -11,7 +11,7 @@ use self::highlighter_service::HighlighterService;
 use self::tray::set_up_tray_menu;
 use crate::args::{Args, Command};
 use crate::communication::{Client, ProtocolError};
-use crate::config::{Config, Integration, OnboardingState};
+use crate::config::{Config, Integration};
 use crate::debounce::{DebounceState, DebounceStatus};
 use clap::Parser;
 use harper_core::{
@@ -162,13 +162,14 @@ pub fn run_tauri() {
     };
 
     // Show the welcome screens until setup is finished, not only on the very first run.
-    let show_onboarding = is_first_launch || config.onboarding_state != OnboardingState::Complete;
+    let show_onboarding = is_first_launch || !config.onboarding_completed;
+
     let broker = platform_broker(|_| false);
 
     let accessibility_granted =
         broker.accessibility_permission_status() == AccessibilityPermissionStatus::Granted;
     let should_start_highlighter = config.highlighter_service_enabled && accessibility_granted;
-    // Without Accessibility access Flowgram cannot see other apps and would silently do nothing,
+    // Without Accessibility access Gramflow cannot see other apps and would silently do nothing,
     // so bring up Settings, which explains what to do.
     let show_settings_for_permission = config.highlighter_service_enabled && !accessibility_granted;
     let config = Arc::new(Mutex::new(config));
@@ -202,7 +203,28 @@ pub fn run_tauri() {
             warm_app_search_cache(app.handle().clone());
             desktop_updater::start_auto_updates(app.handle().clone());
             humanizer::commands::spawn_idle_watcher(app.handle().clone());
+            humanizer::commands::spawn_update_checker(app.handle().clone());
             register_humanize_shortcut(app.handle());
+            let theme_handle = app.handle().clone();
+            app.listen("app-theme-changed", move |event| {
+                let theme = serde_json::from_str::<String>(event.payload()).unwrap_or_default();
+                let theme = match theme.as_str() {
+                    "dark" => Some(tauri::Theme::Dark),
+                    "light" => Some(tauri::Theme::Light),
+                    _ => None,
+                };
+                for window in theme_handle.webview_windows().values() {
+                    let _ = window.set_theme(theme);
+                }
+            });
+            let resize_handle = app.handle().clone();
+            app.listen("onboarding-completed", move |_| {
+                if let Some(window) = resize_handle.get_webview_window("settings") {
+                    let (width, height) = windows::settings_window_size(&resize_handle);
+                    let _ = window.set_size(tauri::LogicalSize::new(width, height));
+                    let _ = window.center();
+                }
+            });
             let humanize_handle = app.handle().clone();
             app.listen("humanizer-open-window", move |_| {
                 let _ = windows::show_humanize_window(&humanize_handle)
@@ -420,7 +442,7 @@ pub fn run_highlighter(has_parent: bool) {
             lint_config,
             integrations: Vec::new(),
             auto_enable_new_apps: false,
-            onboarding_state: OnboardingState::Welcome,
+            onboarding_completed: false,
             debounce_ms: *dictionary_debounce_ms.borrow(),
             auto_update: true,
             last_update_check: None,
@@ -515,7 +537,7 @@ struct IntegrationState {
 
 /// Builds the broker's policy callback. Known apps are checked locally; only unknown apps with
 /// automatic enablement on reach `resolve`, which persists registration in the parent process.
-/// Flowgram itself is excluded from discovery, but explicitly configured entries are respected.
+/// Gramflow itself is excluded from discovery, but explicitly configured entries are respected.
 /// Standalone callers can approve registration locally without IPC.
 fn integration_callback(
     state: Arc<StdMutex<IntegrationState>>,
@@ -566,7 +588,7 @@ fn fetch_highlighter_config(
             lint_config,
             integrations,
             auto_enable_new_apps,
-            onboarding_state: OnboardingState::Welcome,
+            onboarding_completed: false,
             debounce_ms,
             auto_update: true,
             last_update_check: None,

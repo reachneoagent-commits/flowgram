@@ -5,15 +5,20 @@ use std::time::Duration;
 #[cfg(target_os = "windows")]
 use egui_wgpu::wgpu::Dx12SwapchainKind;
 use egui_wgpu::wgpu::PresentMode;
+#[cfg(target_os = "windows")]
+use egui_wgpu::wgpu::{Backends, Dx12SwapchainKind};
 use egui_wgpu::winit::Painter;
 use egui_wgpu::{RendererOptions, WgpuConfiguration, WgpuSetup};
 use winit::dpi::{PhysicalPosition, PhysicalSize};
 use winit::event::WindowEvent;
 use winit::event_loop::ActiveEventLoop;
 use winit::monitor::MonitorHandle;
+#[cfg(target_os = "windows")]
+use winit::platform::windows::WindowAttributesExtWindows;
 use winit::window::{Window as WinitWindow, WindowButtons, WindowId, WindowLevel};
 
 use super::Error;
+use super::diagnostics;
 use super::render_state::RenderState;
 
 /// Builds the wgpu setup for an overlay window.
@@ -27,6 +32,8 @@ fn wgpu_setup(event_loop: &ActiveEventLoop) -> WgpuSetup {
 
     #[cfg(target_os = "windows")]
     if let WgpuSetup::CreateNew(create_new) = &mut setup {
+        // Vulkan surfaces on Windows are always opaque, so use DirectX 12 only.
+        create_new.instance_descriptor.backends = Backends::DX12;
         create_new
             .instance_descriptor
             .backend_options
@@ -35,6 +42,48 @@ fn wgpu_setup(event_loop: &ActiveEventLoop) -> WgpuSetup {
     }
 
     setup
+}
+
+/// Checks, before the overlay is ever shown, that this display can draw a see-through window.
+///
+/// An overlay that can't be transparent would cover the screen with an opaque box, so when this
+/// fails the overlay is simply not shown. Everything it learns goes to the diagnostics log.
+#[cfg(target_os = "windows")]
+async fn verify_transparent_surface(
+    event_loop: &ActiveEventLoop,
+    window: &Arc<WinitWindow>,
+) -> Result<(), String> {
+    use egui_wgpu::wgpu::{CompositeAlphaMode, RequestAdapterOptions};
+
+    let instance = wgpu_setup(event_loop);
+    let WgpuSetup::CreateNew(_) = &instance else {
+        return Ok(());
+    };
+    let instance = instance.new_instance().await;
+    let surface = instance
+        .create_surface(window.clone())
+        .map_err(|error| format!("couldn't create a surface: {error}"))?;
+    let adapter = instance
+        .request_adapter(&RequestAdapterOptions {
+            compatible_surface: Some(&surface),
+            ..Default::default()
+        })
+        .await
+        .map_err(|error| format!("no usable graphics adapter: {error}"))?;
+    let info = adapter.get_info();
+    let modes = surface.get_capabilities(&adapter).alpha_modes;
+    diagnostics::log(format!(
+        "overlay adapter: {} ({:?}, {:?}), driver {} {}; alpha modes: {modes:?}",
+        info.name, info.backend, info.device_type, info.driver, info.driver_info
+    ));
+
+    if modes.contains(&CompositeAlphaMode::PreMultiplied)
+        || modes.contains(&CompositeAlphaMode::PostMultiplied)
+    {
+        Ok(())
+    } else {
+        Err("this graphics setup can't draw a transparent window".into())
+    }
 }
 
 /// A transparent click-through overlay window for one monitor.
@@ -62,21 +111,39 @@ impl Window {
         let context = super::fonts::context();
         let position = monitor.position();
         let size = monitor.size();
-        let window = Arc::new(
-            event_loop.create_window(
-                WinitWindow::default_attributes()
-                    .with_title("Flowgram")
-                    .with_inner_size(size)
-                    .with_position(position)
-                    .with_resizable(false)
-                    .with_enabled_buttons(WindowButtons::empty())
-                    .with_decorations(false)
-                    .with_transparent(true)
-                    .with_window_level(WindowLevel::AlwaysOnTop)
-                    .with_visible(visible)
-                    .with_active(false),
-            )?,
-        );
+        let attributes = WinitWindow::default_attributes()
+            .with_title("Gramflow")
+            .with_inner_size(size)
+            .with_position(position)
+            .with_resizable(false)
+            .with_enabled_buttons(WindowButtons::empty())
+            .with_decorations(false)
+            .with_transparent(true)
+            .with_window_level(WindowLevel::AlwaysOnTop)
+            .with_active(false);
+        // The overlay is not a real window; keep it out of the Windows taskbar. It starts hidden and
+        // without a Windows-drawn background, so it can never appear as an opaque white box: it is
+        // only shown once the display is verified to support transparency (see below).
+        #[cfg(target_os = "windows")]
+        let attributes = attributes
+            .with_skip_taskbar(true)
+            .with_no_redirection_bitmap(true)
+            .with_visible(false);
+        let window = Arc::new(event_loop.create_window(attributes)?);
+        diagnostics::log(format!(
+            "overlay window for monitor at {},{} size {}x{} scale {}",
+            position.x,
+            position.y,
+            size.width,
+            size.height,
+            window.scale_factor()
+        ));
+
+        #[cfg(target_os = "windows")]
+        if let Err(reason) = verify_transparent_surface(event_loop, &window).await {
+            diagnostics::log(format!("overlay disabled: {reason}"));
+            return Err(Error::Overlay(reason));
+        }
 
         window.set_outer_position(PhysicalPosition::new(position.x, position.y));
         let _ = window.request_inner_size(PhysicalSize::new(size.width, size.height));
@@ -107,6 +174,8 @@ impl Window {
             .set_window(viewport_id, Some(window.clone()))
             .await?;
         window.request_redraw();
+        #[cfg(target_os = "windows")]
+        window.set_visible(true);
 
         Ok(Self {
             inner: window,

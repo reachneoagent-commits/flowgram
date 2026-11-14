@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMount, tick } from 'svelte';
 import Button from './Button.svelte';
-import FlowgramMark from './FlowgramMark.svelte';
+import GramflowMark from './GramflowMark.svelte';
 import ChevronLeftIcon from './icons/ChevronLeftIcon.svelte';
 import ChevronRightIcon from './icons/ChevronRightIcon.svelte';
 
@@ -30,6 +30,8 @@ export let showAside = false;
 export let onFinish: (() => void) | undefined = undefined;
 export let finishLabel = 'Finish';
 export let finishDisabled = false;
+/** Fill the whole window with the panel (no outer margin, rounded corners or shadow), for app windows. */
+export let fullBleed = false;
 
 let heading: HTMLElement;
 
@@ -102,10 +104,10 @@ function handleKeydown(event: KeyboardEvent) {
 }
 </script>
 
-<main class="grid h-dvh grid-cols-1 place-items-center overflow-y-auto bg-[#dce99b] px-6 py-6 text-foreground scheme-light [scrollbar-gutter:stable_both-edges] sm:py-10 dark:bg-[#0c0d07] dark:scheme-dark">
+<main class={fullBleed ? 'h-dvh overflow-hidden bg-background text-foreground scheme-light dark:scheme-dark' : 'grid h-dvh grid-cols-1 place-items-center overflow-y-auto bg-[#dce99b] px-6 py-6 text-foreground scheme-light [scrollbar-gutter:stable_both-edges] sm:py-10 dark:bg-[#0c0d07] dark:scheme-dark'}>
 	<!-- Viewport-based width keeps the panel unchanged when reserving scrollbar gutters. -->
-	<div class="relative w-[calc(100vw-3rem)] max-w-[60rem]">
-		<div class="overflow-hidden rounded-[28px] border border-border bg-background text-foreground shadow-[0_30px_60px_-30px_rgba(43,44,35,0.45)]">
+	<div class={fullBleed ? 'relative h-full w-full' : 'relative w-[calc(100vw-3rem)] max-w-[60rem]'}>
+		<div class={fullBleed ? 'flex h-full flex-col overflow-hidden bg-background text-foreground' : 'overflow-hidden rounded-[28px] border border-border bg-background text-foreground shadow-[0_30px_60px_-30px_rgba(43,44,35,0.45)]'}>
 			<div
 				class="h-1.5 bg-muted"
 				role="progressbar"
@@ -120,13 +122,13 @@ function handleKeydown(event: KeyboardEvent) {
 				></div>
 			</div>
 
-			<div class="relative overflow-hidden px-8 pt-7 pb-8 sm:px-14">
+			<div class={fullBleed ? 'relative min-h-0 flex-1 overflow-y-auto px-8 pt-6 pb-6 sm:px-14' : 'relative overflow-hidden px-8 pt-7 pb-8 sm:px-14'}>
 				<div class="flex items-center gap-2.5 text-foreground">
-					<FlowgramMark className="h-6 w-auto" />
-					<span class="text-2xl leading-none font-semibold tracking-[-0.05em]">flowgram</span>
+					<GramflowMark className="h-6 w-auto" />
+					<span class="text-2xl leading-none font-semibold tracking-[-0.05em]">gramflow</span>
 				</div>
 
-				<div class="grid min-h-96 pt-10">
+				<div class={fullBleed ? 'grid pt-6' : 'grid min-h-96 pt-10'}>
 					{#key slideProgress}
 						<div class={showAside ? 'grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,16rem)]' : ''}>
 							<div class="min-w-0 self-start">
@@ -135,11 +137,11 @@ function handleKeydown(event: KeyboardEvent) {
 									bind:this={heading}
 									tabindex="-1"
 									id="step-heading"
-									class="m-0! p-0! text-5xl! font-medium! leading-[0.98]! tracking-[-0.05em]! text-pretty text-foreground focus:outline-none sm:text-6xl!"
+									class={fullBleed ? 'm-0! p-0! text-4xl! font-medium! leading-[1]! tracking-[-0.05em]! text-pretty text-foreground focus:outline-none sm:text-5xl!' : 'm-0! p-0! text-5xl! font-medium! leading-[0.98]! tracking-[-0.05em]! text-pretty text-foreground focus:outline-none sm:text-6xl!'}
 								>
 									{#if leadWords}{leadWords}&nbsp;{/if}<em class="font-serif text-[1.08em] font-normal italic tracking-[-0.03em]">{accentWord}</em>
 								</svelte:element>
-								<p class="mx-0! mb-0! mt-6! max-w-xl text-lg leading-relaxed! font-normal text-pretty text-muted-foreground sm:text-xl">{lede}</p>
+								<p class={fullBleed ? 'mx-0! mb-0! mt-4! max-w-3xl text-base leading-relaxed! font-normal text-pretty text-muted-foreground sm:text-lg' : 'mx-0! mb-0! mt-6! max-w-xl text-lg leading-relaxed! font-normal text-pretty text-muted-foreground sm:text-xl'}>{lede}</p>
 								<slot />
 							</div>
 							{#if showAside}

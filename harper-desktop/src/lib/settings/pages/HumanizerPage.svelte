@@ -21,6 +21,9 @@ const IDLE_CHOICES = [
 ];
 
 let pendingDelete: HumanizerOption | null = null;
+let pendingRollback: HumanizerOption | null = null;
+let isChecking = false;
+let checkMessage = '';
 let actionError = '';
 let isSaving = false;
 const isMac = typeof navigator !== 'undefined' && navigator.userAgent.includes('Macintosh');
@@ -65,6 +68,58 @@ async function saveSettings(patch: Partial<HumanizerSettings>) {
 	isSaving = true;
 	await run(() => Client.humanizerSaveSettings({ ...status.settings, ...patch }));
 	isSaving = false;
+}
+
+function timeAgo(seconds: number | null): string {
+	if (!seconds) return 'never';
+	const minutes = Math.max(0, Math.round((Date.now() / 1000 - seconds) / 60));
+	if (minutes < 1) return 'just now';
+	if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+	const hours = Math.round(minutes / 60);
+	if (hours < 48) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+	return `${Math.round(hours / 24)} days ago`;
+}
+
+function labelFor(tier: string): string {
+	return verdict?.options.find((option) => option.id === tier)?.label ?? tier;
+}
+
+const PHASES: Record<string, string> = {
+	downloading: 'Downloading the new version',
+	testing: 'Testing the new version',
+	installing: 'Installing',
+};
+
+async function checkNow() {
+	if (isChecking) return;
+	isChecking = true;
+	checkMessage = '';
+	try {
+		const found = await Client.humanizerCheckUpdates();
+		checkMessage = found.length ? '' : 'Humanizer is up to date.';
+	} catch (error) {
+		checkMessage = `${error}`;
+	} finally {
+		isChecking = false;
+		await refreshHumanizer();
+	}
+}
+
+async function applyUpdate(tier: string) {
+	actionError = '';
+	try {
+		await Client.humanizerApplyUpdate(tier);
+	} catch (error) {
+		actionError = `${error}`;
+	} finally {
+		await refreshHumanizer();
+	}
+}
+
+async function confirmRollback() {
+	const option = pendingRollback;
+	pendingRollback = null;
+	if (option) await run(() => Client.humanizerRollback(option.id));
 }
 
 async function confirmDelete() {
@@ -166,15 +221,90 @@ async function confirmDelete() {
         {/if}
       </div>
 
+
+      {#if installedCount > 0}
+        <div class="divider"></div>
+        <div class="stanza">
+          <div class="eyebrow">Updates</div>
+          <p class="section-copy">
+            Gramflow checks a list of Humanizer versions we've reviewed and approved. Nothing is installed without your click, and the version you have is kept so you can go back.
+          </p>
+          <div class="rows">
+            <SettingRow top>
+              <strong>Check for updates automatically</strong>
+              <p>About once a day. It only looks at our approved list.</p>
+              <Toggle slot="control" appearance="settings"
+                checked={status.settings.auto_check_updates}
+                aria-label="Check for updates automatically"
+                disabled={isSaving}
+                on:click={() => saveSettings({ auto_check_updates: !status.settings.auto_check_updates })}
+               />
+            </SettingRow>
+            <div class="inline-row">
+              <Button color="white" size="sm" disabled={isChecking || busyDownload !== null} on:click={checkNow}>
+                {isChecking ? 'Checking...' : 'Check now'}
+              </Button>
+              <span>Last checked {timeAgo(status.settings.last_update_check)}.</span>
+            </div>
+            {#if checkMessage}
+              <p class="result-summary" role="status">{checkMessage}</p>
+            {:else if status.update_error}
+              <p class="result-summary" role="alert">{status.update_error}</p>
+            {/if}
+          </div>
+
+          {#if status.updates.length}
+            <Panel>
+              {#each status.updates as update (update.tier)}
+                {@const working = $humanizer.updatePhase?.tier === update.tier || busyDownload === update.tier}
+                <div class="app-row">
+                  <div class="grow">
+                    <strong>{labelFor(update.tier)}</strong>
+                    <span class="pill amber">Update available</span>
+                    <p>
+                      {update.from_version} → {update.to_version} · released {update.released} · {formatGb(update.size_bytes)} download
+                    </p>
+                    <p>{update.notes}</p>
+                    {#if update.needs_newer_app}
+                      <p>This version needs a newer Gramflow. Update the app first.</p>
+                    {:else if working}
+                      <p role="status">{PHASES[$humanizer.updatePhase?.phase ?? 'downloading'] ?? 'Working'}...</p>
+                      {#if $humanizer.progress && $humanizer.progress.tier === update.tier && $humanizer.updatePhase?.phase !== 'testing'}
+                        <div class="progress" role="progressbar" aria-label={`Downloading the ${labelFor(update.tier)} update`} aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.round(($humanizer.progress.downloaded / Math.max($humanizer.progress.total, 1)) * 100)}>
+                          <div style:width={`${Math.min(100, ($humanizer.progress.downloaded / Math.max($humanizer.progress.total, 1)) * 100)}%`}></div>
+                        </div>
+                      {/if}
+                    {/if}
+                  </div>
+                  {#if working}
+                    <Button color="white" size="sm" disabled={$humanizer.updatePhase?.phase === 'installing'} on:click={cancelHumanizerDownload}>Cancel</Button>
+                  {:else}
+                    <Button size="sm" disabled={update.needs_newer_app || busyDownload !== null} on:click={() => applyUpdate(update.tier)}>Update</Button>
+                  {/if}
+                </div>
+              {/each}
+            </Panel>
+          {/if}
+
+          {#each verdict.options.filter((option) => status.rollback.includes(option.id)) as option (option.id)}
+            <div class="inline-row">
+              <Button color="white" size="sm" disabled={busyDownload !== null} on:click={() => (pendingRollback = option)}>
+                Go back to the previous {option.label} version
+              </Button>
+            </div>
+          {/each}
+        </div>
+      {/if}
+
       {#if installedCount > 0}
         <div class="divider"></div>
         <div class="stanza">
           <div class="eyebrow">Use it</div>
           <p class="section-copy">
-            Select text in any app and press <kbd>{shortcutLabel}</kbd>. Flowgram rewrites it and offers to replace your selection. You can also paste a draft in the Humanize window.
+            Select text in any app and press <kbd>{shortcutLabel}</kbd>. Gramflow rewrites it and offers to replace your selection. You can also paste a draft in the Humanize tab of the editor.
           </p>
           <div class="inline-row">
-            <Button size="sm" on:click={() => run(Client.humanizerOpenWindow)}>Open Humanize window</Button>
+            <Button size="sm" on:click={() => run(Client.humanizerOpenWindow)}>Open Humanize in the editor</Button>
           </div>
         </div>
 
@@ -225,6 +355,17 @@ async function confirmDelete() {
     </div>
   {/if}
 </section>
+
+{#if pendingRollback}
+  <ConfirmDialog
+    title={`Go back to the previous ${pendingRollback.label} version?`}
+    message="Gramflow switches to the version you had before the last update. You can switch back again afterwards."
+    confirmLabel="Go back"
+    cancelLabel="Keep current"
+    onCancel={() => (pendingRollback = null)}
+    onConfirm={confirmRollback}
+  />
+{/if}
 
 {#if pendingDelete}
   <ConfirmDialog

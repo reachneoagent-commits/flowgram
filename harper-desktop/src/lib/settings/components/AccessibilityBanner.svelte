@@ -6,7 +6,7 @@ import { onMount } from 'svelte';
 import { Client } from '$lib/client';
 
 /** Clears a stale macOS Accessibility entry (for example after an update changed the app's signature). */
-const RESET_COMMAND = 'tccutil reset Accessibility com.flowgram.app';
+const RESET_COMMAND = 'tccutil reset Accessibility com.gramflow.app';
 
 let missing = false;
 let isWorking = false;
@@ -18,7 +18,7 @@ onMount(() => {
 	if (!isMac) return;
 
 	void check();
-	// Notice as soon as the user switches Flowgram on in System Settings.
+	// Notice as soon as the user switches Gramflow on in System Settings.
 	const timer = setInterval(check, 2000);
 	window.addEventListener('focus', check);
 
@@ -34,7 +34,7 @@ async function check() {
 		const wasMissing = missing;
 		missing = status === 'NotGranted';
 
-		// Access arrived while Flowgram was running: start checking text right away.
+		// Access arrived while Gramflow was running: start checking text right away.
 		if (wasMissing && !missing) await Client.startHighlighterService();
 	} catch {
 		// Leave the banner as it is; the next check will try again.
@@ -69,14 +69,14 @@ async function copyReset() {
   <div class="accessibility-banner" role="alert">
     <div>
       <p>
-        <strong>Flowgram can't see what you write yet.</strong>
-        Switch Flowgram on in System Settings → Privacy &amp; Security → Accessibility. Flowgram notices and starts by itself.
+        <strong>Gramflow can't see what you write yet.</strong>
+        Switch Gramflow on in System Settings → Privacy &amp; Security → Accessibility. Gramflow notices and starts by itself.
       </p>
       <details>
         <summary>Already switched on but it still doesn't work?</summary>
         <p>
-          macOS keeps an old entry after Flowgram is updated or reinstalled. Quit Flowgram, run this in
-          Terminal, then open Flowgram and allow access again:
+          macOS keeps an old entry after Gramflow is updated or reinstalled. Quit Gramflow, run this in
+          Terminal, then open Gramflow and allow access again:
         </p>
         <p class="command"><code>{RESET_COMMAND}</code>
           <Button color="white" size="sm" on:click={copyReset}>{copied ? 'Copied' : 'Copy'}</Button>

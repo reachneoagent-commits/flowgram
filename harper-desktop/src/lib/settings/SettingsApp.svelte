@@ -1,6 +1,6 @@
 <script lang="ts">
 import { onMount } from 'svelte';
-import { Client, type OnboardingState } from '$lib/client';
+import { Client } from '$lib/client';
 import { applyTheme } from '$lib/theme';
 import SettingsSidebar from './SettingsSidebar.svelte';
 import AccessibilityBanner from './components/AccessibilityBanner.svelte';
@@ -21,8 +21,7 @@ import type { SectionId } from './settings-data';
 let active: SectionId = 'general';
 let contentEl: HTMLElement;
 let isLoadingOnboarding = true;
-let onboardingState: OnboardingState = 'welcome';
-let onboardingError = '';
+let onboardingCompleted = false;
 
 const titleMap: Record<SectionId, string> = {
 	general: 'General',
@@ -57,33 +56,31 @@ async function loadTheme() {
 }
 
 async function loadOnboardingState() {
-	isLoadingOnboarding = true;
-	onboardingError = '';
 	try {
-		onboardingState = await Client.getOnboardingState();
+		onboardingCompleted = await Client.getOnboardingCompleted();
 	} catch (error) {
-		onboardingError = `Unable to load onboarding state: ${error}`;
+		console.error('Unable to load onboarding state.', error);
 	} finally {
 		isLoadingOnboarding = false;
 	}
 }
 
 const pageHeads: Partial<Record<SectionId, { lead: string; accent: string; sub: string }>> = {
-	general: { lead: 'Make it', accent: 'yours', sub: 'How Flowgram looks, behaves and starts.' },
+	general: { lead: 'Make it', accent: 'yours', sub: 'How Gramflow looks, behaves and starts.' },
 	dictionary: {
 		lead: 'Your',
 		accent: 'dictionary',
-		sub: 'Words Flowgram should never flag again.',
+		sub: 'Words Gramflow should never flag again.',
 	},
 	integrations: {
 		lead: 'Where it',
 		accent: 'works',
-		sub: 'Choose the apps where Flowgram checks your writing.',
+		sub: 'Choose the apps where Gramflow checks your writing.',
 	},
 	rules: {
-		lead: 'What Flowgram',
+		lead: 'What Gramflow',
 		accent: 'checks',
-		sub: 'Flowgram starts with our recommended settings, so you don\'t need to change anything. Turn a rule off if it gets in your way.',
+		sub: 'Gramflow starts with our recommended settings, so you don\'t need to change anything. Turn a rule off if it gets in your way.',
 	},
 	shortcuts: {
 		lead: 'Keyboard',
@@ -112,15 +109,8 @@ $: if (contentEl && active) {
       <p role="status">Loading settings...</p>
     </main>
   </div>
-{:else if onboardingError}
-  <div class="settings-shell">
-    <main class="content" aria-label="Settings">
-      <p role="alert">{onboardingError}</p>
-      <button type="button" on:click={loadOnboardingState}>Retry</button>
-    </main>
-  </div>
-{:else if onboardingState !== 'complete'}
-  <GettingStartedPage initialState={onboardingState} onComplete={() => (onboardingState = 'complete')} />
+{:else if !onboardingCompleted}
+  <GettingStartedPage onComplete={() => (onboardingCompleted = true)} />
 {:else}
   <div class="settings-shell">
     <SettingsSidebar bind:active />

@@ -33,6 +33,6 @@ function onReady() {
 {#if loading}
 	<div class="flex h-full max-w-full flex-col items-center justify-center gap-2">
 		<Spinner color="green" />
-		<p class="text-sm">Loading Flowgram's writing engine...</p>
+		<p class="text-sm">Loading Gramflow's writing engine...</p>
 	</div>
 {/if}

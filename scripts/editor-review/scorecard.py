@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Scores Flowgram's grammar engine against sentences with known right answers.
+"""Scores Gramflow's grammar engine against sentences with known right answers.
 
 Gold files are JSON lines: {"category": "...", "text": "...", "errors": [{"text": "corect", "fix": "correct"}]}
 A sentence with an empty "errors" list is correct writing, so anything flagged in it is a false alarm.

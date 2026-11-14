@@ -1,14 +1,14 @@
 name: Prepare Harper merge
 
 # Run this by hand after reading the "Harper update available" issue. It merges Harper on a new
-# branch, keeps Flowgram's name/version/updater settings, runs the tests and the branding check,
+# branch, keeps Gramflow's name/version/updater settings, runs the tests and the branding check,
 # and opens a pull request. Merge the pull request yourself once you are happy with it.
 
 on:
   workflow_dispatch:
     inputs:
       skip_paths:
-        description: "Folders to keep exactly as Flowgram has them (Harper's website, other editors)"
+        description: "Folders to keep exactly as Gramflow has them (Harper's website, other editors)"
         default: "packages/web .buildkite packages/wordpress-plugin packages/obsidian-plugin packages/vscode-plugin"
 
 permissions:
@@ -29,7 +29,7 @@ jobs:
       - name: Merge Harper on a new branch
         id: merge
         run: |
-          git config user.name "flowgram-upstream-bot"
+          git config user.name "gramflow-upstream-bot"
           git config user.email "actions@users.noreply.github.com"
           git remote add upstream https://github.com/Automattic/harper.git
           git fetch upstream master
@@ -44,7 +44,7 @@ jobs:
           done
           python3 scripts/upstream/sync_versions.py
           git add -A
-          git commit -m "Merge Harper master into Flowgram"
+          git commit -m "Merge Harper master into Gramflow"
       - name: Branding check
         run: bash scripts/upstream/check_branding.sh
       - name: Run the grammar engine tests

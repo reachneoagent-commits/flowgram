@@ -11,4 +11,6 @@ pub enum Error {
     Window(#[from] OsError),
     #[error("highlighter renderer failed: {0}")]
     Renderer(#[from] egui_wgpu::WgpuError),
+    #[error("highlighter overlay is not supported on this display: {0}")]
+    Overlay(String),
 }

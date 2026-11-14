@@ -1,4 +1,4 @@
-; Flowgram keeps running in the tray and runs a second "highlighter" process from the same
+; Gramflow keeps running in the tray and runs a second "highlighter" process from the same
 ; executable. Windows cannot delete a running program, so the uninstaller (and an upgrade)
 ; must stop both first, otherwise the files stay behind and the app looks un-uninstalled.
 

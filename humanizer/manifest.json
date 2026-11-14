@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "published": "2026-11-11",
+  "models": [
+    {
+      "tier": "q8",
+      "version": "2026-10-15",
+      "released": "2026-10-15",
+      "notes": "Humanizer v2, the version Gramflow 3.0.11 shipped with.",
+      "file": "humanizer-12b-Q8_0.gguf",
+      "url": "https://huggingface.co/jialinyyzz/humanizer/resolve/2e57b6528a4070c33f3e09ca24e3325a84272f68/humanizer-12b-Q8_0.gguf",
+      "size_bytes": 12669630368,
+      "sha256": "8d7a457b56de6530eaaf0151ccfa7550a4b20dab979737e259da9c63e960e0b0",
+      "min_app_version": "3.0.12"
+    },
+    {
+      "tier": "q6",
+      "version": "2026-10-15",
+      "released": "2026-10-15",
+      "notes": "Humanizer v2, the version Gramflow 3.0.11 shipped with.",
+      "file": "humanizer-12b-Q6_K.gguf",
+      "url": "https://huggingface.co/jialinyyzz/humanizer/resolve/2e57b6528a4070c33f3e09ca24e3325a84272f68/humanizer-12b-Q6_K.gguf",
+      "size_bytes": 10029799584,
+      "sha256": "c98f03bb9e71456181f99b0e1d3391e07ce1afc357f9db4c33d6d379b8dd9f0d",
+      "min_app_version": "3.0.12"
+    },
+    {
+      "tier": "q4",
+      "version": "2026-10-15",
+      "released": "2026-10-15",
+      "notes": "Humanizer v2, the version Gramflow 3.0.11 shipped with.",
+      "file": "humanizer-12b-Q4_K_M.gguf",
+      "url": "https://huggingface.co/jialinyyzz/humanizer/resolve/2e57b6528a4070c33f3e09ca24e3325a84272f68/humanizer-12b-Q4_K_M.gguf",
+      "size_bytes": 7625160864,
+      "sha256": "2229574dec5178629575ee4a153dfee7d9e924ab997d0ad9d2ac622b67e44834",
+      "min_app_version": "3.0.12"
+    },
+    {
+      "tier": "q3",
+      "version": "2026-10-15",
+      "released": "2026-10-15",
+      "notes": "Humanizer v2, the version Gramflow 3.0.11 shipped with.",
+      "file": "humanizer-12b-Q3-QAT.gguf",
+      "url": "https://huggingface.co/jialinyyzz/humanizer/resolve/2e57b6528a4070c33f3e09ca24e3325a84272f68/humanizer-12b-Q3-QAT.gguf",
+      "size_bytes": 5587794816,
+      "sha256": "307bbfdf66fb22bf98aaa93fe7d54a713bf167e646073dc0cf10870b1525eb94",
+      "min_app_version": "3.0.12"
+    },
+    {
+      "tier": "q2",
+      "version": "2026-10-15",
+      "released": "2026-10-15",
+      "notes": "Humanizer v2, the version Gramflow 3.0.11 shipped with.",
+      "file": "humanizer-12b-IQ2_XS-QAT.gguf",
+      "url": "https://huggingface.co/jialinyyzz/humanizer/resolve/2e57b6528a4070c33f3e09ca24e3325a84272f68/humanizer-12b-IQ2_XS-QAT.gguf",
+      "size_bytes": 3893632896,
+      "sha256": "383e5ca8f1f48ab5f65013adbc1965fa70d1d1afa6c45d932c34b854e38edbb5",
+      "min_app_version": "3.0.12"
+    }
+  ]
+}

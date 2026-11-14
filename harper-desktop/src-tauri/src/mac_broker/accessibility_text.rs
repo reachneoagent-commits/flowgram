@@ -233,7 +233,7 @@ fn apply_suggestion_to_element(
     }
 }
 
-/// Returns whether an accessibility element has a text role Flowgram can lint.
+/// Returns whether an accessibility element has a text role Gramflow can lint.
 pub fn is_supported_text_element(el: &AXUIElement) -> bool {
     let Ok(role) = el.role() else {
         return false;

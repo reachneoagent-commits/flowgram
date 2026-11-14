@@ -17,7 +17,7 @@ export { default as Card } from './Card.svelte';
 export { default as Checkbox } from './Checkbox.svelte';
 export { default as Collapsible } from './Collapsible.svelte';
 export { default as DelayedRender } from './DelayedRender.svelte';
-export { default as FlowgramMark } from './FlowgramMark.svelte';
+export { default as GramflowMark } from './GramflowMark.svelte';
 export { default as GutterCenter } from './GutterCenter.svelte';
 export { default as IconButton } from './IconButton.svelte';
 export { default as Input } from './Input.svelte';

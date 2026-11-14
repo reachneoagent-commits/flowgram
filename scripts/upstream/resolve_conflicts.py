@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Resolves the merge conflicts we expect when merging Harper into Flowgram.
+"""Resolves the merge conflicts we expect when merging Harper into Gramflow.
 
-Only Flowgram's identity (names, versions, app id) conflicts routinely, so those files keep
+Only Gramflow's identity (names, versions, app id) conflicts routinely, so those files keep
 our side. Cargo.lock is regenerated. Any other conflict is left for a human and fails the run.
 """
 import re

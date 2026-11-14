@@ -105,7 +105,7 @@ async function updateProfileExtension(profile: BrowserProfileStatus) {
 		);
 		profileNotice = {
 			...profileNotice,
-			[profileKey(profile)]: 'Files updated. On the page that opened, click the reload arrow (↻) on Flowgram to finish.',
+			[profileKey(profile)]: 'Files updated. On the page that opened, click the reload arrow (↻) on Gramflow to finish.',
 		};
 		await loadBrowserProfiles();
 	} catch (error) {
@@ -293,7 +293,7 @@ function closeAppPicker() {
 <section>
   <div class="stanza">
     <div class="eyebrow">Selected apps</div>
-    <p class="section-copy">Flowgram will only watch the apps you enable here.</p>
+    <p class="section-copy">Gramflow will only watch the apps you enable here.</p>
 
     {#if isIntegrationsLoading}
       <p class="result-summary">Loading integrations...</p>
@@ -350,7 +350,7 @@ function closeAppPicker() {
 
   <div class="stanza">
     <div class="eyebrow">Browser extension</div>
-    <p class="section-copy">Each browser profile has its own extensions, so add Flowgram to every profile you want checked.</p>
+    <p class="section-copy">Each browser profile has its own extensions, so add Gramflow to every profile you want checked.</p>
 
     <Panel>
       {#if isProfilesLoading}
@@ -373,7 +373,7 @@ function closeAppPicker() {
                 {/if}
               </p>
               {#if outdated}
-                <p><span class="pill amber">Update available</span> Version {profile.bundled_version} ships with this Flowgram.</p>
+                <p><span class="pill amber">Update available</span> Version {profile.bundled_version} ships with this Gramflow.</p>
               {:else if profile.installed}
                 <p><span class="pill">Up to date</span></p>
               {/if}
@@ -398,7 +398,7 @@ function closeAppPicker() {
       <Button unstyled class="button" type="button" disabled={isPreparingExtension} on:click={showExtensionFolder}>
         {isPreparingExtension ? 'Preparing...' : 'Show extension folder'}
       </Button>
-      <span class="muted">Set up opens that profile's extensions page: turn on Developer mode, click Load unpacked, then pick the Flowgram Browser Extension folder in Documents.</span>
+      <span class="muted">Set up opens that profile's extensions page: turn on Developer mode, click Load unpacked, then pick the Gramflow Browser Extension folder in Documents.</span>
     </div>
     <Panel>
       <div class="app-row">
@@ -411,7 +411,7 @@ function closeAppPicker() {
       <div class="app-row">
         <div class="grow">
           <strong>Firefox</strong>
-          <p>Needs its own copy. Set up opens Firefox; choose Load Temporary Add-on and pick manifest.json in the Flowgram Firefox Extension folder. Firefox forgets it on quit.</p>
+          <p>Needs its own copy. Set up opens Firefox; choose Load Temporary Add-on and pick manifest.json in the Gramflow Firefox Extension folder. Firefox forgets it on quit.</p>
         </div>
         <Button color="white" size="sm" disabled={isPreparingFirefox} on:click={setUpFirefox}>{isPreparingFirefox ? 'Preparing...' : 'Set up'}</Button>
       </div>
@@ -427,7 +427,7 @@ function closeAppPicker() {
     <div class="eyebrow">New apps</div>
     <SettingRow top>
       <strong>Enable new apps automatically</strong>
-      <p>Automatically add and enable new apps when Flowgram encounters them. Disabled apps stay disabled; removed apps can be added again.</p>
+      <p>Automatically add and enable new apps when Gramflow encounters them. Disabled apps stay disabled; removed apps can be added again.</p>
       <Toggle slot="control" appearance="settings"
         checked={autoEnableNewApps}
         disabled={isAutoEnableLoading || isAutoEnableSaving}

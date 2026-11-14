@@ -376,7 +376,7 @@ fn suggestion_row(
     )
 }
 
-/// Renders the list footer: a "Go to Flowgram settings" row and the close button.
+/// Renders the list footer: a "Go to Gramflow settings" row and the close button.
 ///
 /// The close button sits over the footer's right edge, where
 /// the footer leaves 26 points of padding for it.
@@ -417,7 +417,7 @@ fn render_list_footer(ui: &mut egui::Ui, action: &mut Option<LintCardAction>) {
     let label_left = icon_rect.right() + 6.0;
     let label = single_line_galley(
         ui,
-        "Go to Flowgram settings",
+        "Go to Gramflow settings",
         12.0,
         settings_rect.right() - 10.0 - label_left,
     );
@@ -431,7 +431,7 @@ fn render_list_footer(ui: &mut egui::Ui, action: &mut Option<LintCardAction>) {
 
     if hover_text(
         settings.on_hover_cursor(egui::CursorIcon::PointingHand),
-        "Click to go to Flowgram settings",
+        "Click to go to Gramflow settings",
     )
     .clicked()
     {
@@ -678,7 +678,7 @@ fn flyout_button(
     )
 }
 
-/// Renders Flowgram's markdown-formatted lint message in the popup instead of showing raw markdown
+/// Renders Gramflow's markdown-formatted lint message in the popup instead of showing raw markdown
 /// markers to the user.
 ///
 /// Inline code gets a background tinted with the lint color. The Chrome extension underlines it
@@ -842,7 +842,7 @@ fn is_spelling_kind(lint_kind: LintKind) -> bool {
     }
 }
 
-/// Converts Flowgram suggestion variants into row labels. Like the Chrome extension, it falls back to
+/// Converts Gramflow suggestion variants into row labels. Like the Chrome extension, it falls back to
 /// the kind of edit when the replacement text is empty.
 fn suggestion_text(suggestion: &Suggestion) -> String {
     match suggestion {

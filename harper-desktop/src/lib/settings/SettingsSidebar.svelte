@@ -2,7 +2,7 @@
 import {
 	BookIcon,
 	ChecklistIcon,
-	FlowgramMark,
+	GramflowMark,
 	GearIcon,
 	GridIcon,
 	InfoIcon,
@@ -29,8 +29,8 @@ export let active: SectionId;
 
 <nav class="sidebar" aria-label="Settings sections">
   <div class="brand">
-    <FlowgramMark className="h-5 w-auto" />
-    <span>flowgram</span>
+    <GramflowMark className="h-5 w-auto" />
+    <span>gramflow</span>
   </div>
   <div class="group">
     {#each MAIN_NAV_ITEMS as item}

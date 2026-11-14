@@ -1,6 +1,6 @@
-name: Flowgram Release
+name: Gramflow Release
 
-# Builds Flowgram installers for macOS (Apple Silicon + Intel) and Windows (x64 + ARM64)
+# Builds Gramflow installers for macOS (Apple Silicon + Intel) and Windows (x64 + ARM64)
 # and attaches them to a GitHub release. Run it manually from the Actions tab.
 # Installers are not signed with paid Apple/Microsoft certificates; the README explains
 # how users open them. Updater artifacts are signed with TAURI_SIGNING_PRIVATE_KEY.
@@ -34,18 +34,18 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: `v${{ steps.get-version.outputs.version }}`,
-              name: `Flowgram ${{ steps.get-version.outputs.version }}`,
+              name: `Gramflow ${{ steps.get-version.outputs.version }}`,
               body: [
                 '## Download the installer for your computer',
                 '',
                 '| System | File |',
                 '|---|---|',
-                '| Mac with an M1, M2, M3 or newer chip | `Flowgram_..._Mac_Apple-Silicon.dmg` |',
-                '| Mac with an Intel chip | `Flowgram_..._Mac_Intel.dmg` |',
+                '| Mac with an M1, M2, M3 or newer chip | `Gramflow_..._Mac_Apple-Silicon.dmg` |',
+                '| Mac with an Intel chip | `Gramflow_..._Mac_Intel.dmg` |',
                 '| Windows (most PCs) | `.exe` ending in `x64-setup` |',
                 '| Windows on ARM | `.exe` ending in `arm64-setup` |',
                 '',
-                'Your computer will warn you the first time you open Flowgram because it is not signed with a paid certificate. The steps to get past that are in the [README](https://github.com/' + context.repo.owner + '/' + context.repo.repo + '#download-and-install).',
+                'Your computer will warn you the first time you open Gramflow because it is not signed with a paid certificate. The steps to get past that are in the [README](https://github.com/' + context.repo.owner + '/' + context.repo.repo + '#download-and-install).',
               ].join('\n'),
               draft: true,
               prerelease: false,
@@ -94,10 +94,10 @@ jobs:
             tauri-args: "--target x86_64-apple-darwin --bundles app,dmg"
           - platform: windows-latest
             rust-target: x86_64-pc-windows-msvc
-            tauri-args: "--target x86_64-pc-windows-msvc --bundles nsis"
+            tauri-args: "--target x86_64-pc-windows-msvc --bundles nsis,msi"
           - platform: windows-11-arm
             rust-target: aarch64-pc-windows-msvc
-            tauri-args: "--target aarch64-pc-windows-msvc --bundles nsis"
+            tauri-args: "--target aarch64-pc-windows-msvc --bundles nsis,msi"
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v5
@@ -127,6 +127,31 @@ jobs:
       - name: Install desktop dependencies
         shell: bash
         run: cd harper-desktop && pnpm install
+      - name: Add the Humanizer engine
+        shell: bash
+        run: |
+          # Humanizer runs a llama.cpp server that ships inside the app. Apple silicon and Windows x64
+          # get the real engine; other platforms get a placeholder so the bundle folder exists
+          # (Settings tells those users Humanizer isn't available on their computer).
+          TAG=b11335
+          BASE="https://github.com/ggml-org/llama.cpp/releases/download/$TAG"
+          DEST=harper-desktop/src-tauri/engine-bundle
+          mkdir -p "$DEST" engine-tmp
+          case "${{ matrix.rust-target }}" in
+            aarch64-apple-darwin)
+              curl -fsSL "$BASE/llama-$TAG-bin-macos-arm64.tar.gz" -o engine.archive
+              tar -xzf engine.archive -C engine-tmp ;;
+            x86_64-pc-windows-msvc)
+              curl -fsSL "$BASE/llama-$TAG-bin-win-vulkan-x64.zip" -o engine.archive
+              7z x -y engine.archive -oengine-tmp > /dev/null ;;
+            *)
+              echo "Humanizer is not offered on this platform." > "$DEST/README.txt" ;;
+          esac
+          SERVER=$(find engine-tmp -type f \( -name llama-server -o -name llama-server.exe \) | head -1)
+          if [ -n "$SERVER" ]; then
+            cp -R "$(dirname "$SERVER")"/. "$DEST"/
+          fi
+          ls "$DEST"
       - name: Build and upload installers
         uses: tauri-apps/tauri-action@v0
         env:
@@ -157,8 +182,8 @@ jobs:
           gh api "repos/$REPO/releases/$RELEASE_ID/assets" --paginate --jq '.[] | "\(.id) \(.name)"' |
           while read -r id name; do
             case "$name" in
-              *_aarch64.dmg) new="Flowgram_${VERSION}_Mac_Apple-Silicon.dmg" ;;
-              *_x64.dmg) new="Flowgram_${VERSION}_Mac_Intel.dmg" ;;
+              *_aarch64.dmg) new="Gramflow_${VERSION}_Mac_Apple-Silicon.dmg" ;;
+              *_x64.dmg) new="Gramflow_${VERSION}_Mac_Intel.dmg" ;;
               *) continue ;;
             esac
             gh api -X PATCH "repos/$REPO/releases/assets/$id" -f name="$new" > /dev/null

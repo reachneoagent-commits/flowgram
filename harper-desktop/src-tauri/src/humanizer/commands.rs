@@ -3,9 +3,11 @@
 use super::capability::{self, Verdict};
 use super::download::{self, DownloadError};
 use super::engine::{self, Engine, EngineError};
+use super::manifest::{self, Manifest, Update};
 use super::models::{TIERS, Tier};
 use super::numbers::{self, NumberCheck};
 use super::settings::HumanizerSettings;
+use super::updates;
 use crate::config::Config;
 use serde::Serialize;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -22,13 +24,17 @@ pub struct HumanizerState {
     rewrite_cancel: StdMutex<Arc<AtomicBool>>,
     /// Text captured by the shortcut before the Humanize window finished loading.
     pending: StdMutex<Option<String>>,
+    /// The last approved-model list we fetched, and the updates it offers for installed models.
+    manifest: StdMutex<Option<Manifest>>,
+    updates: StdMutex<Vec<Update>>,
+    update_error: StdMutex<Option<String>>,
 }
 
 #[derive(Serialize)]
 pub struct Status {
     pub verdict: Verdict,
     pub settings: HumanizerSettings,
-    /// The rewriting engine is bundled with this copy of Flowgram.
+    /// The rewriting engine is bundled with this copy of Gramflow.
     pub engine_installed: bool,
     /// Id of the model size being downloaded right now.
     pub downloading: Option<&'static str>,
@@ -36,6 +42,12 @@ pub struct Status {
     pub engine_running: bool,
     /// Id of the model size rewrites will use, when one is installed.
     pub active: Option<&'static str>,
+    /// Approved updates for models that are installed.
+    pub updates: Vec<Update>,
+    /// Why the last update check failed, if it did.
+    pub update_error: Option<String>,
+    /// Sizes whose last update can be undone.
+    pub rollback: Vec<&'static str>,
 }
 
 #[derive(Serialize)]
@@ -107,6 +119,21 @@ pub async fn humanizer_status<R: Runtime>(
         settings,
         downloading,
         engine_running,
+        updates: state
+            .updates
+            .lock()
+            .map(|list| list.clone())
+            .unwrap_or_default(),
+        update_error: state
+            .update_error
+            .lock()
+            .ok()
+            .and_then(|error| error.clone()),
+        rollback: TIERS
+            .iter()
+            .filter(|info| updates::can_rollback(info.tier))
+            .map(|info| info.id)
+            .collect(),
     })
 }
 
@@ -408,7 +435,7 @@ pub async fn humanizer_paste_back<R: Runtime>(
     text: String,
     app: AppHandle<R>,
 ) -> Result<(), String> {
-    if let Some(window) = app.get_webview_window("humanize") {
+    if let Some(window) = app.get_webview_window("editor") {
         window.hide().map_err(|error| error.to_string())?;
     }
     #[cfg(target_os = "macos")]
@@ -437,5 +464,250 @@ pub fn handle_shortcut(app: AppHandle) {
         }
         let _ = crate::windows::show_humanize_window(&app);
         let _ = app.emit("humanize-input", captured);
+    });
+}
+
+fn unix_now() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|elapsed| elapsed.as_secs())
+        .unwrap_or(0)
+}
+
+fn installed_file_size(tier: Tier) -> Option<u64> {
+    tier.path()
+        .filter(|_| tier.is_installed())
+        .and_then(|path| std::fs::metadata(path).ok())
+        .map(|meta| meta.len())
+}
+
+/// Fetches the approved-model list and works out which installed models it would update.
+async fn run_update_check<R: Runtime>(app: &AppHandle<R>) -> Result<Vec<Update>, String> {
+    let result = async {
+        let manifest = updates::fetch_manifest().await?;
+        let version = app.package_info().version.to_string();
+        let list = manifest::available_updates(
+            &manifest,
+            &version,
+            &super::models::read_installed(),
+            installed_file_size,
+        );
+        Ok::<_, String>((manifest, list))
+    }
+    .await;
+
+    if let Some(state) = app.try_state::<HumanizerState>() {
+        match &result {
+            Ok((manifest, list)) => {
+                if let Ok(mut slot) = state.manifest.lock() {
+                    *slot = Some(manifest.clone());
+                }
+                if let Ok(mut slot) = state.updates.lock() {
+                    *slot = list.clone();
+                }
+                if let Ok(mut slot) = state.update_error.lock() {
+                    *slot = None;
+                }
+            }
+            Err(error) => {
+                if let Ok(mut slot) = state.update_error.lock() {
+                    *slot = Some(error.clone());
+                }
+            }
+        }
+    }
+    // A failed check still counts, so a broken connection isn't retried every minute.
+    if let Some(config) = app.try_state::<Arc<Mutex<Config>>>() {
+        let mut config = config.lock().await;
+        config.humanizer.last_update_check = Some(unix_now());
+        let _ = config.save_to_system().await;
+    }
+    result.map(|(_, list)| list)
+}
+
+/// Looks for approved model updates now. Updates are only ever offered, never installed here.
+#[tauri::command]
+pub async fn humanizer_check_updates<R: Runtime>(app: AppHandle<R>) -> Result<Vec<Update>, String> {
+    run_update_check(&app).await
+}
+
+#[derive(Serialize, Clone)]
+struct UpdateDone {
+    tier: &'static str,
+    error: Option<String>,
+}
+
+#[derive(Serialize, Clone)]
+struct UpdatePhase {
+    tier: &'static str,
+    phase: &'static str,
+}
+
+/// Downloads, tests, and installs one approved update in the background. Progress arrives as
+/// `humanizer-download` and `humanizer-update` events, the end as `humanizer-update-done`.
+#[tauri::command]
+pub async fn humanizer_apply_update<R: Runtime>(
+    tier: String,
+    app: AppHandle<R>,
+    state: State<'_, HumanizerState>,
+) -> Result<(), String> {
+    let tier = parse_tier(&tier)?;
+    let id = tier.info().id;
+    let entry = {
+        let manifest = state.manifest.lock().map_err(|error| error.to_string())?;
+        let offered = state
+            .updates
+            .lock()
+            .map_err(|error| error.to_string())?
+            .iter()
+            .find(|update| update.tier == id)
+            .cloned()
+            .ok_or("There's no update for this model. Check for updates first.")?;
+        if offered.needs_newer_app {
+            return Err(
+                "Update Gramflow first. This model needs a newer version of the app.".into(),
+            );
+        }
+        manifest
+            .as_ref()
+            .and_then(|manifest| manifest.models.iter().find(|model| model.tier == id))
+            .cloned()
+            .ok_or("Check for updates first.")?
+    };
+    let binary = engine::find_binary(resource_dir(&app).as_deref())
+        .ok_or_else(|| EngineError::NoBinary.to_string())?;
+
+    let cancel = Arc::new(AtomicBool::new(false));
+    {
+        let mut downloading = state
+            .downloading
+            .lock()
+            .map_err(|error| error.to_string())?;
+        if downloading.is_some() {
+            return Err("A model is already downloading.".into());
+        }
+        *downloading = Some((tier, cancel.clone()));
+    }
+
+    let handle = app.clone();
+    tauri::async_runtime::spawn(async move {
+        let free_disk_gb = capability::detect().free_disk_gb;
+        let phase_handle = handle.clone();
+        let progress_handle = handle.clone();
+        let prepared = updates::prepare(
+            tier,
+            &entry,
+            &binary,
+            free_disk_gb,
+            cancel,
+            move |phase| {
+                let name = match phase {
+                    updates::Phase::Downloading => "downloading",
+                    updates::Phase::Testing => "testing",
+                };
+                let _ = phase_handle.emit(
+                    "humanizer-update",
+                    UpdatePhase {
+                        tier: id,
+                        phase: name,
+                    },
+                );
+            },
+            move |progress| {
+                let _ = progress_handle.emit("humanizer-download", progress);
+            },
+        )
+        .await;
+
+        let result = match prepared {
+            Ok(()) => {
+                let _ = handle.emit(
+                    "humanizer-update",
+                    UpdatePhase {
+                        tier: id,
+                        phase: "installing",
+                    },
+                );
+                if let Some(state) = handle.try_state::<HumanizerState>() {
+                    // Free the old model file before swapping it; Windows can't move a file in use.
+                    let mut engine = state.engine.lock().await;
+                    if engine.as_ref().is_some_and(|engine| engine.tier == tier) {
+                        *engine = None;
+                    }
+                }
+                updates::install(tier, &entry)
+            }
+            Err(error) => Err(error),
+        };
+
+        if result.is_ok()
+            && let Some(state) = handle.try_state::<HumanizerState>()
+            && let Ok(mut list) = state.updates.lock()
+        {
+            list.retain(|update| update.tier != id);
+        }
+        if let Some(state) = handle.try_state::<HumanizerState>()
+            && let Ok(mut downloading) = state.downloading.lock()
+        {
+            *downloading = None;
+        }
+        let error = match result {
+            Ok(()) | Err(updates::UpdateError::Cancelled) => None,
+            Err(error) => Some(error.to_string()),
+        };
+        let _ = handle.emit("humanizer-update-done", UpdateDone { tier: id, error });
+    });
+    Ok(())
+}
+
+/// Goes back to the model an update replaced. Running it again returns to the updated one.
+#[tauri::command]
+pub async fn humanizer_rollback(
+    tier: String,
+    state: State<'_, HumanizerState>,
+) -> Result<(), String> {
+    let tier = parse_tier(&tier)?;
+    if state
+        .downloading
+        .lock()
+        .map_err(|error| error.to_string())?
+        .is_some()
+    {
+        return Err("Wait for the download to finish first.".into());
+    }
+    {
+        let mut engine = state.engine.lock().await;
+        if engine.as_ref().is_some_and(|engine| engine.tier == tier) {
+            *engine = None;
+        }
+    }
+    updates::rollback(tier).map_err(|error| error.to_string())?;
+    // The list of offered updates is out of date now; the next check rebuilds it.
+    if let Ok(mut list) = state.updates.lock() {
+        list.clear();
+    }
+    Ok(())
+}
+
+/// Checks for approved model updates about once a day, if the user hasn't turned that off. It
+/// only looks; installing an update always needs a click.
+pub fn spawn_update_checker<R: Runtime>(app: AppHandle<R>) {
+    tauri::async_runtime::spawn(async move {
+        tokio::time::sleep(Duration::from_secs(90)).await;
+        loop {
+            let due = match app.try_state::<Arc<Mutex<Config>>>() {
+                Some(config) => {
+                    let humanizer = config.lock().await.humanizer.clone();
+                    humanizer.auto_check_updates
+                        && unix_now().saturating_sub(humanizer.last_update_check.unwrap_or(0))
+                            >= 24 * 60 * 60
+                }
+                None => false,
+            };
+            if due && TIERS.iter().any(|info| info.tier.is_installed()) {
+                let _ = run_update_check(&app).await;
+            }
+            tokio::time::sleep(Duration::from_secs(60 * 60)).await;
+        }
     });
 }

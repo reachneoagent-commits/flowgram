@@ -1,6 +1,6 @@
 {
-	"name": "flowgram-desktop",
-	"version": "3.0.9",
+	"name": "gramflow-desktop",
+	"version": "3.0.14",
 	"description": "",
 	"type": "module",
 	"scripts": {

@@ -1,4 +1,4 @@
-//! Humanizer preferences saved in Flowgram's main config file.
+//! Humanizer preferences saved in Gramflow's main config file.
 
 use serde::{Deserialize, Serialize};
 
@@ -13,6 +13,10 @@ pub struct HumanizerSettings {
     pub idle_minutes: u64,
     /// Flag rewrites whose numbers differ from the draft.
     pub warn_numbers: bool,
+    /// Look for approved model updates about once a day.
+    pub auto_check_updates: bool,
+    /// Unix seconds of the last update check, successful or not.
+    pub last_update_check: Option<u64>,
 }
 
 impl Default for HumanizerSettings {
@@ -22,6 +26,8 @@ impl Default for HumanizerSettings {
             active: None,
             idle_minutes: 10,
             warn_numbers: true,
+            auto_check_updates: true,
+            last_update_check: None,
         }
     }
 }
@@ -37,6 +43,8 @@ mod tests {
         assert_eq!(settings.active, None);
         assert_eq!(settings.idle_minutes, 10);
         assert!(settings.warn_numbers);
+        assert!(settings.auto_check_updates);
+        assert_eq!(settings.last_update_check, None);
     }
 
     #[test]
@@ -54,6 +62,8 @@ mod tests {
             active: Some("q6".into()),
             idle_minutes: 0,
             warn_numbers: false,
+            auto_check_updates: false,
+            last_update_check: Some(1_700_000_000),
         };
         let json = serde_json::to_string(&settings).unwrap();
         assert_eq!(

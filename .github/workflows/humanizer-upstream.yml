@@ -1,0 +1,45 @@
+name: Humanizer upstream check
+
+# Once a week, looks at the upstream Humanizer project (model files on Hugging Face and the GitHub
+# repository) and, if anything changed since we last reviewed it, opens or updates an issue with a
+# report. Nothing reaches Gramflow users from this: a human reads the report, tries the model, and
+# only then runs scripts/humanizer-publish.py to approve it.
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build the report
+        id: report
+        run: |
+          set +e
+          python3 scripts/humanizer-upstream-report.py > report.md
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+      - name: Open or update the review issue
+        if: steps.report.outputs.code == '10'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          LABEL="humanizer-upstream"
+          gh label create "$LABEL" --color BFD4F2 --description "Upstream Humanizer changes to review" 2>/dev/null || true
+          EXISTING=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file report.md
+          else
+            gh issue create --title "Humanizer upstream changes to review" --label "$LABEL" --body-file report.md
+          fi
+      - name: Fail if the report itself broke
+        if: steps.report.outputs.code != '0' && steps.report.outputs.code != '10'
+        run: |
+          echo "The report script failed with exit code ${{ steps.report.outputs.code }}"
+          exit 1

@@ -19,7 +19,7 @@ pub enum AccessibilityPermissionStatus {
 /// those APIs are platform-specific. This trait keeps the event loop and renderer independent from
 /// macOS accessibility and pointer APIs.
 pub trait OsBroker {
-    /// Identifies Flowgram for automatic-discovery exclusion, not for manual integration policy.
+    /// Identifies Gramflow for automatic-discovery exclusion, not for manual integration policy.
     ///
     /// Uses the configured bundle ID on macOS and the current executable path on Windows.
     /// Unsupported platforms return `false`. No broker instance is needed; `Self: Sized` keeps
@@ -46,7 +46,7 @@ pub trait OsBroker {
     /// Implementations may cache platform checks between calls.
     fn should_hide_overlay(&mut self) -> bool;
 
-    /// Check whether Flowgram has permission to access the OS' native accessibility API.
+    /// Check whether Gramflow has permission to access the OS' native accessibility API.
     fn accessibility_permission_status(&self) -> AccessibilityPermissionStatus;
 
     /// Request permission to access the OS' native accessibility API.

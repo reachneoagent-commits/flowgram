@@ -297,11 +297,11 @@ function settingsValueToDialect(value: string): Dialect {
           <div class="eyebrow">General</div>
           <div class="rows">
             <SettingRow top>
-              <strong>Launch Flowgram at startup</strong>
-              <p>Flowgram will start silently when you log in.</p>
+              <strong>Launch Gramflow at startup</strong>
+              <p>Gramflow will start silently when you log in.</p>
               <Toggle slot="control" appearance="settings"
                 checked={launchAtStartup}
-                aria-label="Launch Flowgram at startup"
+                aria-label="Launch Gramflow at startup"
                 disabled={isLaunchAtStartupLoading || isLaunchAtStartupSaving}
                 on:click={() => setLaunchAtStartup(!launchAtStartup)}
                />
@@ -316,7 +316,7 @@ function settingsValueToDialect(value: string): Dialect {
 
             <SettingRow top>
               <strong>Automatically check for updates</strong>
-              <p>Flowgram will check for new versions daily.</p>
+              <p>Gramflow will check for new versions daily.</p>
               <p class="result-summary">
                 Current version: {currentVersion || 'loading...'} · Latest version: {latestVersion || 'loading...'}
               </p>
@@ -355,7 +355,7 @@ function settingsValueToDialect(value: string): Dialect {
         <div class="stanza">
           <div class="eyebrow">Language</div>
           <p class="section-copy">
-                      Choose the dialect Flowgram uses to check spelling and grammar.
+                      Choose the dialect Gramflow uses to check spelling and grammar.
                     </p>
           <div class="inline-row">
             <label for="dialect">English dialect:</label>
@@ -384,7 +384,7 @@ function settingsValueToDialect(value: string): Dialect {
         <div class="stanza">
           <div class="eyebrow">Appearance</div>
           <p class="section-copy">
-            Choose how Flowgram looks on your screen.
+            Choose how Gramflow looks on your screen.
           </p>
           <div class="inline-row">
             <label for="theme">Theme:</label>
@@ -415,7 +415,7 @@ function settingsValueToDialect(value: string): Dialect {
         <div class="stanza">
           <div class="eyebrow">Writing</div>
           <p class="section-copy">
-            How long Flowgram waits after you stop typing before it checks your text. Leave it at 0
+            How long Gramflow waits after you stop typing before it checks your text. Leave it at 0
             for instant checking; raise it if underlines feel distracting while you type.
           </p>
           <div class="inline-row">

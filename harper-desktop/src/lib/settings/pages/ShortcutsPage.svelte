@@ -2,7 +2,7 @@
 import { Button, Select, SettingRow, Toggle } from 'components';
 
 const shortcutItems = [
-	{ id: 'show-menu', label: 'Show Flowgram menu', keys: ['Shift', 'Cmd', 'H'] },
+	{ id: 'show-menu', label: 'Show Gramflow menu', keys: ['Shift', 'Cmd', 'H'] },
 	{ id: 'quick-review', label: 'Open quick review', keys: ['Ctrl', 'Cmd', 'Space'] },
 	{ id: 'accept-last', label: 'Apply last suggestion', keys: ['Ctrl', 'E'] },
 	{ id: 'dismiss-last', label: 'Dismiss last suggestion', keys: ['Ctrl', 'D'] },
@@ -41,7 +41,7 @@ let activationKey = 'off';
 
           <SettingRow top>
             <strong>Allow shortcuts while other apps are focused</strong>
-            <p>When off, Flowgram shortcuts only work while the Flowgram window is active.</p>
+            <p>When off, Gramflow shortcuts only work while the Gramflow window is active.</p>
             <Toggle slot="control" appearance="settings"
               checked={globalShortcuts}
               aria-label="Allow shortcuts while other apps are focused"
@@ -57,7 +57,7 @@ let activationKey = 'off';
           <div class="eyebrow">Activation</div>
           <SettingRow top>
             <strong>Activation key</strong>
-            <p>Require a modifier key to enable Flowgram checking in a window.</p>
+            <p>Require a modifier key to enable Gramflow checking in a window.</p>
             <Select
               slot="control"
               unstyled

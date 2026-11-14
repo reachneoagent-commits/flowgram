@@ -272,7 +272,7 @@ export function createInitialSettingsState(): SettingsState {
 		respectCode: true,
 		dictionary: [
 			'HAL',
-			'Flowgram',
+			'Gramflow',
 			'Automattic',
 			'WordPress',
 			'macOS',

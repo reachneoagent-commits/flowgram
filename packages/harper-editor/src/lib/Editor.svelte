@@ -20,7 +20,7 @@ import LintSidebar from './LintSidebar.svelte';
 import StatusBar from './StatusBar.svelte';
 
 /**
- * Flowgram editor shell: a Quill document surface, a problems sidebar, and a
+ * Gramflow editor shell: a Quill document surface, a problems sidebar, and a
  * status bar, all linted through `lint-framework`.
  * The editor switches to its dark palette under a `.dark` ancestor through
  * Tailwind `dark:` variants; it does not read `prefers-color-scheme` itself.

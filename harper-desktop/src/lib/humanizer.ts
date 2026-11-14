@@ -9,6 +9,8 @@ import {
 
 export interface HumanizerView {
 	status: HumanizerStatus | null;
+	/** The step an update is on: downloading, testing the new model, or installing it. */
+	updatePhase: { tier: string; phase: string } | null;
 	loading: boolean;
 	progress: HumanizerDownloadProgress | null;
 	error: string;
@@ -17,6 +19,7 @@ export interface HumanizerView {
 /** Shared by onboarding and Settings so both always show the same state. */
 export const humanizer = writable<HumanizerView>({
 	status: null,
+	updatePhase: null,
 	loading: true,
 	progress: null,
 	error: '',
@@ -38,6 +41,18 @@ export async function refreshHumanizer() {
 /** Starts listening for download events. Call the returned function to stop. */
 export async function watchHumanizer(): Promise<UnlistenFn> {
 	const stops = await Promise.all([
+		listen<{ tier: string; phase: string }>('humanizer-update', ({ payload }) =>
+			humanizer.update((view) => ({ ...view, updatePhase: payload })),
+		),
+		listen<{ tier: string; error: string | null }>('humanizer-update-done', ({ payload }) => {
+			humanizer.update((view) => ({
+				...view,
+				updatePhase: null,
+				progress: null,
+				error: payload.error ?? '',
+			}));
+			void refreshHumanizer();
+		}),
 		listen<HumanizerDownloadProgress>('humanizer-download', ({ payload }) =>
 			humanizer.update((view) => ({ ...view, progress: payload })),
 		),
