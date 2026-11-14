@@ -25,6 +25,12 @@ To launch a development version of Harper Desktop with live reload, run:
 just dev-desktop
 ```
 
+`just dev-desktop` first builds the shared packages the app imports. If you run `pnpm tauri dev` directly instead, build them first or Vite fails with `Package path ./components.css is exported from package ... components, but no valid target file was found`:
+
+```bash
+just build-components build-harper-editor
+```
+
 To check the frontend and Rust targets, run:
 
 ```bash
